@@ -1,0 +1,23 @@
+{
+  "name": "node-pop3",
+  "version": "0.0.1",
+  "description": "POP3 client for node",
+  "main": "./lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lianxh/node-pop3.git"
+  },
+  "keywords": [
+    "pop3",
+    "node"
+  ],
+  "author": "lianxh",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lianxh/node-pop3/issues"
+  },
+  "homepage": "https://github.com/lianxh/node-pop3#readme"
+}

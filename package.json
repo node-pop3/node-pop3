@@ -2,7 +2,7 @@
   "name": "node-pop3",
   "version": "0.0.1",
   "description": "POP3 client for node",
-  "main": "./lib/index.js",
+  "main": "./lib/Command.js",
   "scripts": {
     "babel": "babel src -d lib"
   },
@@ -12,7 +12,9 @@
   },
   "keywords": [
     "pop3",
-    "node"
+    "node",
+    "Promise",
+    "Stream"
   ],
   "author": "lianxh",
   "license": "MIT",

@@ -14,19 +14,18 @@ class Pop3Command extends Pop3Connection {
     super({ host, port, tls });
     this.user = user;
     this.password = password;
-    this._STATInfo = '';
+    this._PASSInfo = '';
   }
 
   connect() {
     if (super._socket) {
-      return Promise.resolve(this._STATInfo);
+      return Promise.resolve(this._PASSInfo);
     }
     const self = this;
     return super._connect()
       .then(() => super.command('USER', self.user))
       .then(() => super.command('PASS', self.password))
-      .then(() => super.command('STAT'))
-      .then(([info]) => self._STATInfo = info);
+      .then(([info]) => self._PASSInfo = info);
   }
 
   UIDL(msgNumber = '') {
@@ -51,12 +50,11 @@ class Pop3Command extends Pop3Connection {
 
   QUIT() {
     if (!this._socket) {
-      console.log('here');
-      return Promise.resolve(this._STATInfo = '' || 'Bye');
+      return Promise.resolve(this._PASSInfo = '' || 'Bye');
     }
     const self = this;
     return super.command('QUIT')
-      .then(([info]) => self._STATInfo = '' || info);
+      .then(([info]) => self._PASSInfo = '' || info);
   }
 
   static listify(str) {

@@ -73,11 +73,10 @@ class Pop3Connection extends EventEmitter {
           return self._pushStream(buffer);
         }
         if (buffer[0] === 45) {// '-'
-          let errMessage = self._command
-            ? `command: ${self._command} `
-            : '';
-          errMessage += `errMessage: ${buffer.slice(5, -2)}`;
-          return self.emit('error', { type: 'response', err: new Error(errMessage) });
+          const err = new Error(buffer.slice(5, -2));
+          err.eventName = 'error';
+          err.command = self._command;
+          return self.emit('error', err);
         }
         if (buffer[0] === 43) {// '+'
           const firstLineEndIndex = buffer.indexOf(CRLF_BUFFER);
@@ -97,19 +96,24 @@ class Pop3Connection extends EventEmitter {
         resolve();
       });
       self._socket.on('error', (err) => {
+        err.eventName = 'error';
         if (self._stream) {
-          return self.emit('error', { type: 'response', err });
+          return self.emit('error', err);
         }
-        reject({ type: 'error', err })
+        reject(err);
       });
       self._socket.once('closed', () => {
         self._socket.destroy();
-        reject({ type: 'closed' });
+        const err = new Error('closed');
+        err.eventName = 'closed';
+        reject(err);
         self._socket = null;
       });
       self._socket.once('end', () => {
         self._socket.destroy();
-        reject({ type: 'end' });
+        const err = new Error('end');
+        err.eventName = 'end';
+        reject(err);
         self._socket = null;
       });
       socket.connect({

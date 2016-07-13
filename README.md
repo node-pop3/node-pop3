@@ -34,15 +34,17 @@ pop3 command for node. Support **promise** and **stream**
 ```
 # API
 * constructor(options)
+
 params|optional|comment
----|---
-options.user|`true`|
+---|---|---
+options.user|`true`
 options.password|`true`|
 options.host|`false`|
 options.port|`true`|Default to `110`
 options.tls|`true`|Default to `false`
 
 * basic
+
 method|params|return
 ---|---|---
 _connect||{Promise} resolve to undefined
@@ -64,17 +66,19 @@ command|{String} message send for Server|{Promise} resolve to [{String} response
 ```
 
 * common
+
 method|params|return|comment
----|---|---
-connect||{Promise} resolve to {String} response message from Server by `PASS` command|If it is connected, pop3 return Promise.resolve(info). If not, pop3 will connect to Server with `_connect` method and 'USER', 'PASS' command
-UIDL|{String|Number} msgNum|{Promise} resolve to {Array} response list|param is optional
-RETR|{String|Number} msgNum|{Promise} resolve to {Stream} mail stream|
+---|---|---|---
+connect||{Promise} resolve to {String} response message from Server by `PASS` command|If it is connected, pop3 return Promise.resolve(info). If not, pop3 will connect to Server with `_connect` method and `USER`, `PASS` command
+UIDL|{String\|Number} msgNum|{Promise} resolve to {Array} response list|param is optional
+RETR|{String\|Number} msgNum|{Promise} resolve to {Stream} mail stream|
 QUIT||{Promise} resolve to {String} response message|
 
 # ERROR
 pop3 will throw new Error with error message from Server.
 Beyound that, Error may own two property attached by pop3.
+
 property|comment
 ---|---
-`err.eventName`|event name where this err comes from `socket.on`. Include `error`, `close` and `end`
-`err.command`|which command causes the error. For example, 'PASS example'
+`err.eventName`|event name comes from `socket.on`. Include `error`, `close` and `end`
+`err.command`|which command causes the error. For example, `PASS example`

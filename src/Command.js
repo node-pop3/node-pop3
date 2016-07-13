@@ -18,14 +18,13 @@ class Pop3Command extends Pop3Connection {
   }
 
   connect() {
-    if (super._socket) {
+    if (this._socket) {
       return Promise.resolve(this._PASSInfo);
     }
-    const self = this;
     return super._connect()
-      .then(() => super.command('USER', self.user))
-      .then(() => super.command('PASS', self.password))
-      .then(([info]) => self._PASSInfo = info);
+      .then(() => super.command('USER', this.user))
+      .then(() => super.command('PASS', this.password))
+      .then(([info]) => this._PASSInfo = info);
   }
 
   UIDL(msgNumber = '') {
@@ -52,9 +51,8 @@ class Pop3Command extends Pop3Connection {
     if (!this._socket) {
       return Promise.resolve(this._PASSInfo = '' || 'Bye');
     }
-    const self = this;
     return super.command('QUIT')
-      .then(([info]) => self._PASSInfo = '' || info);
+      .then(([info]) => this._PASSInfo = '' || info);
   }
 
   static listify(str) {
@@ -66,42 +64,3 @@ class Pop3Command extends Pop3Connection {
 }
 
 export default Pop3Command;
-
-/*
-//const [host, port, tlsBool] = ['outlook.office365.com', '995', true];
-//const [host, port, tlsBool] = ['mail.ximalaya.com', '110', false];
-const [host, port, tlsBool] = ['pop.exmail.qq.com', '995', true];
-//const pop3Lib = new Pop3Command({ host, port, tls: tlsBool, user: 'recruit_hr@ximalaya.com', password: 'recruit123456' });
-const pop3Lib = new Pop3Command({ host, port, tls: tlsBool, user: 'test@trymoka.com', password: 'moka@2015' });
-pop3Lib.RETR(23)
-.then((stream) => stream.on('data', (buffer) => console.log(buffer.toString())));*/
-//.then(() => pop3Lib.QUIT());
-/*
-//.then(() => pop3Lib.command('USER', 'guoxing@trymoka.onmicrosoft.com'))
-//.then(() => pop3Lib.command('USER', 'recruit_hr@ximalaya.com'))
-//.then(() => pop3Lib.command('USER', 'test@trymoka.com'))
-//.then(([info]) => console.log('info:', info))
-//.then(() => pop3Lib.command('PASS', 'moka@2015'))
-//.then(() => pop3Lib.command('PASS', 'moka@2015'))
-//.then(([info]) => console.log('info:', info))
-//.then(() => pop3Lib.command('STAT'))
-//.then(([info]) => console.log('info:', info))
-//.then(() => pop3Lib.command('DELE', 75))
-.then(() => pop3Lib.command('LIST'))
-.then(([info, stream]) => {
-  console.log('info:', info);
-  stream.on('data', (buffer) => console.log('!!!!!!!!!', buffer.toString()));
-})*
-.then(() => pop3Lib.command('UIDL'))
-.then(([info, stream]) => {
-  console.log('info:', info);
-  stream.on('data', (buffer) => console.log('!!!!!!!!!', buffer.toString()));
-})
-.then(() => pop3Lib.command('RETR', 1))
-.then(([info, stream]) => {
-  console.log('info:', info);
-  stream.on('data', (buffer) => console.log('!!!!!!!!!', buffer.toString()));
-})
-.then(() => pop3Lib.command('QUIT'))
-.then(([info]) => console.log(info))
-.catch((err) => console.log(err));*/

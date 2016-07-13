@@ -20,8 +20,8 @@ class Pop3Connection extends EventEmitter {
   }) {
     super();
     this.host = host;
-    this.port = port;
-    this.tls = tls;
+    this.port = port || 110;
+    this.tls = tls || false;
     this._socket = null;
     this._stream = null;
     this._command;
@@ -55,66 +55,64 @@ class Pop3Connection extends EventEmitter {
   _connect() {
     const { host, port, _queues, _addAsPromise } = this;
     const socket = new Socket();
-    const self = this;
+    socket.setKeepAlive(true);
     return new Promise((resolve, reject) => {
-      if (self.tls) {
-        self._socket = tls.connect({
+      if (this.tls) {
+        this._socket = tls.connect({
           host,
           port,
           socket,
         }, () => console.log(`Connect to ${host}:${port} via tls`));
       } else {
         socket.once('connect', () => console.log(`Connect to ${host}:${port}`));
-        self._socket = socket;
+        this._socket = socket;
       }
 
-      self._socket.on('data', (buffer) => {
-        if (self._stream) {
-          return self._pushStream(buffer);
+      this._socket.on('data', (buffer) => {
+        if (this._stream) {
+          return this._pushStream(buffer);
         }
         if (buffer[0] === 45) {// '-'
           const err = new Error(buffer.slice(5, -2));
           err.eventName = 'error';
-          err.command = self._command;
-          return self.emit('error', err);
+          err.command = this._command;
+          return this.emit('error', err);
         }
         if (buffer[0] === 43) {// '+'
           const firstLineEndIndex = buffer.indexOf(CRLF_BUFFER);
           const infoBuffer = buffer.slice(4, firstLineEndIndex);
-          const commandName = (self._command || '').split(' ')[0];
+          const commandName = (this._command || '').split(' ')[0];
           let stream = null;
           if (MULTI_LINE_COMMAND_NAME.includes(commandName)) {
-            self._updateStream();
-            stream = self._stream;
+            this._updateStream();
+            stream = this._stream;
             const bodyBuffer = buffer.slice(firstLineEndIndex + 2);
             if (bodyBuffer[0]) {
-              self._pushStream(bodyBuffer);
+              this._pushStream(bodyBuffer);
             }
           }
-          self.emit('response', infoBuffer.toString(), stream);
+          this.emit('response', infoBuffer.toString(), stream);
         }
         resolve();
       });
-      self._socket.on('error', (err) => {
+      this._socket.on('error', (err) => {
         err.eventName = 'error';
-        if (self._stream) {
-          return self.emit('error', err);
+        if (this._stream) {
+          return this.emit('error', err);
         }
         reject(err);
       });
-      self._socket.once('closed', () => {
-        self._socket.destroy();
-        const err = new Error('closed');
-        err.eventName = 'closed';
+      this._socket.once('close', () => {
+        const err = new Error('close');
+        err.eventName = 'close';
         reject(err);
-        self._socket = null;
+        this._socket = null;
       });
-      self._socket.once('end', () => {
-        self._socket.destroy();
+      this._socket.once('end', () => {
         const err = new Error('end');
         err.eventName = 'end';
         reject(err);
-        self._socket = null;
+        this._socket = null;
       });
       socket.connect({
         host,
@@ -125,23 +123,21 @@ class Pop3Connection extends EventEmitter {
 
   command(...args) {
     this._command = args.join(' ');
-    const self = this;
     return new Promise((resolve, reject) => {
-      if (!self._stream) {
+      if (!this._stream) {
         return resolve();
       }
-      self.once('end', (err) => {
+      this.once('end', (err) => {
         return err ? reject(err) : resolve();
       });
     }).then(() => new Promise((resolve, reject) => {
       const rejectFn = (err) => reject(err);
-      self.once('error', rejectFn);
-      self.once('response', (info, stream) => {
-        self.removeListener('error', rejectFn);
-        console.log('command:', self._command);
+      this.once('error', rejectFn);
+      this.once('response', (info, stream) => {
+        this.removeListener('error', rejectFn);
         resolve([info, stream]);
       });
-      self._socket.write(`${self._command}${CRLF}`, 'utf8');
+      this._socket.write(`${this._command}${CRLF}`, 'utf8');
     }));
   }
 

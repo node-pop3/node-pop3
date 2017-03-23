@@ -52,8 +52,8 @@ class Pop3Connection extends EventEmitter {
     this.emit('end', err);
   }
 
-  _connect() {
-    const { host, port, _queues, _addAsPromise } = this;
+  connect() {
+    const { host, port } = this;
     const socket = new Socket();
     socket.setKeepAlive(true);
     return new Promise((resolve, reject) => {
@@ -62,9 +62,8 @@ class Pop3Connection extends EventEmitter {
           host,
           port,
           socket,
-        }, () => console.log(`Connect to ${host}:${port} via tls`));
+        });
       } else {
-        socket.once('connect', () => console.log(`Connect to ${host}:${port}`));
         this._socket = socket;
       }
 

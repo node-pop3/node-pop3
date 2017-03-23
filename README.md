@@ -47,13 +47,13 @@ options.tls|`true`|Default to `false`
 
 method|params|return
 ---|---|---
-_connect||{Promise} resolve to undefined
+connect||{Promise} resolve to undefined
 command|{String} message send for Server|{Promise} resolve to [{String} response message, {Stream} response from multi line command] from Server
 
 ```javascript
   const pop3 = new Pop3Command({ host: 'pop3.example.com' });
 
-  pop3._connect()
+  pop3.connect()
   .then(() => pop3.command('USER', 'example@example.com'))
   .then(() => pop3.command('PASS', 'example'))
   .then(() => pop3.command('STAT'))
@@ -70,8 +70,9 @@ command|{String} message send for Server|{Promise} resolve to [{String} response
 method|params|return|comment
 ---|---|---|---
 connect||{Promise} resolve to {String} response message from Server by `PASS` command|If it is connected, pop3 return Promise.resolve(info). If not, pop3 will connect to Server with `_connect` method and `USER`, `PASS` command
-UIDL|{String\|Number} msgNum|{Promise} resolve to {Array} response list|param is optional
+UIDL|{String\|Number} msgNum|{Promise} resolve to {Array} responsed list|param is optional
 RETR|{String\|Number} msgNum|{Promise} resolve to {Stream} mail stream|
+TOP|{String\|Number} msgNum, {Number} n|{Promise} resolve to {Buffer} responsed buffer|n is default to 0
 QUIT||{Promise} resolve to {String} response message|
 
 # ERROR

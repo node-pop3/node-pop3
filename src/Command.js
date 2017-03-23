@@ -17,34 +17,50 @@ class Pop3Command extends Pop3Connection {
     this._PASSInfo = '';
   }
 
-  connect() {
+  _connect() {
     if (this._socket) {
       return Promise.resolve(this._PASSInfo);
     }
-    return super._connect()
+    return super.connect()
       .then(() => super.command('USER', this.user))
       .then(() => super.command('PASS', this.password))
       .then(([info]) => this._PASSInfo = info);
   }
 
   UIDL(msgNumber = '') {
-    return this.connect()
+    return this._connect()
       .then(() => super.command('UIDL', msgNumber))
-      .then(([, stream]) => new Promise((resolve) => {
+      .then(([, stream]) => new Promise((resolve, reject) => {
         let buffer = Buffer.concat([]);
         let length = buffer.length;
         stream.on('data', (_buffer) => {
           length += _buffer.length;
           buffer = Buffer.concat([buffer, _buffer], length);
         });
+        stream.on('error', (err) => reject(err));
         stream.on('end', () => resolve(Pop3Command.listify(buffer.toString())));
       }));
   }
 
   RETR(msgNumber) {
-    return this.connect()
+    return this._connect()
       .then(() => super.command('RETR', msgNumber))
       .then(([, stream]) => stream);
+  }
+
+  TOP(msgNumber, n = 0) {
+    return this._connect()
+      .then(() => super.command('TOP', msgNumber, n))
+      .then(([, stream]) => new Promise((resolve, reject) => {
+        let buffer = Buffer.concat([]);
+        let length = buffer.length;
+        stream.on('data', (_buffer) => {
+          length += _buffer.length;
+          buffer = Buffer.concat([buffer, _buffer], length);
+        });
+        stream.on('error', (err) => reject(err));
+        stream.on('end', () => resolve(buffer));
+      }));
   }
 
   QUIT() {

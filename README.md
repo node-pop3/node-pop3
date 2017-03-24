@@ -37,8 +37,8 @@ pop3 command for node. Support **promise** and **stream**
 
 params|optional|comment
 ---|---|---
-options.user|`true`
-options.password|`true`|
+options.user|`false`
+options.password|`false`|
 options.host|`false`|
 options.port|`true`|Default to `110`
 options.tls|`true`|Default to `false`
@@ -72,7 +72,7 @@ method|params|return|comment
 connect||{Promise} resolve to {String} response message from Server by `PASS` command|If it is connected, pop3 return Promise.resolve(info). If not, pop3 will connect to Server with `_connect` method and `USER`, `PASS` command
 UIDL|{String\|Number} msgNum|{Promise} resolve to {Array} responsed list|param is optional
 RETR|{String\|Number} msgNum|{Promise} resolve to {Stream} mail stream|
-TOP|{String\|Number} msgNum, {Number} n|{Promise} resolve to {Buffer} responsed buffer|n is default to 0
+TOP|{String\|Number} msgNum, {Number} n|{Promise} resolve to {String} responsed string|n is default to 0
 QUIT||{Promise} resolve to {String} response message|
 
 # ERROR
@@ -83,3 +83,13 @@ property|comment
 ---|---
 `err.eventName`|event name comes from `socket.on`. Include `error`, `close` and `end`
 `err.command`|which command causes the error. For example, `PASS example`
+
+# TEST
+
+e.g. Test the API about `TOP`
+
+`node test -u example@gmail.com -p pwd -h example.pop.com -m TOP 100 10`
+
+For more detail, please input
+
+`node test --help`

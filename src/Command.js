@@ -1,6 +1,6 @@
 import Pop3Connection from './Connection';
 
-import { CRLF } from './constant';
+import { stream2String, listify } from './helper';
 
 class Pop3Command extends Pop3Connection {
 
@@ -30,16 +30,8 @@ class Pop3Command extends Pop3Connection {
   UIDL(msgNumber = '') {
     return this._connect()
       .then(() => super.command('UIDL', msgNumber))
-      .then(([, stream]) => new Promise((resolve, reject) => {
-        let buffer = Buffer.concat([]);
-        let length = buffer.length;
-        stream.on('data', (_buffer) => {
-          length += _buffer.length;
-          buffer = Buffer.concat([buffer, _buffer], length);
-        });
-        stream.on('error', (err) => reject(err));
-        stream.on('end', () => resolve(Pop3Command.listify(buffer.toString())));
-      }));
+      .then(([, stream]) => stream2String(stream))
+      .then(listify);
   }
 
   RETR(msgNumber) {
@@ -51,16 +43,7 @@ class Pop3Command extends Pop3Connection {
   TOP(msgNumber, n = 0) {
     return this._connect()
       .then(() => super.command('TOP', msgNumber, n))
-      .then(([, stream]) => new Promise((resolve, reject) => {
-        let buffer = Buffer.concat([]);
-        let length = buffer.length;
-        stream.on('data', (_buffer) => {
-          length += _buffer.length;
-          buffer = Buffer.concat([buffer, _buffer], length);
-        });
-        stream.on('error', (err) => reject(err));
-        stream.on('end', () => resolve(buffer));
-      }));
+      .then(([, stream]) => stream2String(stream));
   }
 
   QUIT() {
@@ -69,12 +52,6 @@ class Pop3Command extends Pop3Connection {
     }
     return super.command('QUIT')
       .then(([info]) => this._PASSInfo = '' || info);
-  }
-
-  static listify(str) {
-    return str.split(CRLF)
-      .filter((line) => line)
-      .map((line) => line.split(' '));
   }
 
 }

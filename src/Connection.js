@@ -1,5 +1,5 @@
 import { Socket } from 'net';
-import tls from 'tls';
+import _tls from 'tls';
 import { EventEmitter } from 'events';
 import { Readable } from 'stream';
 
@@ -17,11 +17,13 @@ class Pop3Connection extends EventEmitter {
     host,
     port,
     tls,
+    timeout,
   }) {
     super();
     this.host = host;
     this.port = port || 110;
-    this.tls = tls || false;
+    this.tls = tls;
+    this.timeout = timeout;
     this._socket = null;
     this._stream = null;
     this._command;
@@ -57,8 +59,18 @@ class Pop3Connection extends EventEmitter {
     const socket = new Socket();
     socket.setKeepAlive(true);
     return new Promise((resolve, reject) => {
+      if (typeof this.timeout !== 'undefined') {
+        socket.setTimeout(this.timeout, () => {
+          const err = new Error('timeout');
+          err.eventName = 'timeout';
+          reject(err);
+          this.emit('end', err);
+          this._socket.end();
+          this._socket = null;
+        });
+      }
       if (this.tls) {
-        this._socket = tls.connect({
+        this._socket = _tls.connect({
           host,
           port,
           socket,

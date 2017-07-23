@@ -64,8 +64,12 @@ class Pop3Connection extends EventEmitter {
           const err = new Error('timeout');
           err.eventName = 'timeout';
           reject(err);
-          this.emit('end', err);
-          this.emit('error', err);
+          if (this.listeners('end').length) {
+            this.emit('end', err);
+          }
+          if (this.listeners('error').length) {
+            this.emit('error', err);
+          }
           this._socket.end();
           this._socket = null;
         });

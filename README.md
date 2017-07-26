@@ -42,7 +42,6 @@ options.password|`false`|
 options.host|`false`|
 options.port|`true`|Default to `110`
 options.tls|`true`|Default to `false`
-options.timeout|`true`|Default to `undefined`
 
 * basic
 
@@ -82,7 +81,7 @@ Beyound that, Error may own two property attached by pop3.
 
 property|comment
 ---|---
-`err.eventName`|event name comes from `socket.on`. Include `error`, `close`, `timeout` and `end`
+`err.eventName`|event name comes from `socket.on`. Include `error`, `close` and `end`
 `err.command`|which command causes the error. For example, `PASS example`
 
 # TEST

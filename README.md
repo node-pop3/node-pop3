@@ -82,7 +82,7 @@ command|`{String*}` command messages to Server|`{Promise}` resolve to `{Array[St
 
 method|params|return|comment
 ---|---|---|---
-UIDL|`{String\|Number}` msgNum|`{Promise}` resolve to `{Array}` responsed list|msgNum is optional
+UIDL|`{String\|Number}` msgNum|`{Promise}` resolve to `{Array}` list of responsed|msgNum is optional
 RETR|`{String\|Number}` msgNum|`{Promise}` resolve to `{Stream}` mail stream|
 TOP|`{String\|Number}` msgNum, `{Number}` n|`{Promise}` resolve to `{String}` message of responsed|n is default to 0
 QUIT||`{Promise}` resolve to `{String}` message of response message|

@@ -4,7 +4,7 @@ pop3 command for node. Support **promise** and **stream**
 # Installation
 `npm install node-pop3`
 
-# TEST
+# Test
 e.g. Test the API about `TOP`
 
 `node test -u example@gmail.com -p pwd -h example.pop.com -m TOP 100 10`
@@ -13,7 +13,7 @@ For more detail, please input
 
 `node test --help`
 
-# Examples
+# Example
 * Fetch mail by msgNum:
 ```javascript
   import Pop3Command from 'node-pop3';

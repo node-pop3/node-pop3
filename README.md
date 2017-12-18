@@ -1,9 +1,6 @@
 # node-pop3
 pop3 command for node. Support **promise** and **stream**
 
-# Installation
-`npm install node-pop3`
-
 # Test
 e.g. Test the API about `TOP`
 

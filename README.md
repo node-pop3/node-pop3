@@ -1,6 +1,18 @@
 # node-pop3
 pop3 command for node. Support **promise** and **stream**
 
+# Installation
+`npm install node-pop3`
+
+# TEST
+e.g. Test the API about `TOP`
+
+`node test -u example@gmail.com -p pwd -h example.pop.com -m TOP 100 10`
+
+For more detail, please input
+
+`node test --help`
+
 # Examples
 * Fetch mail by msgNum:
 ```javascript
@@ -48,8 +60,8 @@ options.timeout|`true`|Default to `undefined`
 
 method|params|return
 ---|---|---
-connect||{Promise} resolve to undefined
-command|{String} message send for Server|{Promise} resolve to [{String} response message, {Stream} response from multi line command] from Server
+connect||`{Promise}` resolve to undefined
+command|`{String*}` command messages to Server|`{Promise}` resolve to `{Array[String, Stream]}`, which are message of response and stream of response(if the response has multi lines) from Server
 
 ```javascript
   const pop3 = new Pop3Command({ host: 'pop3.example.com' });
@@ -70,11 +82,10 @@ command|{String} message send for Server|{Promise} resolve to [{String} response
 
 method|params|return|comment
 ---|---|---|---
-connect||{Promise} resolve to {String} response message from Server by `PASS` command|If it is connected, pop3 return Promise.resolve(info). If not, pop3 will connect to Server with `_connect` method and `USER`, `PASS` command
-UIDL|{String\|Number} msgNum|{Promise} resolve to {Array} responsed list|param is optional
-RETR|{String\|Number} msgNum|{Promise} resolve to {Stream} mail stream|
-TOP|{String\|Number} msgNum, {Number} n|{Promise} resolve to {String} responsed string|n is default to 0
-QUIT||{Promise} resolve to {String} response message|
+UIDL|`{String\|Number}` msgNum|`{Promise}` resolve to `{Array}` responsed list|msgNum is optional
+RETR|`{String\|Number}` msgNum|`{Promise}` resolve to `{Stream}` mail stream|
+TOP|`{String\|Number}` msgNum, `{Number}` n|`{Promise}` resolve to `{String}` message of responsed|n is default to 0
+QUIT||`{Promise}` resolve to `{String}` message of response message|
 
 # ERROR
 pop3 will throw new Error with error message from Server.
@@ -84,13 +95,3 @@ property|comment
 ---|---
 `err.eventName`|event name comes from `socket.on`. Include `error`, `close`, `timeout` and `end`
 `err.command`|which command causes the error. For example, `PASS example`
-
-# TEST
-
-e.g. Test the API about `TOP`
-
-`node test -u example@gmail.com -p pwd -h example.pop.com -m TOP 100 10`
-
-For more detail, please input
-
-`node test --help`

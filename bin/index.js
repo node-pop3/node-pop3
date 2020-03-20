@@ -109,7 +109,7 @@ if (['UIDL', 'TOP', 'QUIT', 'RETR'].includes(methodName)) {
   }
 } else {
   await pop3Command.connect();
-  result = await pop3Command[methodName](...options.method.slice(1));
+  result = await pop3Command.command(...options.method);
   if (result[1]) {
     const [info, stream] = result;
     const str = await stream2String(stream);

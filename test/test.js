@@ -18,7 +18,7 @@ describe('CLI', function () {
     expect(stdout).to.equal("'Bye'\n");
   });
 
-  // Todo: For RETR and TOP, we should really seed the account with an
+  // Todo: For RETR, TOP, and LIST, we should really seed the account with an
   //   email to ensure one exists (could add `emailjs` as a dependency)
   it('Runs RETR', async function () {
     const {stdout, stderr} = await spawnAsync('./bin/pop.js', [
@@ -40,6 +40,18 @@ describe('CLI', function () {
       '--method',
       'TOP',
       '1',
+      '1'
+    ]);
+    expect(stderr).to.equal('');
+    expect(stdout).to.contain('Received:');
+  });
+  it('Runs LIST', async function () {
+    this.timeout(40000);
+    const {stdout, stderr} = await spawnAsync('./bin/pop.js', [
+      '--config',
+      'pop.config.json',
+      '--method',
+      'LIST',
       '1'
     ]);
     expect(stderr).to.equal('');

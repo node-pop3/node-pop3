@@ -165,7 +165,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
 
         case 12:
           _context.next = 14;
-          return pop3Command[methodName].apply(pop3Command, _toConsumableArray(options.method.slice(1)));
+          return pop3Command.command.apply(pop3Command, _toConsumableArray(options.method));
 
         case 14:
           result = _context.sent;

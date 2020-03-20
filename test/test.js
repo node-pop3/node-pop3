@@ -21,6 +21,8 @@ describe('CLI', function () {
     const {stdout, stderr} = await spawnAsync('./bin/pop.js', [
       '--config',
       'pop.config.json',
+      '--timeout',
+      '10000',
       '--method',
       'TOP',
       '1',

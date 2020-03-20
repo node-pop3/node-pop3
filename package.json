@@ -33,7 +33,9 @@
   "engines": {
     "node": ">=0.12.18"
   },
-  "dependencies": {},
+  "dependencies": {
+    "regenerator-runtime-only": "^0.8.38"
+  },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.8.7",

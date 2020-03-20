@@ -1,5 +1,9 @@
+#!/usr/bin/env node
+
 /*! Auto-generated file; please modify /bin/index.js instead */
 "use strict";
+
+require("regenerator-runtime/runtime.js");
 
 var _Command = _interopRequireDefault(require("../lib/Command"));
 
@@ -44,7 +48,7 @@ var _process = process,
     mailStructureOptionNames = ['user', 'password', 'host', 'port', 'tls'];
 
 function printHelpAndExit() {
-  var text = 'Usage: pop [options]\r\n' + '\r\n' + 'Example: pop -u example@gmail.com -p pwd -h example.pop3.com -m UIDL\r\n' + '\r\n' + 'Options:\r\n' + '  -u, --user        username\r\n' + '  -p, --password    password\r\n' + '  -h, --host        host of server\r\n' + '  --port            port of server. Default to 110\r\n' + '  --tls             whether to use TLS(SSL). Default to false.\r\n' + '  -m, --method      method and arguments of API in node-pop3. e.g. \'UIDL\', \'RETR 100\' or \'command USER example@gmail.com\'\r\n' + '  --help            print help';
+  var text = 'Usage: pop [options]\r\n' + '\r\n' + 'Example: pop -u example@gmail.com -p pwd -h example.pop3.com -m UIDL\r\n' + '\r\n' + 'Options:\r\n' + '  -u, --user        username\r\n' + '  -p, --password    password\r\n' + '  -h, --host        host of server\r\n' + '  --port            port of server. Defaults to 110\r\n' + '  --tls             whether to use TLS(SSL). Defaults to false.\r\n' + '  -m, --method      method and arguments of API in node-pop3. e.g. \'UIDL\', \'RETR 100\' or \'command USER example@gmail.com\'\r\n' + '  --help            print help';
   console.log(text);
   process.exit(0);
 }

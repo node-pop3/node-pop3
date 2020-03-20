@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+import 'regenerator-runtime/runtime.js';
 import Pop3Command from '../lib/Command';
 
 import {stream2String} from '../lib/helper';
@@ -26,8 +28,8 @@ function printHelpAndExit() {
            + '  -u, --user        username\r\n'
            + '  -p, --password    password\r\n'
            + '  -h, --host        host of server\r\n'
-           + '  --port            port of server. Default to 110\r\n'
-           + '  --tls             whether to use TLS(SSL). Default to false.\r\n'
+           + '  --port            port of server. Defaults to 110\r\n'
+           + '  --tls             whether to use TLS(SSL). Defaults to false.\r\n'
            + '  -m, --method      method and arguments of API in node-pop3. e.g. \'UIDL\', \'RETR 100\' or \'command USER example@gmail.com\'\r\n'
            + '  --help            print help';
   console.log(text);

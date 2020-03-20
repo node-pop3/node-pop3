@@ -3,6 +3,8 @@
 /*! Auto-generated file; please modify /bin/index.js instead */
 "use strict";
 
+var _path = require("path");
+
 require("regenerator-runtime/runtime.js");
 
 var _Command = _interopRequireDefault(require("../lib/Command"));
@@ -49,7 +51,7 @@ var _process = process,
     mailStructureOptionNames = ['user', 'password', 'host', 'port', 'tls'];
 
 function printHelpAndExit() {
-  var text = 'Usage: pop [options]\r\n' + '\r\n' + 'Example: pop -u example@gmail.com -p pwd -h example.pop3.com -m UIDL\r\n' + '\r\n' + 'Options:\r\n' + '  -c, --config      config file (in place of options below)\r\n' + '  -u, --user        username\r\n' + '  -p, --password    password\r\n' + '  -h, --host        host of server\r\n' + '  --port            port of server. Defaults to 110\r\n' + '  --tls             whether to use TLS(SSL). Defaults to false.\r\n' + '  -m, --method      method and arguments of API in node-pop3. e.g. \'UIDL\', \'RETR 100\' or \'command USER example@gmail.com\'\r\n' + '  --help            print help';
+  var text = 'Usage: pop [options]\r\n' + '\r\n' + 'Example: pop -u example@gmail.com -p pwd -h example.pop3.com -m UIDL\r\n' + '\r\n' + 'Options:\r\n' + '  -c, --config      config file (in place of options below)\r\n' + '  -u, --user        username\r\n' + '  -p, --password    password\r\n' + '  -h, --host        host of server\r\n' + '  --port            port of server. Defaults to 110 or 995 if tls is used.\r\n' + '  --tls             whether to use TLS(SSL). Defaults to false.\r\n' + '  -m, --method      method and arguments of API in node-pop3. e.g. \'UIDL\', \'RETR 100\' or \'command USER example@gmail.com\'\r\n' + '  --help            print help';
   console.log(text);
   process.exit(0);
 }
@@ -80,7 +82,7 @@ if (options.help) {
 }
 
 if (options.config) {
-  var configOptions = require(options.config);
+  var configOptions = require((0, _path.resolve)(process.cwd(), options.config[0]));
 
   ['method'].concat(mailStructureOptionNames).forEach(function (optionName) {
     if (optionName in configOptions) {
@@ -93,7 +95,7 @@ for (var _i = 0, _requiredOptionNames = requiredOptionNames; _i < _requiredOptio
   var requiredOptionName = _requiredOptionNames[_i];
 
   if (!options[requiredOptionName]) {
-    console.log(requiredOptionName + ' is required!\r\n');
+    console.error(requiredOptionName + ' is required!');
     printHelpAndExit();
   }
 }

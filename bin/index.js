@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import {resolve as pathResolve} from 'path';
 import 'regenerator-runtime/runtime.js';
 import Pop3Command from '../lib/Command';
 
@@ -30,7 +31,7 @@ function printHelpAndExit() {
            + '  -u, --user        username\r\n'
            + '  -p, --password    password\r\n'
            + '  -h, --host        host of server\r\n'
-           + '  --port            port of server. Defaults to 110\r\n'
+           + '  --port            port of server. Defaults to 110 or 995 if tls is used.\r\n'
            + '  --tls             whether to use TLS(SSL). Defaults to false.\r\n'
            + '  -m, --method      method and arguments of API in node-pop3. e.g. \'UIDL\', \'RETR 100\' or \'command USER example@gmail.com\'\r\n'
            + '  --help            print help';
@@ -62,7 +63,7 @@ if (options.help) {
 }
 
 if (options.config) {
-  const configOptions = require(options.config);
+  const configOptions = require(pathResolve(process.cwd(), options.config[0]));
   ['method', ...mailStructureOptionNames].forEach((optionName) => {
     if (optionName in configOptions) {
       options[optionName] = configOptions[optionName];
@@ -72,7 +73,7 @@ if (options.config) {
 
 for (const requiredOptionName of requiredOptionNames) {
   if (!options[requiredOptionName]) {
-    console.log(requiredOptionName + ' is required!\r\n');
+    console.error(requiredOptionName + ' is required!');
     printHelpAndExit();
   }
 }

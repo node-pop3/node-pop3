@@ -20,7 +20,7 @@ class Pop3Connection extends EventEmitter {
   }) {
     super();
     this.host = host;
-    this.port = port || 110;
+    this.port = port || (tls ? 995 : 110);
     this.tls = tls;
     this.timeout = timeout;
     this._socket = null;

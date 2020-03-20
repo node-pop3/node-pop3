@@ -14,6 +14,13 @@ describe('CLI', function () {
     expect(stderr).to.equal('Invalid alias x\n');
     expect(stdout).to.equal('');
   });
+  it('Errs upon invalid argument', async function () {
+    const {stdout, stderr} = await spawnAsync('./bin/pop.js', [
+      'xyz'
+    ]);
+    expect(stderr).to.equal('Invalid argument xyz\n');
+    expect(stdout).to.equal('');
+  });
   it('Errs upon missing method', async function () {
     let {stdout, stderr} = await spawnAsync('./bin/pop.js', [
       '--config',

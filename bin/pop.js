@@ -75,7 +75,8 @@ if (argv.slice(2).some(function (arg, i, args) {
       options[optionName] = [true];
     }
   } else if (!optionName) {
-    return;
+    console.error('Invalid argument', arg);
+    return true;
   } else if (options[optionName]) {
     options[optionName].push(arg);
   } else {

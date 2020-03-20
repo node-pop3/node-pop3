@@ -40,10 +40,14 @@ function printHelpAndExit() {
 }
 
 let optionName;
-argv.slice(2).forEach(function(arg, i, args) {
+if (argv.slice(2).some(function(arg, i, args) {
   if (arg.charAt(0) === '-') {
     optionName = arg.replace(/-/g, '');
     if ((optionName || ' ').length === 1) {
+      if (!{}.hasOwnProperty.call(alias, optionName)) {
+        console.error('Invalid alias', optionName);
+        return true;
+      }
       optionName = alias[optionName];
     }
     if (i === args.length - 1) {
@@ -56,7 +60,9 @@ argv.slice(2).forEach(function(arg, i, args) {
   } else {
     options[optionName] = [arg];
   }
-});
+})) {
+  process.exit();
+}
 
 if (options.help) {
   printHelpAndExit();
@@ -65,7 +71,7 @@ if (options.help) {
 if (options.config) {
   const configOptions = require(pathResolve(process.cwd(), options.config[0]));
   ['method', ...mailStructureOptionNames].forEach((optionName) => {
-    if (optionName in configOptions) {
+    if (!(optionName in options) && optionName in configOptions) {
       options[optionName] = configOptions[optionName];
     }
   });

@@ -57,11 +57,17 @@ function printHelpAndExit() {
 }
 
 var optionName;
-argv.slice(2).forEach(function (arg, i, args) {
+
+if (argv.slice(2).some(function (arg, i, args) {
   if (arg.charAt(0) === '-') {
     optionName = arg.replace(/-/g, '');
 
     if ((optionName || ' ').length === 1) {
+      if (!{}.hasOwnProperty.call(alias, optionName)) {
+        console.error('Invalid alias', optionName);
+        return true;
+      }
+
       optionName = alias[optionName];
     }
 
@@ -75,7 +81,9 @@ argv.slice(2).forEach(function (arg, i, args) {
   } else {
     options[optionName] = [arg];
   }
-});
+})) {
+  process.exit();
+}
 
 if (options.help) {
   printHelpAndExit();
@@ -85,7 +93,7 @@ if (options.config) {
   var configOptions = require((0, _path.resolve)(process.cwd(), options.config[0]));
 
   ['method'].concat(mailStructureOptionNames).forEach(function (optionName) {
-    if (optionName in configOptions) {
+    if (!(optionName in options) && optionName in configOptions) {
       options[optionName] = configOptions[optionName];
     }
   });

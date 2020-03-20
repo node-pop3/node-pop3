@@ -1,27 +1,28 @@
+'use strict';
 var Pop3Command = require('../lib/Command');
 
 var stream2String = require('../lib/helper').stream2String;
 
 var args = process.argv,
-    options = {},
-    optionName,
-    alias = {
-      u: 'user',
-      p: 'password',
-      h: 'host',
-      m: 'method',
-    },
-    requiredOptionNames = ['user', 'password', 'host', 'method'],
-    mailStructure = {
-      port: 110,
-      tls: false,
-    },
-    mailStructureOptionNames = ['user', 'password', 'host', 'port', 'tls'];
+  options = {},
+  optionName,
+  alias = {
+    u: 'user',
+    p: 'password',
+    h: 'host',
+    m: 'method',
+  },
+  requiredOptionNames = ['user', 'password', 'host', 'method'],
+  mailStructure = {
+    port: 110,
+    tls: false,
+  },
+  mailStructureOptionNames = ['user', 'password', 'host', 'port', 'tls'];
 
 function printHelpAndExit() {
-  var text = 'Usage: node test [options]\r\n'
+  var text = 'Usage: pop [options]\r\n'
            + '\r\n'
-           + 'Example: node test -u example@gmail.com -p pwd -h example.pop3.com -m UIDL\r\n'
+           + 'Example: pop -u example@gmail.com -p pwd -h example.pop3.com -m UIDL\r\n'
            + '\r\n'
            + 'Options:\r\n'
            + '  -u, --user        username\r\n'
@@ -68,8 +69,8 @@ for (var j = 0; j < mailStructureOptionNames.length; j++) {
 }
 
 var pop3Command = new Pop3Command(mailStructure),
-    methodName = options['method'][0],
-    promise;
+  methodName = options['method'][0],
+  promise;
 
 if (['UIDL', 'TOP', 'QUIT', 'RETR'].indexOf(methodName) > -1) {
   promise = pop3Command[methodName].apply(pop3Command, options['method'].slice(1))
@@ -91,13 +92,13 @@ if (['UIDL', 'TOP', 'QUIT', 'RETR'].indexOf(methodName) > -1) {
             return [result[0], str];
           })
         : result;
-    })
+    });
 }
 
 promise.then(function(result) {
   console.dir(result);
   process.exit(0);
 })
-.catch(function(err){
-  throw err;
-});
+  .catch(function(err){
+    throw err;
+  });

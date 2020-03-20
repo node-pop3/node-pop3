@@ -12,7 +12,7 @@ import {
 } from './constant';
 
 class Pop3Connection extends EventEmitter {
-  
+
   constructor({
     host,
     port,
@@ -97,7 +97,7 @@ class Pop3Connection extends EventEmitter {
         if (buffer[0] === 43) {// '+'
           const firstLineEndIndex = buffer.indexOf(CRLF_BUFFER);
           const infoBuffer = buffer.slice(4, firstLineEndIndex);
-          const commandName = (this._command || '').split(' ')[0];
+          const [commandName] = (this._command || '').split(' ');
           let stream = null;
           if (MULTI_LINE_COMMAND_NAME.indexOf(commandName) > -1) {
             this._updateStream();

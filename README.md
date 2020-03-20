@@ -1,17 +1,21 @@
 # node-pop3
-pop3 command for node. Support **promise** and **stream**
 
-# Test
+pop3 command for node. Supports **Promise** and **stream**.
+
+## CLI
+
 e.g. Test the API about `TOP`
 
-`node test -u example@gmail.com -p pwd -h example.pop.com -m TOP 100 10`
+`pop -u example@gmail.com -p pwd -h example.pop.com -m TOP 100 10`
 
 For more detail, please input
 
-`node test --help`
+`pop --help`
 
-# Example
+## Example
+
 * Fetch mail by msgNum:
+
 ```javascript
   import Pop3Command from 'node-pop3';
 
@@ -41,7 +45,9 @@ For more detail, please input
    * ]
   */
 ```
-# API
+
+## API
+
 * constructor(options)
 
 params|optional|comment
@@ -72,7 +78,6 @@ command|`{String*}` command messages to Server|`{Promise}` resolve to `{Array[St
   .then(([info, stream]) => console.log(info)) // 1024 octets
   .then(() => pop3.command('QUIT'))
   .then(([info]) => console.log(info)); // Bye
-
 ```
 
 * common
@@ -84,7 +89,8 @@ RETR|`{String\|Number}` msgNum|`{Promise}` resolve to `{Stream}` mail stream|
 TOP|`{String\|Number}` msgNum, `{Number}` n|`{Promise}` resolve to `{String}` message of responsed|n is default to 0
 QUIT||`{Promise}` resolve to `{String}` message of response message|
 
-# ERROR
+## ERROR
+
 pop3 will throw new Error with error message from Server.
 Beyound that, Error may own two property attached by pop3.
 

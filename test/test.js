@@ -46,7 +46,7 @@ describe('CLI', function () {
     expect(stdout).to.contain('Received:');
   });
   it('Runs LIST', async function () {
-    this.timeout(40000);
+    this.timeout(20000);
     const {stdout, stderr} = await spawnAsync('./bin/pop.js', [
       '--config',
       'pop.config.json',

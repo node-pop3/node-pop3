@@ -2,24 +2,12 @@
   "extends": "eslint:recommended",
   "parserOptions": {
     "sourceType": "module",
-    "ecmaVersion": 2015
+    "ecmaVersion": 2017
   },
   "env": {
     "es6": true,
     "node": true
   },
-  "overrides": [
-    {
-      "files": "bin/**",
-      "parserOptions": {
-        "sourceType": "script"
-      },
-      "rules": {
-        "no-var": 0,
-        "prefer-destructuring": 0
-      }
-    }
-  ],
   "rules": {
     "strict": ["error"],
     "indent": ["error", 2],

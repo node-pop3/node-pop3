@@ -18,41 +18,44 @@ class Pop3Command extends Pop3Connection {
     this._PASSInfo = '';
   }
 
-  _connect() {
+  async _connect() {
     if (this._socket) {
-      return Promise.resolve(this._PASSInfo);
+      return this._PASSInfo;
     }
-    return super.connect()
-      .then(() => super.command('USER', this.user))
-      .then(() => super.command('PASS', this.password))
-      .then(([info]) => this._PASSInfo = info);
+    await super.connect();
+    await super.command('USER', this.user);
+    const [info] = await super.command('PASS', this.password);
+    this._PASSInfo = info;
+    return this._PASSInfo;
   }
 
-  UIDL(msgNumber = '') {
-    return this._connect()
-      .then(() => super.command('UIDL', msgNumber))
-      .then(([, stream]) => stream2String(stream))
-      .then(listify);
+  async UIDL(msgNumber = '') {
+    await this._connect();
+    const [, stream] = await super.command('UIDL', msgNumber);
+    const str = await stream2String(stream);
+    return listify(str);
   }
 
-  RETR(msgNumber) {
-    return this._connect()
-      .then(() => super.command('RETR', msgNumber))
-      .then(([, stream]) => stream);
+  async RETR(msgNumber) {
+    await this._connect();
+    const [, stream] = await super.command('RETR', msgNumber);
+    return stream;
   }
 
-  TOP(msgNumber, n = 0) {
-    return this._connect()
-      .then(() => super.command('TOP', msgNumber, n))
-      .then(([, stream]) => stream2String(stream));
+  async TOP(msgNumber, n = 0) {
+    await this._connect();
+    const [, stream] = await super.command('TOP', msgNumber, n);
+    return stream2String(stream);
   }
 
-  QUIT() {
+  async QUIT() {
     if (!this._socket) {
-      return Promise.resolve(this._PASSInfo = '' || 'Bye');
+      this._PASSInfo = '' || 'Bye';
+      return this._PASSInfo;
     }
-    return super.command('QUIT')
-      .then(([info]) => this._PASSInfo = '' || info);
+    const [info] = await super.command('QUIT');
+    this._PASSInfo = '' || info;
+    return this._PASSInfo;
   }
 
 }

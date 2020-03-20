@@ -137,16 +137,17 @@ class Pop3Connection extends EventEmitter {
     });
   }
 
-  command(...args) {
+  async command(...args) {
     this._command = args.join(' ');
-    return new Promise((resolve, reject) => {
+    await new Promise((resolve, reject) => {
       if (!this._stream) {
         return resolve();
       }
       this.once('end', (err) => {
         return err ? reject(err) : resolve();
       });
-    }).then(() => new Promise((resolve, reject) => {
+    });
+    return new Promise((resolve, reject) => {
       const rejectFn = (err) => reject(err);
       this.once('error', rejectFn);
       this.once('response', (info, stream) => {
@@ -154,7 +155,7 @@ class Pop3Connection extends EventEmitter {
         resolve([info, stream]);
       });
       this._socket.write(`${this._command}${CRLF}`, 'utf8');
-    }));
+    });
   }
 
 }

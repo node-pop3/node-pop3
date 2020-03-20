@@ -4,12 +4,12 @@
   "description": "POP3 client for node",
   "main": "./lib/Command.js",
   "bin": {
-    "pop": "./bin/index.js"
+    "pop": "./bin/pop.js"
   },
   "scripts": {
-    "cli": "node ./bin/index.js",
+    "cli": "node ./bin/pop.js",
     "eslint": "eslint .",
-    "babel": "babel src -d lib"
+    "babel": "babel src -d lib && babel bin/index.js -o bin/bin.js"
   },
   "repository": {
     "type": "git",
@@ -38,6 +38,7 @@
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.8.7",
     "@babel/preset-env": "^7.8.7",
+    "@comandeer/babel-plugin-banner": "^5.0.0",
     "eslint": "^6.8.0"
   }
 }

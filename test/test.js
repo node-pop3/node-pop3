@@ -69,6 +69,57 @@ describe('CLI', function () {
     expect(stderr).to.equal('');
     expect(stdout).to.contain("[ [ '1',");
   });
+  it('Runs NOOP', async function () {
+    this.timeout(20000);
+    const {stdout, stderr} = await spawnAsync('./bin/pop.js', [
+      '--config',
+      'pop.config.json',
+      '--method',
+      'NOOP'
+      // '1'
+    ]);
+    expect(stderr).to.equal('');
+    expect(stdout).to.contain('OK');
+  });
+  it('Runs STAT', async function () {
+    this.timeout(20000);
+    const {stdout, stderr} = await spawnAsync('./bin/pop.js', [
+      '--config',
+      'pop.config.json',
+      '--method',
+      'STAT'
+      // '1'
+    ]);
+    expect(stderr).to.equal('');
+    expect(stdout).to.contain("[ [ '1',");
+  });
+  it('Runs RSET', async function () {
+    this.timeout(20000);
+    const {stdout, stderr} = await spawnAsync('./bin/pop.js', [
+      '--config',
+      'pop.config.json',
+      '--method',
+      'RSET'
+      // '1'
+    ]);
+    expect(stderr).to.equal('');
+    expect(stdout).to.contain("[ [ '1',");
+  });
+  it('Runs DELE', async function () {
+    this.timeout(20000);
+    const {stdout, stderr} = await spawnAsync('./bin/pop.js', [
+      '--config',
+      'pop.config.json',
+      '--method',
+      'DELE',
+      '1'
+    ]);
+    expect(stderr).to.equal('');
+    expect(stdout).to.contain("[ [ '1',");
+  });
+
+  // Todo: Test APOP
+
   describe('Errors', function () {
     it('Errs upon invalid alias', async function () {
       const {stdout, stderr} = await spawnAsync('./bin/pop.js', [

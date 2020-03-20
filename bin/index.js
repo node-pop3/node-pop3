@@ -39,11 +39,14 @@ function printHelpAndExit() {
 }
 
 let optionName;
-argv.slice(2).forEach(function(arg) {
+argv.slice(2).forEach(function(arg, i, args) {
   if (arg.charAt(0) === '-') {
     optionName = arg.replace(/-/g, '');
     if ((optionName || ' ').length === 1) {
       optionName = alias[optionName];
+    }
+    if (i === args.length - 1) {
+      options[optionName] = [true];
     }
   } else if (!optionName) {
     return;
@@ -54,7 +57,7 @@ argv.slice(2).forEach(function(arg) {
   }
 });
 
-if (optionName === 'help' || options.help) {
+if (options.help) {
   printHelpAndExit();
 }
 

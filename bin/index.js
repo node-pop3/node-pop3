@@ -7,6 +7,7 @@ import {stream2String} from '../lib/helper';
 const {argv} = process,
   options = {},
   alias = {
+    c: 'config',
     u: 'user',
     p: 'password',
     h: 'host',
@@ -25,6 +26,7 @@ function printHelpAndExit() {
            + 'Example: pop -u example@gmail.com -p pwd -h example.pop3.com -m UIDL\r\n'
            + '\r\n'
            + 'Options:\r\n'
+           + '  -c, --config      config file (in place of options below)\r\n'
            + '  -u, --user        username\r\n'
            + '  -p, --password    password\r\n'
            + '  -h, --host        host of server\r\n'
@@ -54,6 +56,15 @@ argv.slice(2).forEach(function(arg) {
 
 if (optionName === 'help' || options.help) {
   printHelpAndExit();
+}
+
+if (options.config) {
+  const configOptions = require(options.config);
+  ['method', ...mailStructureOptionNames].forEach((optionName) => {
+    if (optionName in configOptions) {
+      options[optionName] = configOptions[optionName];
+    }
+  });
 }
 
 for (const requiredOptionName of requiredOptionNames) {

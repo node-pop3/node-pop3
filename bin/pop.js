@@ -161,7 +161,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
 
         case 10:
           _context.next = 12;
-          return pop3Command.connect();
+          return pop3Command._connect();
 
         case 12:
           _context.next = 14;

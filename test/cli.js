@@ -23,7 +23,7 @@ describe('CLI', function () {
         '--timeout',
         '10'
       ]);
-      expect(stderr).to.contain('UnhandledPromiseRejectionWarning: Error: timeout');
+      expect(stderr).to.contain('Error: timeout');
       expect(stdout).to.equal('');
     });
   });
@@ -195,6 +195,19 @@ describe('CLI', function () {
       ]));
       expect(stderr).to.equal('method is required!\n');
       expect(stdout).to.contain('Usage: pop [options]');
+    });
+
+    it('Errs on bad RETR', async function () {
+      this.timeout(60000);
+      const {stdout, stderr} = await spawnAsync('./bin/pop.js', [
+        '--config',
+        'pop.config.json',
+        '--method',
+        'RETR',
+        '0'
+      ]);
+      expect(stderr).to.contain("There's no message 0");
+      expect(stdout).to.equal('');
     });
   });
 });

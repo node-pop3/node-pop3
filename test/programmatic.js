@@ -30,4 +30,13 @@ describe('Programmatic', async function () {
     stream.emit('error', new Error('oops'));
     return prom;
   });
+  it('Defaults programmatically to 110 with no port or tls', async function () {
+    const pop3Command = new Pop3Command({
+      ...config, port: undefined, tls: false
+    });
+    await pop3Command._connect();
+    await pop3Command.QUIT();
+
+    expect(true).to.be.true;
+  });
 });

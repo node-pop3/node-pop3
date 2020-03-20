@@ -114,19 +114,27 @@ const [methodName] = options.method;
 (async () => {
 
 let result;
-if (['UIDL', 'TOP', 'QUIT', 'RETR'].includes(methodName)) {
-  result = await pop3Command[methodName](...options.method.slice(1));
-  if (methodName === 'RETR') {
-    result = await stream2String(result);
+try {
+  if (['UIDL', 'TOP', 'QUIT', 'RETR'].includes(methodName)) {
+    result = await pop3Command[methodName](...options.method.slice(1));
+    if (methodName === 'RETR') {
+      result = await stream2String(result);
+    }
+  } else {
+    await pop3Command._connect();
+    result = await pop3Command.command(...options.method);
+    if (result[1]) {
+      const [info, stream] = result;
+      const str = await stream2String(stream);
+      result = [info, str];
+    }
   }
-} else {
-  await pop3Command._connect();
-  result = await pop3Command.command(...options.method);
-  if (result[1]) {
-    const [info, stream] = result;
-    const str = await stream2String(stream);
-    result = [info, str];
+  if (methodName !== 'QUIT') {
+    await pop3Command.QUIT();
   }
+} catch (err) {
+  console.error(err);
+  process.exit();
 }
 
 console.dir(result);

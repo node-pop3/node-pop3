@@ -12,7 +12,8 @@
     "babel-src": "babel src -d lib --source-maps",
     "babel-bin": "rm bin/pop.js && babel bin/index.js -o bin/pop.js --source-maps && chmod 0755 bin/pop.js",
     "babel": "npm run babel-src && npm run babel-bin",
-    "test": "rm -Rf .nyc_output && rm -Rf ./node_modules/.cache && npm run babel && nyc mocha --require esm --require chai/register-expect --exit"
+    "mocha": "mocha --require esm --require chai/register-expect --exit",
+    "test": "rm -Rf .nyc_output && rm -Rf ./node_modules/.cache && npm run babel && nyc npm run mocha"
   },
   "nyc": {
     "reporter": [

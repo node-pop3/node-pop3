@@ -140,66 +140,87 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
+          _context.prev = 0;
+
           if (!['UIDL', 'TOP', 'QUIT', 'RETR'].includes(methodName)) {
-            _context.next = 10;
+            _context.next = 11;
             break;
           }
 
-          _context.next = 3;
+          _context.next = 4;
           return pop3Command[methodName].apply(pop3Command, _toConsumableArray(options.method.slice(1)));
 
-        case 3:
+        case 4:
           result = _context.sent;
 
           if (!(methodName === 'RETR')) {
-            _context.next = 8;
+            _context.next = 9;
             break;
           }
 
-          _context.next = 7;
+          _context.next = 8;
           return (0, _helper.stream2String)(result);
 
-        case 7:
+        case 8:
           result = _context.sent;
 
-        case 8:
-          _context.next = 21;
+        case 9:
+          _context.next = 22;
           break;
 
-        case 10:
-          _context.next = 12;
+        case 11:
+          _context.next = 13;
           return pop3Command._connect();
 
-        case 12:
-          _context.next = 14;
+        case 13:
+          _context.next = 15;
           return pop3Command.command.apply(pop3Command, _toConsumableArray(options.method));
 
-        case 14:
+        case 15:
           result = _context.sent;
 
           if (!result[1]) {
-            _context.next = 21;
+            _context.next = 22;
             break;
           }
 
           _result = result, _result2 = _slicedToArray(_result, 2), info = _result2[0], stream = _result2[1];
-          _context.next = 19;
+          _context.next = 20;
           return (0, _helper.stream2String)(stream);
 
-        case 19:
+        case 20:
           str = _context.sent;
           result = [info, str];
 
-        case 21:
+        case 22:
+          if (!(methodName !== 'QUIT')) {
+            _context.next = 25;
+            break;
+          }
+
+          _context.next = 25;
+          return pop3Command.QUIT();
+
+        case 25:
+          _context.next = 31;
+          break;
+
+        case 27:
+          _context.prev = 27;
+          _context.t0 = _context["catch"](0);
+          console.error(_context.t0);
+          process.exit();
+
+        case 31:
           console.dir(result);
           process.exit(0);
 
-        case 23:
+        case 33:
         case "end":
           return _context.stop();
       }
     }
-  }, _callee);
+  }, _callee, null, [[0, 27]]);
 }))();
 
 //# sourceMappingURL=pop.js.map

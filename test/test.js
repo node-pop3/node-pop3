@@ -57,6 +57,18 @@ describe('CLI', function () {
     expect(stderr).to.equal('');
     expect(stdout).to.contain('Received:');
   });
+  it('Runs UIDL', async function () {
+    this.timeout(20000);
+    const {stdout, stderr} = await spawnAsync('./bin/pop.js', [
+      '--config',
+      'pop.config.json',
+      '--method',
+      'UIDL'
+      // '1'
+    ]);
+    expect(stderr).to.equal('');
+    expect(stdout).to.contain("[ [ '1',");
+  });
   describe('Errors', function () {
     it('Errs upon invalid alias', async function () {
       const {stdout, stderr} = await spawnAsync('./bin/pop.js', [

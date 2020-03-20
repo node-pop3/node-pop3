@@ -10,7 +10,7 @@
     "cli": "node ./bin/pop.js",
     "eslint": "eslint .",
     "babel-src": "babel src -d lib --source-maps",
-    "babel-bin": "babel bin/index.js -o bin/pop.js --source-maps",
+    "babel-bin": "rm bin/pop.js && babel bin/index.js -o bin/pop.js --source-maps && chmod 0755 bin/pop.js",
     "babel": "npm run babel-src && npm run babel-bin",
     "test": "npm run babel && nyc mocha --require esm --require chai/register-expect --exit"
   },

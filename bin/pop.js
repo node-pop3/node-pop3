@@ -122,9 +122,13 @@ for (var _i2 = 0, _mailStructureOptionN = mailStructureOptionNames; _i2 < _mailS
   mailStructure[_optionName] = (options[_optionName] || [])[0] || mailStructure[_optionName];
 }
 
-var pop3Command = new _Command["default"](mailStructure),
-    _options$method = _slicedToArray(options.method, 1),
-    methodName = _options$method[0];
+var pop3Command = new _Command["default"](mailStructure);
+
+var _options$method = _slicedToArray(options.method, 1),
+    methodName = _options$method[0]; // Todo: Might want to report this as nyc doesn't seem to pick this up,
+//   despite it running
+// istanbul ignore next
+
 
 _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
   var result, _result, _result2, info, stream, str;

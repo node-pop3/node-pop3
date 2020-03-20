@@ -93,12 +93,17 @@ if (options.tls && options.tls[0]) {
   mailStructure.port = '995';
 }
 for (const _optionName of mailStructureOptionNames) {
-  mailStructure[_optionName] = (options[_optionName] || [])[0] || mailStructure[_optionName];
+  mailStructure[_optionName] = (
+    options[_optionName] || []
+  )[0] || mailStructure[_optionName];
 }
 
-const pop3Command = new Pop3Command(mailStructure),
-  [methodName] = options.method;
+const pop3Command = new Pop3Command(mailStructure);
+const [methodName] = options.method;
 
+// Todo: Might want to report this as nyc doesn't seem to pick this up,
+//   despite it running
+// istanbul ignore next
 (async () => {
 
 let result;

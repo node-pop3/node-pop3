@@ -1,8 +1,6 @@
 import spawnAsync from '@expo/spawn-async';
 
 describe('CLI', function () {
-  this.timeout(30000);
-
   describe('Basic commands', function () {
     it('Gets help', async function () {
       const {stdout, stderr} = await spawnAsync('./bin/pop.js', ['--help']);
@@ -14,9 +12,24 @@ describe('CLI', function () {
       expect(stderr).to.equal('user is required!\n');
       expect(stdout).to.contain('Usage: pop [options]');
     });
+
+    it('Times out', async function () {
+      this.timeout(40000);
+      const {stdout, stderr} = await spawnAsync('./bin/pop.js', [
+        '--config',
+        'pop.config.json',
+        '--method',
+        'LIST',
+        '--timeout',
+        '10'
+      ]);
+      expect(stderr).to.contain('UnhandledPromiseRejectionWarning: Error: timeout');
+      expect(stdout).to.equal('');
+    });
   });
 
   describe('POP commands', function () {
+    this.timeout(60000);
     it('Runs QUIT', async function () {
       const {stdout, stderr} = await spawnAsync('./bin/pop.js', [
         '--config',
@@ -45,8 +58,6 @@ describe('CLI', function () {
       const {stdout, stderr} = await spawnAsync('./bin/pop.js', [
         '--config',
         'pop.config.json',
-        '--timeout',
-        '10000',
         '--method',
         'TOP',
         '1',
@@ -56,7 +67,6 @@ describe('CLI', function () {
       expect(stdout).to.contain('Received:');
     });
     it('Runs LIST', async function () {
-      this.timeout(40000);
       const {stdout, stderr} = await spawnAsync('./bin/pop.js', [
         '--config',
         'pop.config.json',
@@ -127,6 +137,7 @@ describe('CLI', function () {
 
   describe('CLI Errors', function () {
     it('Errs with bad user/pass', async function () {
+      this.timeout(10000);
       const {stdout, stderr} = await spawnAsync('./bin/pop.js', [
         '--user',
         'brett@example.name',

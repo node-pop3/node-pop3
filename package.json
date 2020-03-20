@@ -12,7 +12,7 @@
     "babel-src": "babel src -d lib --source-maps",
     "babel-bin": "babel bin/index.js -o bin/pop.js --source-maps",
     "babel": "npm run babel-src && npm run babel-bin",
-    "test": "nyc mocha --require esm --require chai/register-expect"
+    "test": "npm run babel && nyc mocha --require esm --require chai/register-expect"
   },
   "repository": {
     "type": "git",

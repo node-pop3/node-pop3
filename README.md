@@ -8,6 +8,10 @@ e.g. Test the API about `TOP`
 
 `pop -u example@gmail.com -p pwd -h example.pop.com -m TOP 100 10`
 
+or pass in some or all of the config in a designated config file (JSON or JS):
+
+`pop -c pop.config.js -m TOP 100 10`
+
 For more detail, please input
 
 `pop --help`

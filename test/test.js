@@ -1,7 +1,7 @@
 import spawnAsync from '@expo/spawn-async';
 
 describe('CLI', function () {
-  this.timeout(10000);
+  this.timeout(20000);
   it('Gets help', async function () {
     const {stdout, stderr} = await spawnAsync('./bin/pop.js', ['--help']);
     expect(stderr).to.equal('');
@@ -23,11 +23,11 @@ describe('CLI', function () {
       'pop.config.json',
       '--method',
       'TOP',
-      '100',
-      '10'
+      '1',
+      '1'
     ]);
     expect(stderr).to.equal('');
-    expect(stdout).to.equal('');
+    expect(stdout).to.contain('Received:');
   });
   describe('Errors', function () {
     it('Errs upon invalid alias', async function () {

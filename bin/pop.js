@@ -88,7 +88,8 @@ var pop3Command = new _Command["default"](mailStructure),
     methodName = _options$method[0];
 
 _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-  var result, str;
+  var result, _result, _result2, info, stream, str;
+
   return regeneratorRuntime.wrap(function _callee$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
@@ -116,7 +117,7 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
           result = _context.sent;
 
         case 8:
-          _context.next = 20;
+          _context.next = 21;
           break;
 
         case 10:
@@ -131,22 +132,23 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
           result = _context.sent;
 
           if (!result[1]) {
-            _context.next = 20;
+            _context.next = 21;
             break;
           }
 
-          _context.next = 18;
-          return (0, _helper.stream2String)(result[1]);
+          _result = result, _result2 = _slicedToArray(_result, 2), info = _result2[0], stream = _result2[1];
+          _context.next = 19;
+          return (0, _helper.stream2String)(stream);
 
-        case 18:
+        case 19:
           str = _context.sent;
-          result = [result[0], str];
+          result = [info, str];
 
-        case 20:
+        case 21:
           console.dir(result);
           process.exit(0);
 
-        case 22:
+        case 23:
         case "end":
           return _context.stop();
       }

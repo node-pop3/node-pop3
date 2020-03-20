@@ -12,7 +12,6 @@ import {
 } from './constant';
 
 class Pop3Connection extends EventEmitter {
-
   constructor({
     host,
     port,
@@ -157,7 +156,6 @@ class Pop3Connection extends EventEmitter {
       this._socket.write(`${this._command}${CRLF}`, 'utf8');
     });
   }
-
 }
 
 export default Pop3Connection;

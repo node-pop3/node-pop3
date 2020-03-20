@@ -3,7 +3,6 @@ import Pop3Connection from './Connection';
 import { stream2String, listify } from './helper';
 
 class Pop3Command extends Pop3Connection {
-
   constructor({
     user,
     password,
@@ -57,7 +56,6 @@ class Pop3Command extends Pop3Connection {
     this._PASSInfo = '' || info;
     return this._PASSInfo;
   }
-
 }
 
 export default Pop3Command;

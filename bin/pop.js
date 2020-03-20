@@ -95,7 +95,7 @@ if (options.config) {
 
   ['method'].concat(mailStructureOptionNames).forEach(function (optionName) {
     if (!(optionName in options) && optionName in configOptions) {
-      options[optionName] = configOptions[optionName];
+      options[optionName] = [configOptions[optionName]];
     }
   });
 }
@@ -111,6 +111,10 @@ for (var _i = 0, _requiredOptionNames = requiredOptionNames; _i < _requiredOptio
 
 if (options.timeout) {
   options.timeout[0] = parseFloat(options.timeout[0]);
+}
+
+if (options.tls && options.tls[0]) {
+  mailStructure.port = '995';
 }
 
 for (var _i2 = 0, _mailStructureOptionN = mailStructureOptionNames; _i2 < _mailStructureOptionN.length; _i2++) {

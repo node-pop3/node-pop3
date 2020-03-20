@@ -73,7 +73,7 @@ if (options.config) {
   const configOptions = require(pathResolve(process.cwd(), options.config[0]));
   ['method', ...mailStructureOptionNames].forEach((optionName) => {
     if (!(optionName in options) && optionName in configOptions) {
-      options[optionName] = configOptions[optionName];
+      options[optionName] = [configOptions[optionName]];
     }
   });
 }
@@ -89,6 +89,9 @@ if (options.timeout) {
   options.timeout[0] = parseFloat(options.timeout[0]);
 }
 
+if (options.tls && options.tls[0]) {
+  mailStructure.port = '995';
+}
 for (const _optionName of mailStructureOptionNames) {
   mailStructure[_optionName] = (options[_optionName] || [])[0] || mailStructure[_optionName];
 }

@@ -17,6 +17,18 @@ describe('CLI', function () {
     expect(stderr).to.equal('');
     expect(stdout).to.equal("'Bye'\n");
   });
+  it('Runs TOP', async function () {
+    const {stdout, stderr} = await spawnAsync('./bin/pop.js', [
+      '--config',
+      'pop.config.json',
+      '--method',
+      'TOP',
+      '100',
+      '10'
+    ]);
+    expect(stderr).to.equal('');
+    expect(stdout).to.equal('');
+  });
   describe('Errors', function () {
     it('Errs upon invalid alias', async function () {
       const {stdout, stderr} = await spawnAsync('./bin/pop.js', [

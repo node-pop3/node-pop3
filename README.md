@@ -71,8 +71,8 @@ options.timeout|`true`|Default to `undefined`
 
 method|params|return
 ---|---|---
-connect||`{Promise}` resolve to undefined
-command|`{String*}` command messages to Server|`{Promise}` resolve to `{Array[String, Stream]}`, which are message of response and stream of response(if the response has multi lines) from Server
+connect||`{Promise}` resolve to `undefined`
+command|`{String*}` command messages to Server|`{Promise}` resolve to `{Array[String, Stream]}`, which are messages of response and stream of response (if the response has multiple lines) from Server
 
 ```js
 const pop3 = new Pop3Command({ host: 'pop3.example.com' });
@@ -107,8 +107,8 @@ QUIT||`{Promise}` resolve to `{String}` message of response message|
 
 ## ERROR
 
-pop3 will throw new Error with error message from Server.
-Beyound that, Error may own two property attached by pop3.
+pop3 will throw new Error's with an error message from Server.
+Beyond that, Error may have two properties attached by pop3.
 
 property|comment
 ---|---

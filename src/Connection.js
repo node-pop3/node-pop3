@@ -87,13 +87,13 @@ class Pop3Connection extends EventEmitter {
         if (this._stream) {
           return this._pushStream(buffer);
         }
-        if (buffer[0] === 45) {// '-'
+        if (buffer[0] === 45) { // '-'
           const err = new Error(buffer.slice(5, -2));
           err.eventName = 'error';
           err.command = this._command;
           return this.emit('error', err);
         }
-        if (buffer[0] === 43) {// '+'
+        if (buffer[0] === 43) { // '+'
           const firstLineEndIndex = buffer.indexOf(CRLF_BUFFER);
           const infoBuffer = buffer.slice(4, firstLineEndIndex);
           const [commandName] = (this._command || '').split(' ');

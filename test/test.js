@@ -15,9 +15,9 @@ describe('CLI', function () {
       expect(stderr).to.equal('');
       expect(stdout).to.contain('Usage: pop [options]');
     });
-    it('Ignores empty command (treats as help)', async function () {
+    it('Ignores empty command', async function () {
       const {stdout, stderr} = await spawnAsync('./bin/pop.js', ['--']);
-      expect(stderr).to.equal('');
+      expect(stderr).to.equal('user is required!\n');
       expect(stdout).to.contain('Usage: pop [options]');
     });
   });
@@ -131,19 +131,22 @@ describe('CLI', function () {
     // Todo: Test APOP
   });
 
-  describe('Programmatic', async function () {
-    it('Runs command', async function () {
-      const pop3Command = new Pop3Command(config);
-      await pop3Command.connect();
-      await pop3Command.command('USER', config.user);
-      await pop3Command.command('PASS', config.password);
-      const [, stream] = await pop3Command.command('TOP', '1', '0');
-      const str = await stream2String(stream);
-      expect(str).to.contain('Received:');
+  describe('CLI Errors', function () {
+    it('Errs with bad user/pass', async function () {
+      const {stdout, stderr} = await spawnAsync('./bin/pop.js', [
+        '--user',
+        'brett@example.name',
+        '--password',
+        '123456',
+        '--host',
+        'example.name',
+        '--method',
+        'NOOP'
+        // '1'
+      ]);
+      expect(stderr).to.contain('getaddrinfo ENOTFOUND');
+      expect(stdout).to.equal('');
     });
-  });
-
-  describe('Errors', function () {
     it('Errs upon invalid alias', async function () {
       const {stdout, stderr} = await spawnAsync('./bin/pop.js', [
         '-x'
@@ -174,6 +177,18 @@ describe('CLI', function () {
       ]));
       expect(stderr).to.equal('method is required!\n');
       expect(stdout).to.contain('Usage: pop [options]');
+    });
+  });
+
+  describe('Programmatic', async function () {
+    it('Runs command', async function () {
+      const pop3Command = new Pop3Command(config);
+      await pop3Command.connect();
+      await pop3Command.command('USER', config.user);
+      await pop3Command.command('PASS', config.password);
+      const [, stream] = await pop3Command.command('TOP', '1', '0');
+      const str = await stream2String(stream);
+      expect(str).to.contain('Received:');
     });
   });
 });

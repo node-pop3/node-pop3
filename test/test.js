@@ -9,9 +9,14 @@ import config from '../pop.config.json';
 describe('CLI', function () {
   this.timeout(30000);
 
-  describe('help', function () {
+  describe('Basic commands', function () {
     it('Gets help', async function () {
       const {stdout, stderr} = await spawnAsync('./bin/pop.js', ['--help']);
+      expect(stderr).to.equal('');
+      expect(stdout).to.contain('Usage: pop [options]');
+    });
+    it('Ignores empty command (treats as help)', async function () {
+      const {stdout, stderr} = await spawnAsync('./bin/pop.js', ['--']);
       expect(stderr).to.equal('');
       expect(stdout).to.contain('Usage: pop [options]');
     });

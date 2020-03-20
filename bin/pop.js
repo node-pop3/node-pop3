@@ -62,7 +62,7 @@ if (argv.slice(2).some(function (arg, i, args) {
   if (arg.charAt(0) === '-') {
     optionName = arg.replace(/-/g, '');
 
-    if ((optionName || ' ').length === 1) {
+    if ((optionName || '').length === 1) {
       if (!{}.hasOwnProperty.call(alias, optionName)) {
         console.error('Invalid alias', optionName);
         return true;
@@ -71,7 +71,7 @@ if (argv.slice(2).some(function (arg, i, args) {
       optionName = alias[optionName];
     }
 
-    if (i === args.length - 1) {
+    if (optionName && i === args.length - 1) {
       options[optionName] = [true];
     }
   } else if (!optionName) {

@@ -68,35 +68,24 @@ for (const _optionName of mailStructureOptionNames) {
 const pop3Command = new Pop3Command(mailStructure),
   [methodName] = options.method;
 
-let promise;
+(async () => {
 
+let result;
 if (['UIDL', 'TOP', 'QUIT', 'RETR'].includes(methodName)) {
-  promise = pop3Command[methodName](...options.method.slice(1))
-    .then(function(result) {
-      if (methodName === 'RETR') {
-        return stream2String(result);
-      }
-      return result;
-    });
+  result = await pop3Command[methodName](...options.method.slice(1));
+  if (methodName === 'RETR') {
+    result = await stream2String(result);
+  }
 } else {
-  promise = pop3Command.connect()
-    .then(function() {
-      return pop3Command[methodName](...options.method.slice(1));
-    })
-    .then(function(result) {
-      return result[1]
-        ? stream2String(result[1] || new Buffer())
-          .then(function(str) {
-            return [result[0], str];
-          })
-        : result;
-    });
+  await pop3Command.connect();
+  result = await pop3Command[methodName](...options.method.slice(1));
+  if (result[1]) {
+    const str = await stream2String(result[1]);
+    result = [result[0], str];
+  }
 }
 
-promise.then(function(result) {
-  console.dir(result);
-  process.exit(0);
-})
-  .catch(function(err){
-    throw err;
-  });
+console.dir(result);
+process.exit(0);
+
+})();

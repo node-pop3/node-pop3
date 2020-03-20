@@ -10,8 +10,7 @@
   },
   "rules": {
     "strict": ["error"],
-    "indent": ["error", 2],
-
+    "indent": ["error", 2, {"outerIIFEBody": 0}],
     "semi": ["error"],
     "prefer-const": ["error"],
     "no-var": ["error"],

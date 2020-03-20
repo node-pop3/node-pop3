@@ -15,6 +15,10 @@ function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
 
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
@@ -83,29 +87,69 @@ var pop3Command = new _Command["default"](mailStructure),
     _options$method = _slicedToArray(options.method, 1),
     methodName = _options$method[0];
 
-var promise;
+_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+  var result, str;
+  return regeneratorRuntime.wrap(function _callee$(_context) {
+    while (1) {
+      switch (_context.prev = _context.next) {
+        case 0:
+          if (!['UIDL', 'TOP', 'QUIT', 'RETR'].includes(methodName)) {
+            _context.next = 10;
+            break;
+          }
 
-if (['UIDL', 'TOP', 'QUIT', 'RETR'].includes(methodName)) {
-  promise = pop3Command[methodName].apply(pop3Command, _toConsumableArray(options.method.slice(1))).then(function (result) {
-    if (methodName === 'RETR') {
-      return (0, _helper.stream2String)(result);
+          _context.next = 3;
+          return pop3Command[methodName].apply(pop3Command, _toConsumableArray(options.method.slice(1)));
+
+        case 3:
+          result = _context.sent;
+
+          if (!(methodName === 'RETR')) {
+            _context.next = 8;
+            break;
+          }
+
+          _context.next = 7;
+          return (0, _helper.stream2String)(result);
+
+        case 7:
+          result = _context.sent;
+
+        case 8:
+          _context.next = 20;
+          break;
+
+        case 10:
+          _context.next = 12;
+          return pop3Command.connect();
+
+        case 12:
+          _context.next = 14;
+          return pop3Command[methodName].apply(pop3Command, _toConsumableArray(options.method.slice(1)));
+
+        case 14:
+          result = _context.sent;
+
+          if (!result[1]) {
+            _context.next = 20;
+            break;
+          }
+
+          _context.next = 18;
+          return (0, _helper.stream2String)(result[1]);
+
+        case 18:
+          str = _context.sent;
+          result = [result[0], str];
+
+        case 20:
+          console.dir(result);
+          process.exit(0);
+
+        case 22:
+        case "end":
+          return _context.stop();
+      }
     }
-
-    return result;
-  });
-} else {
-  promise = pop3Command.connect().then(function () {
-    return pop3Command[methodName].apply(pop3Command, _toConsumableArray(options.method.slice(1)));
-  }).then(function (result) {
-    return result[1] ? (0, _helper.stream2String)(result[1] || new Buffer()).then(function (str) {
-      return [result[0], str];
-    }) : result;
-  });
-}
-
-promise.then(function (result) {
-  console.dir(result);
-  process.exit(0);
-})["catch"](function (err) {
-  throw err;
-});
+  }, _callee);
+}))();

@@ -9,7 +9,7 @@
   "scripts": {
     "cli": "node ./bin/pop.js",
     "eslint": "eslint .",
-    "babel": "babel src -d lib && babel bin/index.js -o bin/bin.js"
+    "babel": "babel src -d lib && babel bin/index.js -o bin/pop.js"
   },
   "repository": {
     "type": "git",

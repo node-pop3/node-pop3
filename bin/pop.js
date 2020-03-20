@@ -27,7 +27,8 @@ function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) ||
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var args = process.argv,
+var _process = process,
+    argv = _process.argv,
     options = {},
     alias = {
   u: 'user',
@@ -49,7 +50,7 @@ function printHelpAndExit() {
 }
 
 var optionName;
-args.slice(2).forEach(function (arg) {
+argv.slice(2).forEach(function (arg) {
   if (arg.charAt(0) === '-') {
     optionName = arg.replace(/-/g, '');
 

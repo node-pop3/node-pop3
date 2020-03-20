@@ -2,7 +2,7 @@ import Pop3Command from '../lib/Command';
 
 import {stream2String} from '../lib/helper';
 
-const args = process.argv,
+const {argv} = process,
   options = {},
   alias = {
     u: 'user',
@@ -35,7 +35,7 @@ function printHelpAndExit() {
 }
 
 let optionName;
-args.slice(2).forEach(function(arg) {
+argv.slice(2).forEach(function(arg) {
   if (arg.charAt(0) === '-') {
     optionName = arg.replace(/-/g, '');
     if ((optionName || ' ').length === 1) {

@@ -99,7 +99,7 @@ class Pop3Connection extends EventEmitter {
           const infoBuffer = buffer.slice(4, firstLineEndIndex);
           const [commandName] = (this._command || '').split(' ');
           let stream = null;
-          if (MULTI_LINE_COMMAND_NAME.indexOf(commandName) > -1) {
+          if (MULTI_LINE_COMMAND_NAME.includes(commandName)) {
             this._updateStream();
             stream = this._stream;
             const bodyBuffer = buffer.slice(firstLineEndIndex + 2);

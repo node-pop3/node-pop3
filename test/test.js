@@ -15,7 +15,7 @@ describe('CLI', function () {
       'QUIT'
     ]);
     expect(stderr).to.equal('');
-    expect(stdout).to.equal('\'Bye\'\n');
+    expect(stdout).to.equal("'Bye'\n");
   });
   describe('Errors', function () {
     it('Errs upon invalid alias', async function () {

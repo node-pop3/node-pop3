@@ -19,7 +19,7 @@ const {argv} = process,
     port: 110,
     tls: false,
   },
-  mailStructureOptionNames = ['user', 'password', 'host', 'port', 'tls'];
+  mailStructureOptionNames = ['user', 'password', 'host', 'port', 'tls', 'timeout'];
 
 function printHelpAndExit() {
   const text = 'Usage: pop [options]\r\n'
@@ -83,6 +83,10 @@ for (const requiredOptionName of requiredOptionNames) {
     console.error(requiredOptionName + ' is required!');
     printHelpAndExit();
   }
+}
+
+if (options.timeout) {
+  options.timeout[0] = parseFloat(options.timeout[0]);
 }
 
 for (const _optionName of mailStructureOptionNames) {

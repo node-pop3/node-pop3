@@ -48,7 +48,7 @@ var _process = process,
   port: 110,
   tls: false
 },
-    mailStructureOptionNames = ['user', 'password', 'host', 'port', 'tls'];
+    mailStructureOptionNames = ['user', 'password', 'host', 'port', 'tls', 'timeout'];
 
 function printHelpAndExit() {
   var text = 'Usage: pop [options]\r\n' + '\r\n' + 'Example: pop -u example@gmail.com -p pwd -h example.pop3.com -m UIDL\r\n' + '\r\n' + 'Options:\r\n' + '  -c, --config      config file (in place of options below)\r\n' + '  -u, --user        username\r\n' + '  -p, --password    password\r\n' + '  -h, --host        host of server\r\n' + '  --port            port of server. Defaults to 110 or 995 if tls is used.\r\n' + '  --tls             whether to use TLS(SSL). Defaults to false.\r\n' + '  -m, --method      method and arguments of API in node-pop3. e.g. \'UIDL\', \'RETR 100\' or \'command USER example@gmail.com\'\r\n' + '  --help            print help';
@@ -107,6 +107,10 @@ for (var _i = 0, _requiredOptionNames = requiredOptionNames; _i < _requiredOptio
     console.error(requiredOptionName + ' is required!');
     printHelpAndExit();
   }
+}
+
+if (options.timeout) {
+  options.timeout[0] = parseFloat(options.timeout[0]);
 }
 
 for (var _i2 = 0, _mailStructureOptionN = mailStructureOptionNames; _i2 < _mailStructureOptionN.length; _i2++) {

@@ -33,6 +33,7 @@ function printHelpAndExit() {
            + '  -h, --host        host of server\r\n'
            + '  --port            port of server. Defaults to 110 or 995 if tls is used.\r\n'
            + '  --tls             whether to use TLS(SSL). Defaults to false.\r\n'
+           + '  --no-tls          disables previously set TLS(SSL).\r\n'
            + '  -m, --method      method and arguments of API in node-pop3. e.g. \'UIDL\', \'RETR 100\' or \'command USER example@gmail.com\'\r\n'
            + '  --help            print help';
   console.log(text);
@@ -42,7 +43,7 @@ function printHelpAndExit() {
 let optionName;
 if (argv.slice(2).some(function(arg, i, args) {
   if (arg.charAt(0) === '-') {
-    optionName = arg.replace(/-/g, '');
+    optionName = arg.replace(/^-+/g, '');
     if ((optionName || '').length === 1) {
       if (!{}.hasOwnProperty.call(alias, optionName)) {
         console.error('Invalid alias', optionName);
@@ -50,7 +51,10 @@ if (argv.slice(2).some(function(arg, i, args) {
       }
       optionName = alias[optionName];
     }
-    if (optionName && i === args.length - 1) {
+    if (
+      optionName &&
+      (i === args.length - 1 || args[i + 1].charAt(0) === '-')
+    ) {
       options[optionName] = [true];
     }
   } else if (!optionName) {
@@ -89,7 +93,10 @@ if (options.timeout) {
   options.timeout[0] = parseFloat(options.timeout[0]);
 }
 
-if (options.tls && options.tls[0]) {
+if ('no-tls' in options) {
+  options.tls = [false];
+} else if (options.tls && options.tls[0]) {
+  // By using `mailStructure`, can still be overridden below
   mailStructure.port = '995';
 }
 for (const _optionName of mailStructureOptionNames) {

@@ -30,6 +30,19 @@ describe('CLI', function () {
 
   describe('POP commands', function () {
     this.timeout(60000);
+
+    it('Override config to run without TLS', async function () {
+      const {stdout, stderr} = await spawnAsync('./bin/pop.js', [
+        '--config',
+        'pop.config.json',
+        '--no-tls',
+        '--method',
+        'QUIT'
+      ]);
+      expect(stderr).to.equal('');
+      expect(stdout).to.equal("'Bye'\n");
+    });
+
     it('Runs QUIT', async function () {
       const {stdout, stderr} = await spawnAsync('./bin/pop.js', [
         '--config',

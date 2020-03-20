@@ -35,6 +35,7 @@ var _process = process,
     argv = _process.argv,
     options = {},
     alias = {
+  c: 'config',
   u: 'user',
   p: 'password',
   h: 'host',
@@ -48,18 +49,22 @@ var _process = process,
     mailStructureOptionNames = ['user', 'password', 'host', 'port', 'tls'];
 
 function printHelpAndExit() {
-  var text = 'Usage: pop [options]\r\n' + '\r\n' + 'Example: pop -u example@gmail.com -p pwd -h example.pop3.com -m UIDL\r\n' + '\r\n' + 'Options:\r\n' + '  -u, --user        username\r\n' + '  -p, --password    password\r\n' + '  -h, --host        host of server\r\n' + '  --port            port of server. Defaults to 110\r\n' + '  --tls             whether to use TLS(SSL). Defaults to false.\r\n' + '  -m, --method      method and arguments of API in node-pop3. e.g. \'UIDL\', \'RETR 100\' or \'command USER example@gmail.com\'\r\n' + '  --help            print help';
+  var text = 'Usage: pop [options]\r\n' + '\r\n' + 'Example: pop -u example@gmail.com -p pwd -h example.pop3.com -m UIDL\r\n' + '\r\n' + 'Options:\r\n' + '  -c, --config      config file (in place of options below)\r\n' + '  -u, --user        username\r\n' + '  -p, --password    password\r\n' + '  -h, --host        host of server\r\n' + '  --port            port of server. Defaults to 110\r\n' + '  --tls             whether to use TLS(SSL). Defaults to false.\r\n' + '  -m, --method      method and arguments of API in node-pop3. e.g. \'UIDL\', \'RETR 100\' or \'command USER example@gmail.com\'\r\n' + '  --help            print help';
   console.log(text);
   process.exit(0);
 }
 
 var optionName;
-argv.slice(2).forEach(function (arg) {
+argv.slice(2).forEach(function (arg, i, args) {
   if (arg.charAt(0) === '-') {
     optionName = arg.replace(/-/g, '');
 
     if ((optionName || ' ').length === 1) {
       optionName = alias[optionName];
+    }
+
+    if (i === args.length - 1) {
+      options[optionName] = [true];
     }
   } else if (!optionName) {
     return;
@@ -70,8 +75,18 @@ argv.slice(2).forEach(function (arg) {
   }
 });
 
-if (optionName === 'help' || options.help) {
+if (options.help) {
   printHelpAndExit();
+}
+
+if (options.config) {
+  var configOptions = require(options.config);
+
+  ['method'].concat(mailStructureOptionNames).forEach(function (optionName) {
+    if (optionName in configOptions) {
+      options[optionName] = configOptions[optionName];
+    }
+  });
 }
 
 for (var _i = 0, _requiredOptionNames = requiredOptionNames; _i < _requiredOptionNames.length; _i++) {
@@ -160,3 +175,5 @@ _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
     }
   }, _callee);
 }))();
+
+//# sourceMappingURL=pop.js.map

@@ -8,6 +8,17 @@
     "es6": true,
     "node": true
   },
+  "overrides": [
+    {
+      "files": ["test/**"],
+      "env": {
+        "mocha": true
+      },
+      "globals": {
+        "expect": true
+      }
+    }
+  ],
   "rules": {
     "strict": ["error"],
     "indent": ["error", 2, {"outerIIFEBody": 0}],

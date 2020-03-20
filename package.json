@@ -9,7 +9,10 @@
   "scripts": {
     "cli": "node ./bin/pop.js",
     "eslint": "eslint .",
-    "babel": "babel src -d lib && babel bin/index.js -o bin/pop.js"
+    "babel-src": "babel src -d lib --source-maps",
+    "babel-bin": "babel bin/index.js -o bin/pop.js --source-maps",
+    "babel": "npm run babel-src && npm run babel-bin",
+    "test": "nyc mocha --require esm --require chai/register-expect"
   },
   "repository": {
     "type": "git",
@@ -41,6 +44,11 @@
     "@babel/core": "^7.8.7",
     "@babel/preset-env": "^7.8.7",
     "@comandeer/babel-plugin-banner": "^5.0.0",
-    "eslint": "^6.8.0"
+    "@expo/spawn-async": "^1.5.0",
+    "chai": "^4.2.0",
+    "eslint": "^6.8.0",
+    "esm": "^3.2.25",
+    "mocha": "^7.1.1",
+    "nyc": "^15.0.0"
   }
 }

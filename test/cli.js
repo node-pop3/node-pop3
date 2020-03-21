@@ -2,6 +2,7 @@ import spawnAsync from '@expo/spawn-async';
 
 describe('CLI', function () {
   describe('Basic commands', function () {
+    this.timeout(8000);
     it('Gets help', async function () {
       const {stdout, stderr} = await spawnAsync('./bin/pop.js', ['--help']);
       expect(stderr).to.equal('');

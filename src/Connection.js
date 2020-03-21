@@ -117,7 +117,8 @@ class Pop3Connection extends EventEmitter {
       this._socket.on('error', (err) => {
         err.eventName = 'error';
         if (this._stream) {
-          return this.emit('error', err);
+          this.emit('error', err);
+          return;
         }
         reject(err);
       });
@@ -146,6 +147,9 @@ class Pop3Connection extends EventEmitter {
       if (!this._stream) {
         return resolve();
       }
+      this.once('error', (err) => {
+        return reject(err);
+      });
       this.once('end', (err) => {
         return err ? reject(err) : resolve();
       });

@@ -65,13 +65,26 @@ describe('Programmatic', async function () {
     expect(true).to.be.true;
   });
 
+  it('Stops with cal to `_endStream` (not called internally as such)', async function () {
+    const pop3Command = new Pop3Command(config);
+    const prom = pop3Command._connect();
+    const listProm = pop3Command.command('LIST');
+    setTimeout(() => {
+      pop3Command._endStream();
+    }, 5000);
+    await listProm;
+    await prom;
+    await pop3Command.QUIT();
+    expect(true).to.be.true;
+  });
+
   it('Stops with error to `_endStream` (not called internally as such)', async function () {
     const pop3Command = new Pop3Command(config);
     const prom = pop3Command._connect();
     const listProm = pop3Command.command('LIST');
     setTimeout(() => {
       pop3Command._endStream(new Error('oops'));
-    }, 7000);
+    }, 5000);
     await listProm;
     try {
       await prom;
@@ -81,6 +94,35 @@ describe('Programmatic', async function () {
     }
     await pop3Command.QUIT();
     expect(true).to.be.true;
+  });
+
+  it('Rejects with socket error and existing stream', async function () {
+    const pop3Command = new Pop3Command(config);
+    let err, res;
+    pop3Command.on('error', (e) => {
+      err = e;
+      expect(err.message).to.equal('oops');
+      res();
+    });
+    const connectProm = pop3Command._connect();
+    const listProm = pop3Command.command('LIST');
+    const p = new Promise((resolve) => {
+      res = resolve;
+      setTimeout(() => {
+        pop3Command._socket.emit('error', new Error('oops'));
+        // We have to send this ourselves as not getting from server
+        pop3Command._socket.emit('data', Buffer.from('\r\n.\r\n'));
+      }, 3000);
+    });
+    try {
+      await connectProm;
+      expect(false).to.be.true;
+    } catch (err) {
+      expect(err.message).to.equal('oops');
+    }
+    await listProm;
+    await pop3Command.QUIT();
+    return p;
   });
 
   it('Gets events on time out', async function () {

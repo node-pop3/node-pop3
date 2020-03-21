@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 import {resolve as pathResolve} from 'path';
-import 'regenerator-runtime/runtime.js';
 import Pop3Command from '../lib/Command';
 
 import {stream2String} from '../lib/helper';

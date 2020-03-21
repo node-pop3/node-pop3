@@ -1,5 +1,3 @@
-import 'regenerator-runtime/runtime.js';
-
 import {Readable} from 'stream';
 
 import Pop3Command from '../lib/Command.js';

@@ -2,6 +2,8 @@ import Pop3Connection from './Connection';
 
 import { stream2String, listify } from './helper';
 
+export { stream2String, listify };
+
 class Pop3Command extends Pop3Connection {
   constructor({
     user,

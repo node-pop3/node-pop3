@@ -5,8 +5,6 @@
 
 var _path = require("path");
 
-require("regenerator-runtime/runtime.js");
-
 var _Command = _interopRequireDefault(require("../lib/Command"));
 
 var _helper = require("../lib/helper");
@@ -21,9 +19,75 @@ function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+function _await(value, then, direct) {
+  if (direct) {
+    return then ? then(value) : value;
+  }
 
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+  if (!value || !value.then) {
+    value = Promise.resolve(value);
+  }
+
+  return then ? value.then(then) : value;
+}
+
+function _empty() {}
+
+function _invokeIgnored(body) {
+  var result = body();
+
+  if (result && result.then) {
+    return result.then(_empty);
+  }
+}
+
+function _awaitIgnored(value, direct) {
+  if (!direct) {
+    return value && value.then ? value.then(_empty) : Promise.resolve();
+  }
+}
+
+function _invoke(body, then) {
+  var result = body();
+
+  if (result && result.then) {
+    return result.then(then);
+  }
+
+  return then(result);
+}
+
+function _catch(body, recover) {
+  try {
+    var result = body();
+  } catch (e) {
+    return recover(e);
+  }
+
+  if (result && result.then) {
+    return result.then(void 0, recover);
+  }
+
+  return result;
+}
+
+function _continue(value, then) {
+  return value && value.then ? value.then(then) : then(value);
+}
+
+function _async(f) {
+  return function () {
+    for (var args = [], i = 0; i < arguments.length; i++) {
+      args[i] = arguments[i];
+    }
+
+    try {
+      return Promise.resolve(f.apply(this, args));
+    } catch (e) {
+      return Promise.reject(e);
+    }
+  };
+}
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
@@ -133,94 +197,54 @@ var _options$method = _slicedToArray(options.method, 1),
 // istanbul ignore next
 
 
-_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-  var result, _result, _result2, info, stream, str;
+_async(function () {
+  var result;
+  return _continue(_catch(function () {
+    return _invoke(function () {
+      if (['UIDL', 'TOP', 'QUIT', 'RETR'].includes(methodName)) {
+        return _await(pop3Command[methodName].apply(pop3Command, _toConsumableArray(options.method.slice(1))), function (_pop3Command$methodNa) {
+          result = _pop3Command$methodNa;
+          return _invokeIgnored(function () {
+            if (methodName === 'RETR') {
+              return _await((0, _helper.stream2String)(result), function (_stream2String) {
+                result = _stream2String;
+              });
+            }
+          });
+        });
+      } else {
+        return _await(pop3Command._connect(), function () {
+          return _await(pop3Command.command.apply(pop3Command, _toConsumableArray(options.method)), function (_pop3Command$command) {
+            result = _pop3Command$command;
+            return _invokeIgnored(function () {
+              if (result[1]) {
+                var _result = result,
+                    _result2 = _slicedToArray(_result, 2),
+                    info = _result2[0],
+                    stream = _result2[1];
 
-  return regeneratorRuntime.wrap(function _callee$(_context) {
-    while (1) {
-      switch (_context.prev = _context.next) {
-        case 0:
-          _context.prev = 0;
-
-          if (!['UIDL', 'TOP', 'QUIT', 'RETR'].includes(methodName)) {
-            _context.next = 11;
-            break;
-          }
-
-          _context.next = 4;
-          return pop3Command[methodName].apply(pop3Command, _toConsumableArray(options.method.slice(1)));
-
-        case 4:
-          result = _context.sent;
-
-          if (!(methodName === 'RETR')) {
-            _context.next = 9;
-            break;
-          }
-
-          _context.next = 8;
-          return (0, _helper.stream2String)(result);
-
-        case 8:
-          result = _context.sent;
-
-        case 9:
-          _context.next = 22;
-          break;
-
-        case 11:
-          _context.next = 13;
-          return pop3Command._connect();
-
-        case 13:
-          _context.next = 15;
-          return pop3Command.command.apply(pop3Command, _toConsumableArray(options.method));
-
-        case 15:
-          result = _context.sent;
-
-          if (!result[1]) {
-            _context.next = 22;
-            break;
-          }
-
-          _result = result, _result2 = _slicedToArray(_result, 2), info = _result2[0], stream = _result2[1];
-          _context.next = 20;
-          return (0, _helper.stream2String)(stream);
-
-        case 20:
-          str = _context.sent;
-          result = [info, str];
-
-        case 22:
-          if (!(methodName !== 'QUIT')) {
-            _context.next = 25;
-            break;
-          }
-
-          _context.next = 25;
-          return pop3Command.QUIT();
-
-        case 25:
-          _context.next = 31;
-          break;
-
-        case 27:
-          _context.prev = 27;
-          _context.t0 = _context["catch"](0);
-          console.error(_context.t0);
-          process.exit();
-
-        case 31:
-          console.dir(result);
-          process.exit(0);
-
-        case 33:
-        case "end":
-          return _context.stop();
+                return _await((0, _helper.stream2String)(stream), function (str) {
+                  result = [info, str];
+                });
+              }
+            });
+          });
+        });
       }
-    }
-  }, _callee, null, [[0, 27]]);
-}))();
+    }, function () {
+      return _invokeIgnored(function () {
+        if (methodName !== 'QUIT') {
+          return _awaitIgnored(pop3Command.QUIT());
+        }
+      });
+    });
+  }, function (err) {
+    console.error(err);
+    process.exit();
+  }), function () {
+    console.dir(result);
+    process.exit(0);
+  });
+})();
 
 //# sourceMappingURL=pop.js.map

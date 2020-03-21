@@ -51,4 +51,35 @@ describe('Programmatic', async function () {
     });
     await pop3Command.QUIT();
   });
+
+  it('Stops with early terminating server response', async function () {
+    const pop3Command = new Pop3Command(config);
+    const prom = pop3Command._connect();
+    const listProm = pop3Command.command('LIST');
+    setTimeout(() => {
+      pop3Command._socket.emit('data', Buffer.from('\r\n.\r\n'));
+    }, 3000);
+    await listProm;
+    await prom;
+    await pop3Command.QUIT();
+    expect(true).to.be.true;
+  });
+
+  it('Stops with error to `_endStream` (not called internally as such)', async function () {
+    const pop3Command = new Pop3Command(config);
+    const prom = pop3Command._connect();
+    const listProm = pop3Command.command('LIST');
+    setTimeout(() => {
+      pop3Command._endStream(new Error('oops'));
+    }, 7000);
+    await listProm;
+    try {
+      await prom;
+      expect(false).to.be.true;
+    } catch (err) {
+      expect(err.message).to.equal('oops');
+    }
+    await pop3Command.QUIT();
+    expect(true).to.be.true;
+  });
 });

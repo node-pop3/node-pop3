@@ -107,8 +107,12 @@ class Pop3Connection extends EventEmitter {
             }
           }
           this.emit('response', infoBuffer.toString(), stream);
+          resolve();
+          return;
         }
-        resolve();
+        const err = new Error('Unexpected response');
+        err.eventName = 'bad-server-response';
+        reject(err);
       });
       this._socket.on('error', (err) => {
         err.eventName = 'error';

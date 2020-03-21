@@ -39,4 +39,16 @@ describe('Programmatic', async function () {
 
     expect(true).to.be.true;
   });
+  it('Rejects with bad server response (not `+OK` or `-ERR`)', async function () {
+    const pop3Command = new Pop3Command(config);
+    const prom = pop3Command._connect();
+    pop3Command._socket.emit('data', [50]);
+    await prom.then(() => {
+      expect(false).to.be.true;
+    }, (err) => {
+      expect(err).to.be.an('error');
+      expect(err.message).to.equal('Unexpected response');
+    });
+    await pop3Command.QUIT();
+  });
 });

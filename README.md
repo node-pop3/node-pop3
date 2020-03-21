@@ -112,5 +112,5 @@ Beyond that, Error may have two properties attached by pop3.
 
 property|comment
 ---|---
-`err.eventName`|event name comes from `socket.on`. Includes `error`, `close`, `timeout`, `end`, and `bad-server-response`
+`err.eventName`|event name comes from `socket.on`. Includes `error`, `close`, `timeout`, `end`, and `bad-server-response`. `command` may also throw `no-socket`.
 `err.command`|which command causes the error. For example, `PASS example`

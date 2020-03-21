@@ -128,8 +128,8 @@ for (var _i2 = 0, _mailStructureOptionN = mailStructureOptionNames; _i2 < _mailS
 var pop3Command = new _Command["default"](mailStructure);
 
 var _options$method = _slicedToArray(options.method, 1),
-    methodName = _options$method[0]; // Todo: Might want to report this as nyc doesn't seem to pick this up,
-//   despite it running
+    methodName = _options$method[0]; // Todo: Might want to report this to Istnabul as nyc doesn't seem to pick
+//   this up, despite it running
 // istanbul ignore next
 
 

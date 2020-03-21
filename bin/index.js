@@ -108,8 +108,8 @@ for (const _optionName of mailStructureOptionNames) {
 const pop3Command = new Pop3Command(mailStructure);
 const [methodName] = options.method;
 
-// Todo: Might want to report this as nyc doesn't seem to pick this up,
-//   despite it running
+// Todo: Might want to report this to Istnabul as nyc doesn't seem to pick
+//   this up, despite it running
 // istanbul ignore next
 (async () => {
 

@@ -82,4 +82,38 @@ describe('Programmatic', async function () {
     await pop3Command.QUIT();
     expect(true).to.be.true;
   });
+
+  it('Gets events on time out', async function () {
+    const pop3Command = new Pop3Command({
+      ...config,
+      timeout: 10
+    });
+    let endError, errError;
+    pop3Command.on('end', (e) => {
+      endError = e;
+    });
+    pop3Command.on('error', (e) => {
+      errError = e;
+    });
+
+    try {
+      await pop3Command._connect();
+      expect(false).to.be.true;
+    } catch (err) {
+      expect(err.eventName).to.equal('timeout');
+      expect(err.message).to.equal('timeout');
+
+      expect(endError.eventName).to.equal('timeout');
+      expect(endError.message).to.equal('timeout');
+
+      expect(errError.eventName).to.equal('timeout');
+      expect(errError.message).to.equal('timeout');
+    }
+    try {
+      await pop3Command.command('QUIT');
+      expect(false).to.be.true;
+    } catch (err) {
+      expect(err.message).to.equal('no-socket');
+    }
+  });
 });

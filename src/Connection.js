@@ -151,6 +151,9 @@ class Pop3Connection extends EventEmitter {
       });
     });
     return new Promise((resolve, reject) => {
+      if (!this._socket) {
+        reject(new Error('no-socket'));
+      }
       const rejectFn = (err) => reject(err);
       this.once('error', rejectFn);
       this.once('response', (info, stream) => {

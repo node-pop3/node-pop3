@@ -33,8 +33,8 @@ const msgNum = 1;
 
 (async () => {
 
-  await stream = pop3.RETR(msgNum);
-  // deal with mail stream
+  await string = pop3.RETR(msgNum);
+  // deal with mail string
   await pop3.QUIT();
 
 })();
@@ -101,7 +101,7 @@ const pop3 = new Pop3Command({ host: 'pop3.example.com' });
 method|params|return|comment
 ---|---|---|---
 UIDL|`{String\|Number}` msgNum|`{Promise}` resolve to `{Array}` list of responsed|msgNum is optional
-RETR|`{String\|Number}` msgNum|`{Promise}` resolve to `{Stream}` mail stream|
+RETR|`{String\|Number}` msgNum|`{Promise}` resolve to `{String}` of mail stream|
 TOP|`{String\|Number}` msgNum, `{Number}` n|`{Promise}` resolve to `{String}` message of responsed|n is default to 0
 QUIT||`{Promise}` resolve to `{String}` message of response message|
 

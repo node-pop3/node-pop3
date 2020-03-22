@@ -118,7 +118,6 @@ describe('CLI', function () {
         'pop.config.json',
         '--method',
         'STAT'
-        // '1'
       ]);
       expect(stderr).to.equal('');
       expect(stdout).to.match(/\[ '\d+ \d+', null \]\n/u);

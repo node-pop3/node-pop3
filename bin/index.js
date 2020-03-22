@@ -116,9 +116,6 @@ let result;
 try {
   if (['UIDL', 'TOP', 'QUIT', 'RETR'].includes(methodName)) {
     result = await pop3Command[methodName](...options.method.slice(1));
-    if (methodName === 'RETR') {
-      result = await stream2String(result);
-    }
   } else {
     await pop3Command._connect();
     result = await pop3Command.command(...options.method);

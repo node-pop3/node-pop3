@@ -208,13 +208,6 @@ _async(function () {
       if (['UIDL', 'TOP', 'QUIT', 'RETR'].includes(methodName)) {
         return _await(pop3Command[methodName].apply(pop3Command, _toConsumableArray(options.method.slice(1))), function (_pop3Command$methodNa) {
           result = _pop3Command$methodNa;
-          return _invokeIgnored(function () {
-            if (methodName === 'RETR') {
-              return _await((0, _helper.stream2String)(result), function (_stream2String) {
-                result = _stream2String;
-              });
-            }
-          });
         });
       } else {
         return _await(pop3Command._connect(), function () {

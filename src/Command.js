@@ -34,13 +34,46 @@ class Pop3Command extends Pop3Connection {
     await this._connect();
     const [, stream] = await super.command('UIDL', msgNumber);
     const str = await stream2String(stream);
-    return listify(str);
+    const list = listify(str);
+    return msgNumber ? list[0] : list;
+  }
+
+  async NOOP() {
+    await this._connect();
+    await super.command('NOOP');
+    return;
+  }
+
+  async LIST(msgNumber = '') {
+    await this._connect();
+    const [, stream] = await super.command('LIST', msgNumber);
+    const str = await stream2String(stream);
+    const list = listify(str);
+    return msgNumber ? list[0] : list;
+  }
+
+  async RSET() {
+    await this._connect();
+    const [info] = await super.command('RSET');
+    return info;
   }
 
   async RETR(msgNumber) {
     await this._connect();
     const [, stream] = await super.command('RETR', msgNumber);
-    return stream;
+    return stream2String(stream);
+  }
+
+  async DELE(msgNumber) {
+    await this._connect();
+    const [info] = await super.command('DELE', msgNumber);
+    return info;
+  }
+
+  async STAT() {
+    await this._connect();
+    const [info] = await super.command('STAT');
+    return info;
   }
 
   async TOP(msgNumber, n = 0) {
@@ -55,7 +88,7 @@ class Pop3Command extends Pop3Connection {
       return this._PASSInfo;
     }
     const [info] = await super.command('QUIT');
-    this._PASSInfo = '' || info;
+    this._PASSInfo = info || '';
     return this._PASSInfo;
   }
 }

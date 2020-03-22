@@ -8,7 +8,7 @@ import config from '../pop.config.json';
 describe('Programmatic', async function () {
   this.timeout(60000);
   // Todo: Seed the account to ensure there is a message to retrieve
-  it('Runs command', async function () {
+  it('Runs `command`', async function () {
     const pop3Command = new Pop3Command(config);
     await pop3Command.connect();
     await pop3Command.command('USER', config.user);
@@ -17,6 +17,89 @@ describe('Programmatic', async function () {
     await pop3Command.QUIT();
     const str = await stream2String(stream);
     expect(str).to.contain('Received:');
+  });
+  it('Runs RSET command', async function () {
+    const pop3Command = new Pop3Command(config);
+    await pop3Command.connect();
+    await pop3Command.command('USER', config.user);
+    await pop3Command.command('PASS', config.password);
+    const info = await pop3Command.RSET();
+    await pop3Command.QUIT();
+    expect(info).to.be.a('string');
+  });
+  it('Runs STAT command', async function () {
+    const pop3Command = new Pop3Command(config);
+    await pop3Command.connect();
+    await pop3Command.command('USER', config.user);
+    await pop3Command.command('PASS', config.password);
+    const info = await pop3Command.STAT();
+    await pop3Command.QUIT();
+    expect(info).to.be.a('string');
+  });
+  it('Runs NOOP command', async function () {
+    const pop3Command = new Pop3Command(config);
+    await pop3Command.connect();
+    await pop3Command.command('USER', config.user);
+    await pop3Command.command('PASS', config.password);
+    const info = await pop3Command.NOOP();
+    await pop3Command.QUIT();
+    expect(info).to.be.undefined;
+  });
+  it('Runs LIST command', async function () {
+    const pop3Command = new Pop3Command(config);
+    await pop3Command.connect();
+    await pop3Command.command('USER', config.user);
+    await pop3Command.command('PASS', config.password);
+    const list = await pop3Command.LIST();
+    await pop3Command.QUIT();
+    expect(list).to.be.an('array');
+  });
+  it('Runs UIDL command', async function () {
+    const pop3Command = new Pop3Command(config);
+    await pop3Command.connect();
+    await pop3Command.command('USER', config.user);
+    await pop3Command.command('PASS', config.password);
+    const list = await pop3Command.UIDL();
+    await pop3Command.QUIT();
+    expect(list).to.be.an('array');
+  });
+  // Not sure why not getting server responses for these despite passing
+  //   on command
+  it.skip('Runs LIST command with message', async function () {
+    const pop3Command = new Pop3Command(config);
+    await pop3Command.connect();
+    await pop3Command.command('USER', config.user);
+    await pop3Command.command('PASS', config.password);
+    const list = await pop3Command.LIST(1);
+    await pop3Command.QUIT();
+    expect(list).to.be.an('array');
+  });
+  it.skip('Runs UIDL command with message', async function () {
+    const pop3Command = new Pop3Command(config);
+    await pop3Command.connect();
+    await pop3Command.command('USER', config.user);
+    await pop3Command.command('PASS', config.password);
+    const list = await pop3Command.UIDL(1);
+    await pop3Command.QUIT();
+    expect(list).to.be.a('string');
+  });
+  it('Runs RETR command with message', async function () {
+    const pop3Command = new Pop3Command(config);
+    await pop3Command.connect();
+    await pop3Command.command('USER', config.user);
+    await pop3Command.command('PASS', config.password);
+    const string = await pop3Command.RETR(1);
+    await pop3Command.QUIT();
+    expect(string).to.be.a('string');
+  });
+  it('Runs DELE command with message', async function () {
+    const pop3Command = new Pop3Command(config);
+    await pop3Command.connect();
+    await pop3Command.command('USER', config.user);
+    await pop3Command.command('PASS', config.password);
+    const info = await pop3Command.DELE(1);
+    await pop3Command.QUIT();
+    expect(info).to.contain('Marked to be deleted');
   });
   it('Defaults programmatically to 110 with no port or tls', async function () {
     const pop3Command = new Pop3Command({

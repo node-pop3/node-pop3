@@ -1,5 +1,12 @@
 # CHANGES to node-pop3
 
+## 0.4.0 (2020-07-19)
+
+- Breaking change: Have public RETR stringify stream
+- Breaking change: Cause public UIDL to return single item if a message number
+  was specified
+- Enhancement: Add public methods for LIST, RSET, DELE, STAT, NOOP
+
 ## 0.3.0 (2020-07-19)
 
 - Breaking change: Requires Node >= 6

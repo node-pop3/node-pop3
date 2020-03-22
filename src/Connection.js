@@ -48,7 +48,9 @@ class Pop3Connection extends EventEmitter {
   }
 
   _endStream(err) {
-    this._stream.push(null);
+    if (this._stream) {
+      this._stream.push(null);
+    }
     this._stream = null;
     this.emit('end', err);
   }

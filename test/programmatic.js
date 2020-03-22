@@ -52,18 +52,36 @@ describe('Programmatic', async function () {
 
   it('Stops with early terminating server response', async function () {
     const pop3Command = new Pop3Command(config);
-    const prom = pop3Command._connect();
+    const prom = pop3Command._connect().catch(() => {
+      // May throw
+    });
     const listProm = pop3Command.command('LIST');
     setTimeout(() => {
       pop3Command._socket.emit('data', Buffer.from('\r\n.\r\n'));
     }, 3000);
-    await listProm;
-    await prom;
-    await pop3Command.QUIT();
+
+    try {
+      await listProm;
+    } catch (err) {
+      // May throw
+    }
+
+    try {
+      await prom;
+    } catch (err) {
+      // May throw
+    }
+
+    try {
+      await pop3Command.QUIT();
+    } catch (err) {
+      // May throw
+    }
+
     expect(true).to.be.true;
   });
 
-  it('Stops with cal to `_endStream` (not called internally as such)', async function () {
+  it('Stops with call to `_endStream` (not called internally as such)', async function () {
     const pop3Command = new Pop3Command(config);
     const prom = pop3Command._connect();
     const listProm = pop3Command.command('LIST');

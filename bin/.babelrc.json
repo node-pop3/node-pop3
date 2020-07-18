@@ -1,0 +1,11 @@
+{
+  "presets": [
+    ["@babel/preset-env"]
+  ],
+  "plugins": [
+    ["@comandeer/babel-plugin-banner", {
+      "banner": "/*! Auto-generated file; please modify /bin/index.js instead */"
+    }],
+    ["babel-plugin-transform-async-to-promises"]
+  ]
+}

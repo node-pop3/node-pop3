@@ -1,0 +1,32 @@
+{
+  "extends": "eslint:recommended",
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 2018
+  },
+  "env": {
+    "es6": true,
+    "node": true
+  },
+  "overrides": [
+    {
+      "files": ["test/**"],
+      "env": {
+        "mocha": true
+      },
+      "globals": {
+        "expect": true
+      }
+    }
+  ],
+  "rules": {
+    "strict": ["error"],
+    "indent": ["error", 2, {"outerIIFEBody": 0}],
+    "semi": ["error"],
+    "prefer-const": ["error"],
+    "no-var": ["error"],
+    "prefer-destructuring": ["error"],
+    "object-shorthand": ["error"],
+    "quotes": ["error", "single", {"avoidEscape": true}]
+  }
+}

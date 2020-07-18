@@ -3,7 +3,7 @@ import { CRLF } from './constant';
 export function stream2String(stream) {
   return new Promise((resolve, reject) => {
     let buffer = Buffer.concat([]);
-    let length = buffer.length;
+    let {length} = buffer;
     stream.on('data', (_buffer) => {
       length += _buffer.length;
       buffer = Buffer.concat([buffer, _buffer], length);

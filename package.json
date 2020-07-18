@@ -3,8 +3,23 @@
   "version": "0.2.0",
   "description": "POP3 client for node",
   "main": "./lib/Command.js",
+  "bin": {
+    "pop": "./bin/pop.js"
+  },
   "scripts": {
-    "babel": "babel src -d lib"
+    "cli": "node ./bin/pop.js",
+    "eslint": "eslint .",
+    "babel-src": "babel src -d lib --source-maps",
+    "babel-bin": "rm bin/pop.js && babel bin/index.js -o bin/pop.js --source-maps && chmod 0755 bin/pop.js",
+    "babel": "npm run babel-src && npm run babel-bin",
+    "mocha": "mocha --require esm --require chai/register-expect --exit",
+    "test": "rm -Rf .nyc_output && rm -Rf ./node_modules/.cache && npm run babel && nyc npm run mocha"
+  },
+  "nyc": {
+    "reporter": [
+      "text",
+      "lcov"
+    ]
   },
   "repository": {
     "type": "git",
@@ -17,9 +32,29 @@
     "Stream"
   ],
   "author": "lianxh",
+  "contributors": [
+    "Brett Zamir"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/lianxh/node-pop3/issues"
   },
-  "homepage": "https://github.com/lianxh/node-pop3#readme"
+  "homepage": "https://github.com/lianxh/node-pop3#readme",
+  "engines": {
+    "node": ">=0.12.18"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.0",
+    "@comandeer/babel-plugin-banner": "^5.0.0",
+    "@expo/spawn-async": "^1.5.0",
+    "babel-plugin-transform-async-to-promises": "^0.8.15",
+    "chai": "^4.2.0",
+    "eslint": "^6.8.0",
+    "esm": "^3.2.25",
+    "mocha": "^7.1.1",
+    "nyc": "^15.0.0"
+  }
 }

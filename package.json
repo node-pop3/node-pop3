@@ -41,7 +41,7 @@
   },
   "homepage": "https://github.com/lianxh/node-pop3#readme",
   "engines": {
-    "node": ">=0.12.18"
+    "node": ">=6.0.0"
   },
   "dependencies": {},
   "devDependencies": {

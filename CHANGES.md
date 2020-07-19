@@ -1,5 +1,9 @@
 # CHANGES to node-pop3
 
+## 0.5.1 (2020-07-19)
+
+- npm: Update devDeps (and build)
+
 ## 0.5.0 (2020-07-19)
 
 - Breaking enhancement: Add genuine Node exports

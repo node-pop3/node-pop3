@@ -1,6 +1,6 @@
-import Pop3Connection from './Connection';
+import Pop3Connection from './Connection.mjs';
 
-import { stream2String, listify } from './helper';
+import { stream2String, listify } from './helper.mjs';
 
 export { stream2String, listify };
 

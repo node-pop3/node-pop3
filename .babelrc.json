@@ -3,6 +3,9 @@
     ["@babel/preset-env"]
   ],
   "plugins": [
-    ["babel-plugin-transform-async-to-promises"]
+    ["babel-plugin-transform-async-to-promises"],
+    ["module-extension", {
+      "mjs": "js"
+    }]
   ]
 }

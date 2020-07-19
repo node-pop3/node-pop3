@@ -1,4 +1,4 @@
-import { CRLF } from './constant';
+import { CRLF } from './constant.mjs';
 
 export function stream2String(stream) {
   return new Promise((resolve, reject) => {

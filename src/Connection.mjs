@@ -9,7 +9,7 @@ import {
   TERMINATOR_BUFFER,
   TERMINATOR_BUFFER_ARRAY,
   MULTI_LINE_COMMAND_NAME
-} from './constant';
+} from './constant.mjs';
 
 class Pop3Connection extends EventEmitter {
   constructor({

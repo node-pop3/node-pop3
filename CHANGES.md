@@ -1,5 +1,9 @@
 # CHANGES to node-pop3
 
+## 0.5.0 (2020-07-19)
+
+- Breaking enhancement: Add genuine Node exports
+
 ## 0.4.0 (2020-07-19)
 
 - Breaking change: Have public RETR stringify stream

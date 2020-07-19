@@ -2,3 +2,4 @@ pop.config.js
 pop.config.json
 coverage
 .nyc_output
+test

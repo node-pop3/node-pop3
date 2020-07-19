@@ -1,0 +1,25 @@
+# CHANGES to node-pop3
+
+## 0.3.0 (2020-07-19)
+
+- Breaking change: Requires Node >= 6
+- Enhancement: Added `timeout` option (also to binary)
+- Enhancement: Re-export `listify` and `streamtoString`
+- Enhancement: If `tls` is set, default port to 995
+- Enhancement: Add source maps
+- Enhancement: Throw `no-socket` Error in `command` if no socket left
+- Enhancement (binary): Change `test` file to a genuine binary (as `pop`)
+- Enhancement (binary): Support passing in `--config` file (used also in tests)
+- Fix: Add `bad-server-response` error (handle obscure case where server
+    doesn't follow spec or gives unknown response)
+- Fix: Reject `command` early upon error
+- Fix (CLI): For other commands, use `_connect` instead of `connect` to allow
+  necessary authentication before practical use
+- Fix (CLI): Allow boolean args at any posiiton
+- Fix (CLI): Report bad alias (though ignore empty `--` arg)
+- Fix (CLI) Avoid including reference to promise being uncaught in reported
+  errors; catch any errors ourselves but log error to stderr
+- Fix (CLI): Ensure `QUIT` in CLI usage after every other command
+- Update: Avoid deprecated `new Buffer` in favor of `Buffer.from`
+- Refactoring: Misc. improvements/linting
+- Testing: Add Mocha + NYC testing

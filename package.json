@@ -1,6 +1,6 @@
 {
   "name": "node-pop3",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "POP3 client for node",
   "main": "./lib/Command.js",
   "bin": {

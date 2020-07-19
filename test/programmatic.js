@@ -7,6 +7,7 @@ import config from '../pop.config.json';
 
 describe('Programmatic', async function () {
   this.timeout(60000);
+  // Todo: Seed the account to ensure there is a message to retrieve
   it('Runs command', async function () {
     const pop3Command = new Pop3Command(config);
     await pop3Command.connect();

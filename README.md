@@ -114,3 +114,15 @@ property|comment
 ---|---
 `err.eventName`|event name comes from `socket.on`. Includes `error`, `close`, `timeout`, `end`, and `bad-server-response`. `command` may also throw `no-socket`.
 `err.command`|which command causes the error. For example, `PASS example`
+
+## To-dos
+
+1. Testing:
+    1. Ensure tests seed (and then delete) messages (e.g., using `emailjs`)
+    1. Set up CI with hidden `pop.config.json` credentials
+    1. Avoid skipping some tests
+1. Edge cases
+    1. After timeout, ensure any stream is ended (so other commands can
+        continue)
+    1. Ensure `command` will reject if socket is ended.
+    1. Ensure in fixing the above that can QUIT and reuse same instance

@@ -16,9 +16,20 @@ For more detail, please input
 
 `pop --help`
 
+## Usage
+
+In CommonJS, you can get the `Pop3Command` as follows:
+
+```js
+const Pop3Command = require('node-pop3');
+```
+
+The examples below, however, use the [ESM Modules](https://nodejs.org/api/esm.html)
+format instead (i.e., `import`).
+
 ## Example
 
-* Fetch mail by msgNum:
+- Fetch mail by msgNum:
 
 ```js
 import Pop3Command from 'node-pop3';
@@ -40,7 +51,7 @@ const msgNum = 1;
 })();
 ```
 
-* List msgNum to uid in Server
+- List msgNum to uid in Server
 
 ```js
 const list = await pop3.UIDL();

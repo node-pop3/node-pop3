@@ -2,8 +2,6 @@ import Pop3Connection from './Connection.mjs';
 
 import { stream2String, listify } from './helper.mjs';
 
-export { stream2String, listify };
-
 class Pop3Command extends Pop3Connection {
   constructor({
     user,
@@ -92,5 +90,8 @@ class Pop3Command extends Pop3Connection {
     return this._PASSInfo;
   }
 }
+
+Pop3Command.stream2String = stream2String;
+Pop3Command.listify = listify;
 
 export default Pop3Command;

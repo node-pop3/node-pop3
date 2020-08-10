@@ -1,5 +1,11 @@
 # CHANGES to node-pop3
 
+## 0.6.0 (2020-08-10)
+
+- Breaking change: Change named exports `listify` and `stream2String` to
+  attach to the default export class to enable `require` to avoid `default`.
+- Docs: Document CommonJS usage
+
 ## 0.5.1 (2020-07-19)
 
 - npm: Update devDeps (and build)

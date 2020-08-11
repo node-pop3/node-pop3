@@ -1,5 +1,9 @@
 # CHANGES to node-pop3
 
+## ?
+
+- Fix: Drop TLS socket if erring (so subsequent `connect` can detect)
+
 ## 0.6.0 (2020-08-10)
 
 - Breaking change: Change named exports `listify` and `stream2String` to

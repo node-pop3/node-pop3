@@ -123,6 +123,7 @@ class Pop3Connection extends EventEmitter {
           return;
         }
         reject(err);
+        this._socket = null;
       });
       this._socket.once('close', () => {
         const err = new Error('close');

@@ -167,6 +167,9 @@ class Pop3Connection extends EventEmitter {
         this.removeListener('error', rejectFn);
         resolve([info, stream]);
       });
+      if (!this._socket) {
+        reject(new Error('no-socket'));
+      }
       this._socket.write(`${this._command}${CRLF}`, 'utf8');
     });
   }

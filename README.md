@@ -77,6 +77,9 @@ options.host|`false`|
 options.port|`true`|Default to `110`
 options.tls|`true`|Default to `false`
 options.timeout|`true`|Default to `undefined`
+options.tlsOptions|`true`|Default to `{}`
+
+tlsOptions takes the options documented for your node version and `tls.connect` function.
 
 * basic
 

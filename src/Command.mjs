@@ -10,8 +10,9 @@ class Pop3Command extends Pop3Connection {
     port,
     tls,
     timeout,
+    tlsOptions,
   }) {
-    super({ host, port, tls, timeout });
+    super({ host, port, tls, timeout, tlsOptions});
     this.user = user;
     this.password = password;
     this._PASSInfo = '';

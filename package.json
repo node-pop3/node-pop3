@@ -13,7 +13,7 @@
   },
   "scripts": {
     "cli": "node ./bin/pop.js",
-    "eslint": "eslint .",
+    "eslint": "eslint --ext=mjs,js .",
     "babel-src": "babel src -d lib --source-maps --out-file-extension .js",
     "babel-bin": "rm bin/pop.js && babel bin/index.mjs -o bin/pop.js --source-maps --out-file-extension .js && chmod 0755 bin/pop.js",
     "babel": "npm run babel-src && npm run babel-bin",

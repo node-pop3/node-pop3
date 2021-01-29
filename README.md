@@ -71,12 +71,12 @@ console.dir(list);
 
 params|optional|comment
 ---|---|---
-options.user|`false`
-options.password|`false`|
-options.host|`false`|
-options.port|`true`|Default to `110`
-options.tls|`true`|Default to `false`
-options.timeout|`true`|Default to `undefined`
+options.user|no|String
+options.password|no|String
+options.host|no|String
+options.port|yes|Number. Defaults to `110`
+options.tls|yes|Boolean. Defaults to `false`
+options.timeout|yes|Number. Defaults to `undefined`
 
 * basic
 

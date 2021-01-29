@@ -1,0 +1,8 @@
+{
+  "user": "testing@my-site.example",
+  "password": "abc123",
+  "host": "subdomain.example.com",
+  "tls": true,
+  "timeout": 50000,
+  "port": 110
+}

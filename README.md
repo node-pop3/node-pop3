@@ -71,15 +71,15 @@ console.dir(list);
 
 params|optional|comment
 ---|---|---
-options.user|`false`
-options.password|`false`|
-options.host|`false`|
-options.port|`true`|Default to `110`
-options.tls|`true`|Default to `false`
-options.timeout|`true`|Default to `undefined`
-options.tlsOptions|`true`|Default to `{}`
+options.user|no|String
+options.password|no|String
+options.host|no|String
+options.port|yes|Number. Defaults to `110`
+options.tls|yes|Boolean. Defaults to `false`
+options.timeout|yes|Number. Defaults to `undefined`
+options.tlsOptions|yes|Defaults to `{}`
 
-tlsOptions takes the options documented for your node version and `tls.connect` function.
+`tlsOptions` takes the options documented for your Node version and `tls.connect` function.
 
 * basic
 

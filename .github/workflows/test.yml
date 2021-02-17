@@ -57,10 +57,13 @@ jobs:
               "port": ${{ matrix.port }}
             }'
       - run: 'docker exec mail bash -c "echo \"Subject: hello\" | sendmail ${{ env.MAIL_ADDRESS }}"'
+      - run: 'docker exec mail env'
       - run: 'docker exec mail bash -c "ls -la /var/mail/"'
       - run: 'docker exec mail bash -c "ls -la /var/mail/${{ env.MAILNAME }}"'
       - run: 'docker exec mail bash -c "ls -la /var/mail/${{ env.MAILNAME }}/someone/"'
       - run: 'docker exec mail bash -c "ls -la /var/mail/${{ env.MAILNAME }}/someone/new"'
+      - run: 'docker exec mail bash -c "ls -la /var/mail/${{ env.MAILNAME }}/debug/"'
+      - run: 'docker exec mail bash -c "ls -la /var/mail/${{ env.MAILNAME }}/debug/new"'
       - run: npm --version
       - run: npm install -g npm@6.14.4
       - run: npm install

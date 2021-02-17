@@ -30,7 +30,7 @@ jobs:
     services:
       mail:
         image: virtuasa/docker-mail-devel:latest
-        port:
+        ports:
           - 110:110
           - 995:995
         env:

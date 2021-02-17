@@ -15,7 +15,7 @@ jobs:
       MAILNAME: testdomain.local
       MAIL_PASS: passwd
       architecture_node: x64
-      MAIL_ADDRESS: someone@${{ env.MAILNAME }}
+      MAIL_ADDRESS: someone@testdomain.local
     strategy:
       fail-fast: true
       matrix:

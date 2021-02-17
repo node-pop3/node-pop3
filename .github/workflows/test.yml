@@ -64,6 +64,8 @@ jobs:
       - run: 'docker exec mail bash -c "ls -la /var/mail/${{ env.MAILNAME }}/someone/new"'
       - run: 'docker exec mail bash -c "ls -la /var/mail/${{ env.MAILNAME }}/debug/"'
       - run: 'docker exec mail bash -c "ls -la /var/mail/${{ env.MAILNAME }}/debug/new"'
+      - run: 'docker exec mail bash -c "cat /var/log/mail.log"'
+      - run: 'docker exec mail bash -c "cat /var/log/mail.err"'
       - run: npm --version
       - run: npm install -g npm@6.14.4
       - run: npm install

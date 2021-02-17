@@ -30,8 +30,7 @@ jobs:
     services:
       mail:
         image: virtuasa/docker-mail-devel:latest
-        options:
-          name: mail
+        options: --name=mail
         ports:
           - 110:110
           - 995:995

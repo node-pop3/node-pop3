@@ -55,6 +55,9 @@ jobs:
               "timeout": 50000,
               "port": ${{ matrix.port }}
             }'
+      - run:  docker exec -it mail bash -c "echo 'Subject: hello' | sendmail ${{ env.MAIL_ADDRESS }}"
+
+
       - run: npm --version
       - run: npm install -g npm@6.14.4
       - run: npm install

@@ -1,0 +1,63 @@
+---
+name: Tests
+
+on:
+  push:
+    tags:
+      - '1.*'
+    branches:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  integration-test:
+    env:
+      MAILNAME: testdomain.local
+      MAIL_PASS: passwd
+      architecture_node: x64
+      MAIL_ADDRESS: someone@${{ env.MAILNAME }}
+    strategy:
+      fail-fast: true
+      matrix:
+        tls: [true, false]
+        node: [6.14.1, 7.10.1, 8.11.0, 9.11.1, 10.8.0, 11.2.0, 12.0.0, 13.14.0, 14.0.0, 15.7.0]
+        include:
+          - tls: true
+            port: 995
+          - tls: false
+            port: 110
+    runs-on: ubuntu-18.04
+    services:
+      mail:
+        image: virtuasa/docker-mail-devel:latest
+        port:
+          - 110:110
+          - 995:995
+        env:
+          MAIL_ADDRESS: ${{ env.MAILNAME }}
+          MAIL_PASS: ${{ env.MAIL_PASS }}
+          MAIL_ADDRESS: ${{ env.MAIL_ADDRESS }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+          architecture: ${{ env.architecture_node }}
+      - uses: jsdaniell/create-json@1.1.2
+        with:
+          name: "pop.config.json"
+          json: 
+            '{
+              "user": "${{ env.MAIL_ADDRESS }}",
+              "password": "${{ env.MAIL_PASS }}",
+              "host": "localhost",
+              "tls": ${{ Boolean(matrix.tls) }},
+              "timeout": 50000,
+              "port": ${{ matrix.port }}
+            }'
+      - run: npm test
+      - uses: actions/upload-artifact@v2
+        with:
+          path: coverage/
+          name: coverage-${{ matrix.node }}-tls.${{ Boolean(matrix.tls) }}
+          if-no-files-found: error

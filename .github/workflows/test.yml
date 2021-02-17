@@ -33,6 +33,10 @@ jobs:
         ports:
           - 110:110
           - 995:995
+        env:
+          MAILNAME: ${{ env.MAILNAME }}
+          MAIL_PASS: ${{ env.MAIL_PASS }}
+          MAIL_ADDRESS: ${{ env.MAIL_ADDRESS }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2

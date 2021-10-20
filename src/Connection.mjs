@@ -78,7 +78,7 @@ class Pop3Connection extends EventEmitter {
         });
       }
       if (this.tls) {
-        const options = Object.assign({}, { host, port, socket }, tlsOptions);
+        const options = Object.assign({ host, port, socket }, tlsOptions);
         this._socket = _tls.connect(options);
       } else {
         this._socket = socket;

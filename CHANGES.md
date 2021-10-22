@@ -1,8 +1,12 @@
 # CHANGES to node-pop3
 
-## ?
+## 0.7.0 (2021-10-22)
 
+- Enhancement: Add `tlsOptions` option
 - Fix: Drop TLS socket if erring (so subsequent `connect` can detect)
+- Fix: Report if no socket
+- Docs: Add sample `pop.config-sample.json` file; Clarify values
+- Chore: update devDeps. , add lint script, and switch to pnpm
 
 ## 0.6.0 (2020-08-10)
 

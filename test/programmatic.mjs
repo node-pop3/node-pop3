@@ -1,10 +1,10 @@
 import {Readable} from 'stream';
-import {readFile} from 'fs/promises';
+import {readFileSync} from 'fs';
 
 import Pop3Command from '../lib/Command.js';
 import {stream2String} from '../lib/helper.js';
 
-const config = JSON.parse(await readFile(new URL('../pop.config.json', import.meta.url)));
+const config = JSON.parse(readFileSync(new URL('../pop.config.json', import.meta.url)));
 
 describe('Programmatic', async function () {
   this.timeout(60000);

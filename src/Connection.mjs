@@ -18,6 +18,7 @@ class Pop3Connection extends EventEmitter {
     tls,
     timeout,
     tlsOptions,
+    servername
   }) {
     super();
     this.host = host;
@@ -28,6 +29,7 @@ class Pop3Connection extends EventEmitter {
     this._stream = null;
     this._command;
     this.tlsOptions = tlsOptions || {};
+    this.servername = servername || host;
   }
 
   _updateStream() {
@@ -58,7 +60,7 @@ class Pop3Connection extends EventEmitter {
   }
 
   connect() {
-    const { host, port, tlsOptions } = this;
+    const { host, port, tlsOptions, servername } = this;
     const socket = new Socket();
     socket.setKeepAlive(true);
     return new Promise((resolve, reject) => {
@@ -78,7 +80,7 @@ class Pop3Connection extends EventEmitter {
         });
       }
       if (this.tls) {
-        const options = Object.assign({ host, port, socket }, tlsOptions);
+        const options = Object.assign({ host, port, socket, servername }, tlsOptions);
         this._socket = _tls.connect(options);
       } else {
         this._socket = socket;

@@ -1,5 +1,9 @@
 # CHANGES to node-pop3
 
+## 0.8.0 (2022-01-16)
+
+- Enhancement: Add `servername` option
+
 ## 0.7.0 (2021-10-22)
 
 - Enhancement: Add `tlsOptions` option

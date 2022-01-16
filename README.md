@@ -75,6 +75,7 @@ options.user|no|String
 options.password|no|String
 options.host|no|String
 options.port|yes|Number. Defaults to `110`
+options.servername|yes|String. Defaults to `host` value. Same as `servername` for Node TLS option.
 options.tls|yes|Boolean. Defaults to `false`
 options.timeout|yes|Number. Defaults to `undefined`
 options.tlsOptions|yes|Defaults to `{}`

@@ -1,6 +1,7 @@
 # node-pop3
 
-pop3 command for node. Supports **Promise** and **stream**.
+[pop3](https://tools.ietf.org/html/rfc1939) command support for node.
+Supports **Promise** and **stream**.
 
 ## CLI
 

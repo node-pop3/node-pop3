@@ -43,13 +43,9 @@ const pop3 = new Pop3Command({
 
 const msgNum = 1;
 
-(async () => {
-
-  await string = pop3.RETR(msgNum);
-  // deal with mail string
-  await pop3.QUIT();
-
-})();
+await string = pop3.RETR(msgNum);
+// deal with mail string
+await pop3.QUIT();
 ```
 
 - List msgNum to uid in Server
@@ -95,23 +91,24 @@ listify|Splits lines by CRLF, filters out empty lines, and converts each line to
 ```js
 const pop3 = new Pop3Command({ host: 'pop3.example.com' });
 
-(async () => {
+// These must be in order
+await pop3.connect();
+await pop3.command('USER', 'example@example.com');
+await pop3.command('PASS', 'example');
 
-  await pop3.connect();
-  await pop3.command('USER', 'example@example.com');
-  await pop3.command('PASS', 'example');
+const [statInfo] = await pop3.command('STAT');
+const [retrInfo, retrStream] = await pop3.command('RETR', 1);
 
-  const [info] = await pop3.command('STAT');
-  console.log(info); // 100 102400
+console.log(statInfo); // 100 102400
+console.log(retrInfo); // 1024 octets
 
-  const [info, stream] = await pop3.command('RETR', 1);
-  console.log(info); // 1024 octets
+const [quitInfo] = await pop3.command('QUIT');
+console.log(quitInfo); // Logging out.
 
-  const [info] = await pop3.command('QUIT');
-  console.log(info); // Bye
+const streamString = await Pop3Command.stream2String(retrStream);
+console.log(streamString); // <message details...>
 
-})();
-
+console.log(await Pop3Command.listify(streamString)); // [ ['Return-Path:', 'brett@...'], ...]
 ```
 
 * common

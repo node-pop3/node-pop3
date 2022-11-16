@@ -39,3 +39,5 @@ jspm_packages
 # Our own private config file (for testing)
 pop.config.json
 pop.config.js
+
+.idea

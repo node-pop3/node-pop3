@@ -87,6 +87,12 @@ class Pop3Connection extends EventEmitter {
       }
 
       this._socket.on('data', (buffer) => {
+        // It's expected that every line ends with a crlf. If this is not the case,
+        // add it here to the buffer, to avoid the need of handling this case individually in all places. 
+        if (!buffer.slice(buffer.length - 2).equals(CRLF_BUFFER)) {
+          buffer = Buffer.concat([buffer, CRLF_BUFFER]);
+        }
+
         if (this._stream) {
           return this._pushStream(buffer);
         }

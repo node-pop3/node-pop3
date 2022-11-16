@@ -89,6 +89,7 @@ method|params|return
 ---|---|---
 connect||`{Promise}` resolve to `undefined`
 command|`{String*}` command messages to Server|`{Promise}` resolve to `{Array[String, Stream]}`, which are messages of response and stream of response (if the response has multiple lines) from Server
+listify|Splits lines by CRLF, filters out empty lines, and converts each line to a an array based on splitting by spaces
 
 ```js
 const pop3 = new Pop3Command({ host: 'pop3.example.com' });

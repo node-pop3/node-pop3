@@ -1,8 +1,8 @@
 import {Readable} from 'stream';
 import {readFileSync} from 'fs';
 
-import Pop3Command from '../lib/Command.js';
-import {stream2String} from '../lib/helper.js';
+import Pop3Command from '../src/Command.js';
+import {stream2String} from '../src/helper.js';
 
 const config = JSON.parse(readFileSync(new URL('../pop.config.json', import.meta.url)));
 

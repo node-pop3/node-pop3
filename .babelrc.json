@@ -1,12 +1,15 @@
 {
   "presets": [
-    ["@babel/preset-env"]
+    ["@babel/preset-env", {
+      "targets": {
+        "node": "14"
+      }
+    }]
   ],
   "plugins": [
     ["add-module-exports"],
-    ["transform-async-to-promises"],
     ["module-extension", {
-      "mjs": "js"
+      "js": "cjs"
     }]
   ]
 }

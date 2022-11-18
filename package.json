@@ -2,11 +2,11 @@
   "name": "node-pop3",
   "version": "0.8.0",
   "description": "POP3 client for node",
-  "main": "./lib/Command.js",
-  "type": "commonjs",
+  "main": "./lib/Command.cjs",
+  "type": "module",
   "exports": {
-    "import": "./src/Command.mjs",
-    "require": "./lib/Command.js"
+    "import": "./src/Command.js",
+    "require": "./lib/Command.cjs"
   },
   "bin": {
     "pop": "./bin/pop.js"
@@ -14,10 +14,8 @@
   "scripts": {
     "cli": "node ./bin/pop.js",
     "lint": "npm run eslint",
-    "eslint": "eslint --ext=mjs,js .",
-    "babel-src": "babel src -d lib --source-maps --out-file-extension .js",
-    "babel-bin": "rm bin/pop.js && babel bin/index.mjs -o bin/pop.js --source-maps --out-file-extension .js && chmod 0755 bin/pop.js",
-    "babel": "npm run babel-src && npm run babel-bin",
+    "eslint": "eslint .",
+    "babel": "babel src -d lib --source-maps --out-file-extension .cjs",
     "mocha": "mocha --require chai/register-expect.js --exit",
     "test": "rm -Rf .nyc_output && rm -Rf ./node_modules/.cache && npm run babel && nyc npm run mocha"
   },
@@ -47,18 +45,16 @@
   },
   "homepage": "https://github.com/lianxh/node-pop3#readme",
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=14.13.0"
   },
   "dependencies": {},
   "devDependencies": {
     "@babel/cli": "^7.19.3",
     "@babel/core": "^7.20.2",
     "@babel/preset-env": "^7.20.2",
-    "@comandeer/babel-plugin-banner": "^5.0.0",
     "@expo/spawn-async": "^1.7.0",
     "babel-plugin-add-module-exports": "^1.0.4",
     "babel-plugin-module-extension": "^0.1.3",
-    "babel-plugin-transform-async-to-promises": "^0.8.18",
     "chai": "^4.3.7",
     "eslint": "^8.27.0",
     "mocha": "^10.1.0",

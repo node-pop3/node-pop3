@@ -87,33 +87,28 @@ class Pop3Connection extends EventEmitter {
       }
 
       this._socket.on('data', (buffer) => {
-        // It's expected that every line ends with a crlf. If this is not the case,
-        // add it here to the buffer, to avoid the need of handling this case individually in all places. 
-        if (!buffer.slice(buffer.length - 2).equals(CRLF_BUFFER)) {
-          buffer = Buffer.concat([buffer, CRLF_BUFFER]);
-        }
-
         if (this._stream) {
           return this._pushStream(buffer);
         }
+        
+        // only cut off crlf if it's existing in payload
+        const crlfSliceEndIndex = buffer.slice(buffer.length - 2).equals(CRLF_BUFFER)
+          ? -2
+          : buffer.length;
+
         if (buffer[0] === 45) { // '-'
-          const err = new Error(buffer.slice(5, -2));
+          const err = new Error(buffer.slice(5, crlfSliceEndIndex));
           err.eventName = 'error';
           err.command = this._command;
           return this.emit('error', err);
         }
         if (buffer[0] === 43) { // '+'
-          const firstLineEndIndex = buffer.indexOf(CRLF_BUFFER);
-          const infoBuffer = buffer.slice(4, firstLineEndIndex);
+          const infoBuffer = buffer.slice(4, crlfSliceEndIndex);
           const [commandName] = (this._command || '').split(' ');
           let stream = null;
           if (MULTI_LINE_COMMAND_NAME.includes(commandName)) {
             this._updateStream();
             stream = this._stream;
-            const bodyBuffer = buffer.slice(firstLineEndIndex + 2);
-            if (bodyBuffer[0]) {
-              this._pushStream(bodyBuffer);
-            }
           }
           this.emit('response', infoBuffer.toString(), stream);
           resolve();

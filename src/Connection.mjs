@@ -90,24 +90,25 @@ class Pop3Connection extends EventEmitter {
         if (this._stream) {
           return this._pushStream(buffer);
         }
+        
+        // only cut off crlf if it's existing in payload
+        const crlfSliceEndIndex = buffer.slice(buffer.length - 2).equals(CRLF_BUFFER)
+          ? -2
+          : buffer.length;
+
         if (buffer[0] === 45) { // '-'
-          const err = new Error(buffer.slice(5, -2));
+          const err = new Error(buffer.slice(5, crlfSliceEndIndex));
           err.eventName = 'error';
           err.command = this._command;
           return this.emit('error', err);
         }
         if (buffer[0] === 43) { // '+'
-          const firstLineEndIndex = buffer.indexOf(CRLF_BUFFER);
-          const infoBuffer = buffer.slice(4, firstLineEndIndex);
+          const infoBuffer = buffer.slice(4, crlfSliceEndIndex);
           const [commandName] = (this._command || '').split(' ');
           let stream = null;
           if (MULTI_LINE_COMMAND_NAME.includes(commandName)) {
             this._updateStream();
             stream = this._stream;
-            const bodyBuffer = buffer.slice(firstLineEndIndex + 2);
-            if (bodyBuffer[0]) {
-              this._pushStream(bodyBuffer);
-            }
           }
           this.emit('response', infoBuffer.toString(), stream);
           resolve();

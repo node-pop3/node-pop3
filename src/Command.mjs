@@ -32,10 +32,13 @@ class Pop3Command extends Pop3Connection {
 
   async UIDL(msgNumber = '') {
     await this._connect();
-    const [, stream] = await super.command('UIDL', msgNumber);
-    const str = await stream2String(stream);
-    const list = listify(str);
-    return msgNumber ? list[0] : list;
+    const [info, stream] = await super.command('UIDL', msgNumber);
+    if (msgNumber) {
+        return listify(info)[0];
+    } else {
+        const str = await stream2String(stream);
+        return listify(str);
+    }
   }
 
   async NOOP() {
@@ -46,10 +49,13 @@ class Pop3Command extends Pop3Connection {
 
   async LIST(msgNumber = '') {
     await this._connect();
-    const [, stream] = await super.command('LIST', msgNumber);
-    const str = await stream2String(stream);
-    const list = listify(str);
-    return msgNumber ? list[0] : list;
+    const [info, stream] = await super.command('LIST', msgNumber);
+    if (msgNumber) {
+        return listify(info)[0];
+    } else {
+        const str = await stream2String(stream);
+        return listify(str);
+    }
   }
 
   async RSET() {
@@ -73,6 +79,12 @@ class Pop3Command extends Pop3Connection {
   async STAT() {
     await this._connect();
     const [info] = await super.command('STAT');
+    return info;
+  }
+
+  async LAST() {
+    await this._connect();
+    const [info] = await super.command('LAST');
     return info;
   }
 

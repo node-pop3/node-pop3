@@ -8,7 +8,8 @@ import {
   CRLF_BUFFER,
   TERMINATOR_BUFFER,
   TERMINATOR_BUFFER_ARRAY,
-  MULTI_LINE_COMMAND_NAME
+  MULTI_LINE_COMMAND_NAME,
+  MAYBE_MULTI_LINE_COMMAND_NAME
 } from './constant.js';
 
 class Pop3Connection extends EventEmitter {
@@ -99,9 +100,10 @@ class Pop3Connection extends EventEmitter {
         if (buffer[0] === 43) { // '+'
           const firstLineEndIndex = buffer.indexOf(CRLF_BUFFER);
           const infoBuffer = buffer.slice(4, firstLineEndIndex);
-          const [commandName] = (this._command || '').split(' ');
+          const [commandName, msgNumber] = (this._command || '').split(' ');
           let stream = null;
-          if (MULTI_LINE_COMMAND_NAME.includes(commandName)) {
+          if (MULTI_LINE_COMMAND_NAME.includes(commandName) ||
+              !msgNumber && MAYBE_MULTI_LINE_COMMAND_NAME.includes(commandName)) {
             this._updateStream();
             stream = this._stream;
             const bodyBuffer = buffer.slice(firstLineEndIndex + 2);

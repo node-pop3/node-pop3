@@ -37,6 +37,15 @@ describe('Programmatic', async function () {
     await pop3Command.QUIT();
     expect(info).to.be.a('string');
   });
+  it('Runs LAST command', async function () {
+    const pop3Command = new Pop3Command(config);
+    await pop3Command.connect();
+    await pop3Command.command('USER', config.user);
+    await pop3Command.command('PASS', config.password);
+    const info = await pop3Command.LAST();
+    await pop3Command.QUIT();
+    expect(info).to.be.a('string');
+  });
   it('Runs NOOP command', async function () {
     const pop3Command = new Pop3Command(config);
     await pop3Command.connect();
@@ -64,9 +73,7 @@ describe('Programmatic', async function () {
     await pop3Command.QUIT();
     expect(list).to.be.an('array');
   });
-  // Not sure why not getting server responses for these despite passing
-  //   on command
-  it.skip('Runs LIST command with message', async function () {
+  it('Runs LIST command with message number', async function () {
     const pop3Command = new Pop3Command(config);
     await pop3Command.connect();
     await pop3Command.command('USER', config.user);
@@ -75,7 +82,7 @@ describe('Programmatic', async function () {
     await pop3Command.QUIT();
     expect(list).to.be.an('array');
   });
-  it.skip('Runs UIDL command with message', async function () {
+  it('Runs UIDL command with message number', async function () {
     const pop3Command = new Pop3Command(config);
     await pop3Command.connect();
     await pop3Command.command('USER', config.user);

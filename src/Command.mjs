@@ -11,10 +11,12 @@ class Pop3Command extends Pop3Connection {
     tls,
     timeout,
     tlsOptions,
+    maxMailSize,
     servername
   }) {
     super({ host, port, tls, timeout, tlsOptions, servername });
     this.user = user;
+    this.maxMailSize = maxMailSize;
     this.password = password;
     this._PASSInfo = '';
   }
@@ -61,7 +63,7 @@ class Pop3Command extends Pop3Connection {
   async RETR(msgNumber) {
     await this._connect();
     const [, stream] = await super.command('RETR', msgNumber);
-    return stream2String(stream);
+    return stream2String(stream, this.maxMailSize);
   }
 
   async DELE(msgNumber) {

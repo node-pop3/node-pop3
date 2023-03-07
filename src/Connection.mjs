@@ -17,6 +17,7 @@ class Pop3Connection extends EventEmitter {
     port,
     tls,
     timeout,
+    maxMailSize,
     tlsOptions,
     servername
   }) {
@@ -25,6 +26,7 @@ class Pop3Connection extends EventEmitter {
     this.port = port || (tls ? 995 : 110);
     this.tls = tls;
     this.timeout = timeout;
+    this.maxMailSize = maxMailSize;
     this._socket = null;
     this._stream = null;
     this._command;

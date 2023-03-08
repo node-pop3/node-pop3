@@ -1,5 +1,5 @@
 {
-  "name": "node-pop3",
+  "name": "@tyzion/node-pop3",
   "version": "0.8.0",
   "description": "POP3 client for node",
   "main": "./lib/Command.js",

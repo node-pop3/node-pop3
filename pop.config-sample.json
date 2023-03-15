@@ -5,5 +5,5 @@
   "tls": true,
   "timeout": 50000,
   "port": 110,
-  "maxMailSize": 5242880
+  "maxBufferSize": 5242880
 }

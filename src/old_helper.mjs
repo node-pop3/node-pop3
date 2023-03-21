@@ -9,7 +9,7 @@ export function stream2String(stream, maxBufferSize) {
       if (length >= maxBufferSize) {
         const err = new Error('mailSizeExceeded');
         err.eventName = 'max-mail-size-exceeded';
-        stream.destroy(err)
+        stream.destroy(err);
       }
       else buffer = Buffer.concat([buffer, _buffer], length);
     });

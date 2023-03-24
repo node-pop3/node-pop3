@@ -4,5 +4,6 @@
   "host": "subdomain.example.com",
   "tls": true,
   "timeout": 50000,
-  "port": 110
+  "port": 110,
+  "maxBufferSize": 5242880
 }

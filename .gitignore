@@ -39,3 +39,6 @@ jspm_packages
 # Our own private config file (for testing)
 pop.config.json
 pop.config.js
+
+# package-lock.json
+package-lock.json

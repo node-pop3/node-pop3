@@ -83,7 +83,8 @@ class Pop3Command extends Pop3Connection {
   async TOP(msgNumber, n = 0) {
     await this._connect();
     const [, stream] = await super.command('TOP', msgNumber, n);
-    return stream2String(stream);
+    if (this.parseStreamToString === false) return stream
+    return stream2String(stream, this.maxBufferSize);
   }
 
   async QUIT() {

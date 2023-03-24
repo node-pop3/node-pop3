@@ -18,6 +18,7 @@ class Pop3Connection extends EventEmitter {
     tls,
     timeout,
     maxBufferSize,
+    parseStreamToString,
     tlsOptions,
     servername
   }) {

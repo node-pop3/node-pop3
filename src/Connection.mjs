@@ -27,6 +27,7 @@ class Pop3Connection extends EventEmitter {
     this.tls = tls;
     this.timeout = timeout;
     this.maxBufferSize = maxBufferSize;
+    this.parseStreamToString = parseStreamToString || true;
     this._socket = null;
     this._stream = null;
     this._command;

@@ -17,6 +17,7 @@ class Pop3Command extends Pop3Connection {
     super({ host, port, tls, timeout, tlsOptions, servername });
     this.user = user;
     this.maxBufferSize = maxBufferSize;
+    this.parseStreamToString = parseStreamToString;
     this.password = password;
     this._PASSInfo = '';
   }
@@ -63,6 +64,7 @@ class Pop3Command extends Pop3Connection {
   async RETR(msgNumber) {
     await this._connect();
     const [, stream] = await super.command('RETR', msgNumber);
+    if (this.parseStreamToString === false) return stream
     return stream2String(stream, this.maxBufferSize);
   }
 

@@ -91,35 +91,43 @@ class Pop3Connection extends EventEmitter {
       }
 
       this._socket.on('data', (buffer) => {
-        if (this._stream) {
-          return this._pushStream(buffer);
-        }
-        if (buffer[0] === 45) { // '-'
-          const err = new Error(buffer.slice(5, -2));
-          err.eventName = 'error';
-          err.command = this._command;
-          return this.emit('error', err);
-        }
-        if (buffer[0] === 43) { // '+'
-          const firstLineEndIndex = buffer.indexOf(CRLF_BUFFER);
-          const infoBuffer = buffer.slice(4, firstLineEndIndex);
-          const [commandName] = (this._command || '').split(' ');
-          let stream = null;
-          if (MULTI_LINE_COMMAND_NAME.includes(commandName)) {
-            this._updateStream();
-            stream = this._stream;
-            const bodyBuffer = buffer.slice(firstLineEndIndex + 2);
-            if (bodyBuffer[0]) {
-              this._pushStream(bodyBuffer);
-            }
+        try {
+          
+          if (this._stream) {
+            return this._pushStream(buffer);
           }
-          this.emit('response', infoBuffer.toString(), stream);
-          resolve();
-          return;
+          if (buffer[0] === 45) { // '-'
+            const err = new Error(buffer.slice(5, -2));
+            err.eventName = 'error';
+            err.command = this._command;
+            return this.emit('error', err);
+          }
+          if (buffer[0] === 43) { // '+'
+            const firstLineEndIndex = buffer.indexOf(CRLF_BUFFER);
+            const infoBuffer = buffer.slice(4, firstLineEndIndex);
+            const [commandName] = (this._command || '').split(' ');
+            let stream = null;
+            if (MULTI_LINE_COMMAND_NAME.includes(commandName)) {
+              this._updateStream();
+              stream = this._stream;
+              const bodyBuffer = buffer.slice(firstLineEndIndex + 2);
+              if (bodyBuffer[0]) {
+                this._pushStream(bodyBuffer);
+              }
+            }
+            this.emit('response', infoBuffer.toString(), stream);
+            resolve();
+            return;
+          }
+          const err = new Error('Unexpected response');
+          err.eventName = 'bad-server-response';
+          reject(err);
+        } catch (error) {
+          console.log('error: ', error)
+          const err = new Error('Unexpected response');
+          err.eventName = 'try-catch-error';
+          reject(err);
         }
-        const err = new Error('Unexpected response');
-        err.eventName = 'bad-server-response';
-        reject(err);
       });
       this._socket.on('error', (err) => {
         err.eventName = 'error';

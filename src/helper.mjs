@@ -11,6 +11,10 @@ export function stream2String(stream, maxBufferSize) {
     else maxLength = 4*1024*1024;
   }
   return new Promise((resolve, reject) => {
+    const streamTimeout = setTimeout(() => {
+      reject(new Error('stream2String timeout'))
+    }, 10*60*1000);
+
     const finalBufferArr = [];
     let finalBufferLength = 0;
     let bufferChunk = Buffer.concat([]);
@@ -33,6 +37,7 @@ export function stream2String(stream, maxBufferSize) {
         finalBufferArr.push(bufferChunk);
         finalBuffer = Buffer.concat(finalBufferArr, finalBufferLength);
       } else finalBuffer = bufferChunk;
+      clearTimeout(streamTimeout)
       resolve(finalBuffer.toString());
     });
   });

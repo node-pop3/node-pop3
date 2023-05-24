@@ -85,6 +85,8 @@ class Pop3Command extends Pop3Connection {
   async LAST() {
     await this._connect();
     const [info] = await super.command('LAST');
+    // May fail depending on test server
+    /* c8 ignore next */
     return info;
   }
 

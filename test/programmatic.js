@@ -37,6 +37,26 @@ describe('Programmatic', async function () {
       await pop3Command.QUIT();
       expect(string).to.be.a('string');
     });
+
+    it('Runs LIST command with message number', async function () {
+      const pop3Command = new Pop3Command(config);
+      await pop3Command.connect();
+      await pop3Command.command('USER', config.user);
+      await pop3Command.command('PASS', config.password);
+      const list = await pop3Command.LIST(1);
+      await pop3Command.QUIT();
+      expect(list).to.be.an('array');
+    });
+
+    it('Runs UIDL command with message number', async function () {
+      const pop3Command = new Pop3Command(config);
+      await pop3Command.connect();
+      await pop3Command.command('USER', config.user);
+      await pop3Command.command('PASS', config.password);
+      const list = await pop3Command.UIDL(1);
+      await pop3Command.QUIT();
+      expect(list).to.be.an('array');
+    });
   });
   describe('Commands needing messages but no clean-up', function () {
     beforeEach(() => {
@@ -106,24 +126,7 @@ describe('Programmatic', async function () {
     await pop3Command.QUIT();
     expect(list).to.be.an('array');
   });
-  it('Runs LIST command with message number', async function () {
-    const pop3Command = new Pop3Command(config);
-    await pop3Command.connect();
-    await pop3Command.command('USER', config.user);
-    await pop3Command.command('PASS', config.password);
-    const list = await pop3Command.LIST(1);
-    await pop3Command.QUIT();
-    expect(list).to.be.an('array');
-  });
-  it('Runs UIDL command with message number', async function () {
-    const pop3Command = new Pop3Command(config);
-    await pop3Command.connect();
-    await pop3Command.command('USER', config.user);
-    await pop3Command.command('PASS', config.password);
-    const list = await pop3Command.UIDL(1);
-    await pop3Command.QUIT();
-    expect(list).to.be.a('string');
-  });
+
   it('Defaults programmatically to 110 with no port or tls', async function () {
     const pop3Command = new Pop3Command({
       ...config, port: undefined, tls: false

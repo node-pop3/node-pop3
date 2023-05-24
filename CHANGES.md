@@ -2,9 +2,13 @@
 
 ## 0.9.0 (2023-05-24)
 
+- feat: ESM modules (BREAKING)
 - feat: TypeScript types
 - feat: added LAST command (@metafloor)
 - fix: LIST and UIDL with msg-nbr (@metafloor)
+- fix: add '.' to TERMINATOR_BUFFER_ARRAY constant (@Irykson)
+- docs: link to spec
+- docs: document `listify`
 
 ## 0.8.0 (2022-01-16)
 

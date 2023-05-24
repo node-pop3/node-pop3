@@ -148,6 +148,7 @@ class Pop3Connection extends EventEmitter {
               /**
                * @type {Error & {eventName: "error", command: string|undefined}}
                */ (
+                // @ts-expect-error It's ok
                 new Error(buffer.subarray(5, -2))
               );
             err.eventName = 'error';

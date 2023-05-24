@@ -227,7 +227,9 @@ describe('Programmatic', function () {
           expect(false).to.be.true;
         } catch (err) {
           expect(err).to.be.an('error');
-          expect(err.message).to.equal('Unexpected response');
+          expect(/** @type {Error} */ (err).message).to.equal(
+            'Unexpected response'
+          );
         }
         await pop3Command.QUIT();
       }

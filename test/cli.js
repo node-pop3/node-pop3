@@ -1,4 +1,5 @@
 import spawnAsync from '@expo/spawn-async';
+import {seedMessage, deleteMessage} from './helpers/helper.js';
 
 describe('CLI', function () {
   describe('Basic commands', function () {
@@ -55,52 +56,77 @@ describe('CLI', function () {
       expect(stdout).to.equal("'Bye'\n");
     });
 
-    // Todo: For RETR, TOP, and LIST, we should really seed the account with an
-    //   email to ensure one exists (could add `emailjs` as a dependency)
-    it('Runs RETR', async function () {
-      const {stdout, stderr} = await spawnAsync('./bin/pop.js', [
-        '--config',
-        'pop.config.json',
-        '--method',
-        'RETR',
-        '1'
-      ]);
-      expect(stderr).to.equal('');
-      expect(stdout).to.contain('Received:');
+    describe('Commands needing messages', function () {
+      beforeEach(() => {
+        return seedMessage({subject: 'test', html: 'test'});
+      });
+      afterEach(() => {
+        return deleteMessage();
+      });
+      it('Runs RETR', async function () {
+        const {stdout, stderr} = await spawnAsync('./bin/pop.js', [
+          '--config',
+          'pop.config.json',
+          '--method',
+          'RETR',
+          '1'
+        ]);
+        expect(stderr).to.equal('');
+        expect(stdout).to.contain('Received:');
+      });
+      it('Runs TOP', async function () {
+        const {stdout, stderr} = await spawnAsync('./bin/pop.js', [
+          '--config',
+          'pop.config.json',
+          '--method',
+          'TOP',
+          '1',
+          '1'
+        ]);
+        expect(stderr).to.equal('');
+        expect(stdout).to.contain('Received:');
+      });
+      it('Runs LIST', async function () {
+        const {stdout, stderr} = await spawnAsync('./bin/pop.js', [
+          '--config',
+          'pop.config.json',
+          '--method',
+          'LIST'
+        ]);
+        expect(stderr).to.equal('');
+        expect(stdout).to.match(/'\d+ messages:'/u).and.match(/'\d+ \d+(\\r\\n\d+ \d+)*'/u);
+      });
+      it('Runs UIDL', async function () {
+        const {stdout, stderr} = await spawnAsync('./bin/pop.js', [
+          '--config',
+          'pop.config.json',
+          '--method',
+          'UIDL'
+          // '1'
+        ]);
+        expect(stderr).to.equal('');
+        expect(stdout).to.contain("[ [ '1',");
+      });
     });
-    it('Runs TOP', async function () {
-      const {stdout, stderr} = await spawnAsync('./bin/pop.js', [
-        '--config',
-        'pop.config.json',
-        '--method',
-        'TOP',
-        '1',
-        '1'
-      ]);
-      expect(stderr).to.equal('');
-      expect(stdout).to.contain('Received:');
+
+    describe('Commands needing messages but no clean-up', function () {
+      beforeEach(() => {
+        return seedMessage({subject: 'test', html: 'test'});
+      });
+
+      it('Runs DELE', async function () {
+        const {stdout, stderr} = await spawnAsync('./bin/pop.js', [
+          '--config',
+          'pop.config.json',
+          '--method',
+          'DELE',
+          '1'
+        ]);
+        expect(stderr).to.equal('');
+        expect(stdout).to.contain("[ 'Marked to be deleted.', null ]\n");
+      });
     });
-    it('Runs LIST', async function () {
-      const {stdout, stderr} = await spawnAsync('./bin/pop.js', [
-        '--config',
-        'pop.config.json',
-        '--method',
-        'LIST'
-      ]);
-      expect(stderr).to.equal('');
-      expect(stdout).to.match(/'\d+ messages:'/u).and.match(/'\d+ \d+(\\r\\n\d+ \d+)*'/u);
-    });
-    it('Runs UIDL', async function () {
-      const {stdout, stderr} = await spawnAsync('./bin/pop.js', [
-        '--config',
-        'pop.config.json',
-        '--method',
-        'UIDL'
-        // '1'
-      ]);
-      expect(stderr).to.equal('');
-      expect(stdout).to.contain("[ [ '1',");
-    });
+
     it('Runs NOOP', async function () {
       const {stdout, stderr} = await spawnAsync('./bin/pop.js', [
         '--config',
@@ -132,17 +158,6 @@ describe('CLI', function () {
       ]);
       expect(stderr).to.equal('');
       expect(stdout).to.contain("[ '', null ]\n");
-    });
-    it('Runs DELE', async function () {
-      const {stdout, stderr} = await spawnAsync('./bin/pop.js', [
-        '--config',
-        'pop.config.json',
-        '--method',
-        'DELE',
-        '1'
-      ]);
-      expect(stderr).to.equal('');
-      expect(stdout).to.contain("[ 'Marked to be deleted.', null ]\n");
     });
 
     // Todo: Test APOP

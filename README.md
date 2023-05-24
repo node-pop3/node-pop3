@@ -133,7 +133,6 @@ property|comment
 ## To-dos
 
 1. Testing:
-    1. Ensure tests seed (and then delete) messages (e.g., using `emailjs`)
     1. Set up CI with hidden `pop.config.json` credentials
     1. Avoid skipping some tests
 1. Edge cases

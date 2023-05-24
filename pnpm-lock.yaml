@@ -25,6 +25,9 @@ devDependencies:
   chai:
     specifier: ^4.3.7
     version: 4.3.7
+  emailjs:
+    specifier: ^4.0.2
+    version: 4.0.2
   eslint:
     specifier: ^8.27.0
     version: 8.27.0
@@ -1668,6 +1671,16 @@ packages:
 
   /electron-to-chromium@1.4.284:
     resolution: {integrity: sha512-M8WEXFuKXMYMVr45fo8mq0wUrrJHheiKZf6BArTKk9ZBYCKJEOU5H8cdWgDT+qCVZf7Na4lVUaZsA+h6uA9+PA==}
+    dev: true
+
+  /emailjs@4.0.2:
+    resolution: {integrity: sha512-w/tldI93qO7uw9XzdwCCRR36OY/TYJxB81vEOmQkmxVDZOdrAnoQoOAvaMoDmmBUSoD1msyAIwBdKFWzC7lgKQ==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      typescript: '>=4.3.5'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
     dev: true
 
   /emoji-regex@8.0.0:

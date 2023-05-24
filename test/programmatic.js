@@ -3,21 +3,54 @@ import {readFileSync} from 'fs';
 
 import Pop3Command from '../src/Command.js';
 import {stream2String} from '../src/helper.js';
+import {seedMessage, deleteMessage} from './helpers/helper.js';
 
 const config = JSON.parse(readFileSync(new URL('../pop.config.json', import.meta.url)));
 
 describe('Programmatic', async function () {
   this.timeout(60000);
-  // Todo: Seed the account to ensure there is a message to retrieve
-  it('Runs `command`', async function () {
-    const pop3Command = new Pop3Command(config);
-    await pop3Command.connect();
-    await pop3Command.command('USER', config.user);
-    await pop3Command.command('PASS', config.password);
-    const [, stream] = await pop3Command.command('TOP', '1', '0');
-    await pop3Command.QUIT();
-    const str = await stream2String(stream);
-    expect(str).to.contain('Received:');
+  describe('Commands needing messages', function () {
+    beforeEach(() => {
+      return seedMessage({subject: 'test', html: 'test'});
+    });
+    afterEach(() => {
+      return deleteMessage();
+    });
+
+    it('Runs `command`', async function () {
+      const pop3Command = new Pop3Command(config);
+      await pop3Command.connect();
+      await pop3Command.command('USER', config.user);
+      await pop3Command.command('PASS', config.password);
+      const [, stream] = await pop3Command.command('TOP', '1', '0');
+      await pop3Command.QUIT();
+      const str = await stream2String(stream);
+      expect(str).to.contain('Received:');
+    });
+
+    it('Runs RETR command with message', async function () {
+      const pop3Command = new Pop3Command(config);
+      await pop3Command.connect();
+      await pop3Command.command('USER', config.user);
+      await pop3Command.command('PASS', config.password);
+      const string = await pop3Command.RETR(1);
+      await pop3Command.QUIT();
+      expect(string).to.be.a('string');
+    });
+  });
+  describe('Commands needing messages but no clean-up', function () {
+    beforeEach(() => {
+      return seedMessage({subject: 'test', html: 'test'});
+    });
+    it('Runs DELE command with message', async function () {
+      const pop3Command = new Pop3Command(config);
+      await pop3Command.connect();
+      await pop3Command.command('USER', config.user);
+      await pop3Command.command('PASS', config.password);
+      const info = await pop3Command.DELE(1);
+      await pop3Command.QUIT();
+      expect(info).to.contain('Marked to be deleted');
+    });
   });
   it('Runs RSET command', async function () {
     const pop3Command = new Pop3Command(config);
@@ -83,24 +116,6 @@ describe('Programmatic', async function () {
     const list = await pop3Command.UIDL(1);
     await pop3Command.QUIT();
     expect(list).to.be.a('string');
-  });
-  it('Runs RETR command with message', async function () {
-    const pop3Command = new Pop3Command(config);
-    await pop3Command.connect();
-    await pop3Command.command('USER', config.user);
-    await pop3Command.command('PASS', config.password);
-    const string = await pop3Command.RETR(1);
-    await pop3Command.QUIT();
-    expect(string).to.be.a('string');
-  });
-  it('Runs DELE command with message', async function () {
-    const pop3Command = new Pop3Command(config);
-    await pop3Command.connect();
-    await pop3Command.command('USER', config.user);
-    await pop3Command.command('PASS', config.password);
-    const info = await pop3Command.DELE(1);
-    await pop3Command.QUIT();
-    expect(info).to.contain('Marked to be deleted');
   });
   it('Defaults programmatically to 110 with no port or tls', async function () {
     const pop3Command = new Pop3Command({

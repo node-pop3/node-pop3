@@ -38,12 +38,12 @@ import Pop3Command from 'node-pop3';
 const pop3 = new Pop3Command({
   user: 'example@example.com',
   password: 'example',
-  host: 'pop3.example.com',
+  host: 'pop3.example.com'
 });
 
 const msgNum = 1;
 
-await string = pop3.RETR(msgNum);
+const str = await pop3.RETR(msgNum);
 // deal with mail string
 await pop3.QUIT();
 ```
@@ -53,7 +53,7 @@ await pop3.QUIT();
 ```js
 const list = await pop3.UIDL();
 console.dir(list);
-/**
+/*
  * [
  *  ['1', 'ZC0113-H8wi_YChVab4F0QTbwP4B6i'],
  *  ['2', 'ZC0114-3A9gAn8M2Sp1RhVCGTIII6i'],
@@ -89,7 +89,7 @@ command|`{String*}` command messages to Server|`{Promise}` resolve to `{Array[St
 listify|Splits lines by CRLF, filters out empty lines, and converts each line to a an array based on splitting by spaces
 
 ```js
-const pop3 = new Pop3Command({ host: 'pop3.example.com' });
+const pop3 = new Pop3Command({host: 'pop3.example.com'});
 
 // These must be in order
 await pop3.connect();
@@ -108,7 +108,9 @@ console.log(quitInfo); // Logging out.
 const streamString = await Pop3Command.stream2String(retrStream);
 console.log(streamString); // <message details...>
 
-console.log(await Pop3Command.listify(streamString)); // [ ['Return-Path:', 'brett@...'], ...]
+console.log(
+  await Pop3Command.listify(streamString)
+); // [ ['Return-Path:', 'brett@...'], ...]
 ```
 
 * common

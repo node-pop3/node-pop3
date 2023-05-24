@@ -1,6 +1,8 @@
+/* eslint-disable no-unused-expressions -- Chai */
 import {Readable} from 'stream';
 import {readFileSync} from 'fs';
 
+// eslint-disable-next-line no-shadow -- Needed
 import {expect} from 'chai';
 
 import Pop3Command from '../src/Command.js';
@@ -14,7 +16,7 @@ const config = JSON.parse(
   )
 );
 
-describe('Programmatic', async function () {
+describe('Programmatic', function () {
   this.timeout(60000);
   describe('Commands needing messages', function () {
     beforeEach(() => {
@@ -146,9 +148,12 @@ describe('Programmatic', async function () {
 
   it('Stops with early terminating server response', async function () {
     const pop3Command = new Pop3Command(config);
-    const prom = pop3Command._connect().catch(() => {
+    let prom;
+    try {
+      prom = pop3Command._connect();
+    } catch (err) {
       // May throw
-    });
+    }
     const listProm = pop3Command.command('LIST');
     setTimeout(() => {
       /** @type {import('net').Socket} */ (
@@ -177,24 +182,31 @@ describe('Programmatic', async function () {
     expect(true).to.be.true;
   });
 
-  it('Stops with call to `_endStream` (not called internally as such)', async function () {
-    const pop3Command = new Pop3Command(config);
-    const prom = pop3Command._connect();
-    const listProm = pop3Command.command('LIST');
-    setTimeout(() => {
-      pop3Command._endStream();
-    }, 5000);
-    await listProm;
-    await prom;
-    await pop3Command.QUIT();
-    expect(true).to.be.true;
-  });
+  it(
+    'Stops with call to `_endStream` (not called internally as such)',
+    async function () {
+      const pop3Command = new Pop3Command(config);
+      const prom = pop3Command._connect();
+      const listProm = pop3Command.command('LIST');
+      setTimeout(() => {
+        pop3Command._endStream();
+      }, 5000);
+      await listProm;
+      await prom;
+      await pop3Command.QUIT();
+      expect(true).to.be.true;
+    }
+  );
 
   describe('Errors', function () {
     it('Rejects with bad stream', function () {
       const stream = new Readable();
+      // eslint-disable-next-line promise/prefer-await-to-then -- Stream emit
       const prom = stream2String(stream).then(() => {
         expect(false).to.be.true;
+        return undefined;
+      // eslint-disable-next-line max-len -- Long
+      // eslint-disable-next-line promise/prefer-await-to-callbacks -- Stream emit
       }, (err) => {
         expect(err).to.be.an('error');
         expect(err.message).to.equal('oops');
@@ -202,37 +214,44 @@ describe('Programmatic', async function () {
       stream.emit('error', new Error('oops'));
       return prom;
     });
-    it('Rejects with bad server response (not `+OK` or `-ERR`)', async function () {
-      const pop3Command = new Pop3Command(config);
-      const prom = pop3Command._connect();
-      /** @type {import('net').Socket} */ (
-        pop3Command._socket
-      ).emit('data', [50]);
-      await prom.then(() => {
-        expect(false).to.be.true;
-      }, (err) => {
-        expect(err).to.be.an('error');
-        expect(err.message).to.equal('Unexpected response');
-      });
-      await pop3Command.QUIT();
-    });
-    it('Stops with error to `_endStream` (not called internally as such)', async function () {
-      const pop3Command = new Pop3Command(config);
-      const prom = pop3Command._connect();
-      const listProm = pop3Command.command('LIST');
-      setTimeout(() => {
-        pop3Command._endStream(new Error('oops'));
-      }, 5000);
-      await listProm;
-      try {
-        await prom;
-        expect(false).to.be.true;
-      } catch (err) {
-        expect(/** @type {Error} */ (err).message).to.equal('oops');
+    it(
+      'Rejects with bad server response (not `+OK` or `-ERR`)',
+      async function () {
+        const pop3Command = new Pop3Command(config);
+        const prom = pop3Command._connect();
+        /** @type {import('net').Socket} */ (
+          pop3Command._socket
+        ).emit('data', [50]);
+        try {
+          await prom;
+          expect(false).to.be.true;
+        } catch (err) {
+          expect(err).to.be.an('error');
+          expect(err.message).to.equal('Unexpected response');
+        }
+        await pop3Command.QUIT();
       }
-      await pop3Command.QUIT();
-      expect(true).to.be.true;
-    });
+    );
+    it(
+      'Stops with error to `_endStream` (not called internally as such)',
+      async function () {
+        const pop3Command = new Pop3Command(config);
+        const prom = pop3Command._connect();
+        const listProm = pop3Command.command('LIST');
+        setTimeout(() => {
+          pop3Command._endStream(new Error('oops'));
+        }, 5000);
+        await listProm;
+        try {
+          await prom;
+          expect(false).to.be.true;
+        } catch (err) {
+          expect(/** @type {Error} */ (err).message).to.equal('oops');
+        }
+        await pop3Command.QUIT();
+        expect(true).to.be.true;
+      }
+    );
 
     it('Rejects with socket error and existing stream', async function () {
       const pop3Command = new Pop3Command(config);
@@ -247,6 +266,7 @@ describe('Programmatic', async function () {
       });
       const connectProm = pop3Command._connect();
       const listProm = pop3Command.command('LIST');
+      // eslint-disable-next-line promise/avoid-new -- Testing
       const p = new Promise((resolve) => {
         setTimeout(() => {
           res = resolve;
@@ -263,14 +283,14 @@ describe('Programmatic', async function () {
       try {
         await connectProm;
         expect(false).to.be.true;
-      } catch (err) {
-        expect(/** @type {Error} */ (err).message).to.equal('oops');
+      } catch (error) {
+        expect(/** @type {Error} */ (error).message).to.equal('oops');
       }
 
       await listProm;
       try {
         await pop3Command.QUIT();
-      } catch (err) {
+      } catch (error) {
         // Sometimes errs
       }
       return p;

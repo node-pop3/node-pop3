@@ -2,3 +2,4 @@ lib
 bin/pop.js
 pop.config.js
 coverage
+dist

@@ -1,14 +1,38 @@
 {
-  "extends": "eslint:recommended",
+  "extends": "ash-nazg/sauron-overrides",
   "parserOptions": {
     "sourceType": "module",
-    "ecmaVersion": 2020
+    "ecmaVersion": 2022
+  },
+  "settings": {
+    "polyfills": [
+      "Promise",
+      "URL"
+    ]
   },
   "env": {
     "es6": true,
     "node": true
   },
   "overrides": [
+    {
+      "files": "*.md/*.js",
+      "globals": {
+        "require": true,
+        "pop3": true,
+        "Pop3Command": true
+      },
+      "rules": {
+        "import/unambiguous": "off",
+        "import/no-unresolved": "off",
+        "import/no-commonjs": "off",
+        "no-console": "off",
+        "no-shadow": ["error", {
+          "allow": ["Pop3Command"]
+        }],
+        "no-unused-vars": ["error", {"varsIgnorePattern": "Pop3Command|str"}]
+      }
+    },
     {
       "files": ["test/**"],
       "env": {
@@ -20,13 +44,5 @@
     }
   ],
   "rules": {
-    "strict": ["error"],
-    "indent": ["error", 2, {"outerIIFEBody": 0}],
-    "semi": ["error"],
-    "prefer-const": ["error"],
-    "no-var": ["error"],
-    "prefer-destructuring": ["error"],
-    "object-shorthand": ["error"],
-    "quotes": ["error", "single", {"avoidEscape": true}]
   }
 }

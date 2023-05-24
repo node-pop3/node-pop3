@@ -1,4 +1,5 @@
 import {readFileSync} from 'fs';
+// eslint-disable-next-line import/no-unresolved -- It's present
 import {SMTPClient} from 'emailjs';
 import Pop3Command from '../../src/Command.js';
 

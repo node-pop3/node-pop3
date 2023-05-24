@@ -1,11 +1,14 @@
 import Pop3Connection from './Connection.js';
 
-import { stream2String, listify } from './helper.js';
+import {stream2String, listify} from './helper.js';
 
 /**
  * @typedef {number} Integer
  */
 
+/**
+ *
+ */
 class Pop3Command extends Pop3Connection {
   /**
    * @param {{
@@ -19,7 +22,7 @@ class Pop3Command extends Pop3Connection {
    *   servername?: string
    * }} cfg
    */
-  constructor({
+  constructor ({
     user,
     password,
     host,
@@ -29,7 +32,7 @@ class Pop3Command extends Pop3Connection {
     tlsOptions,
     servername
   }) {
-    super({ host, port, tls, timeout, tlsOptions, servername });
+    super({host, port, tls, timeout, tlsOptions, servername});
     this.user = user;
     this.password = password;
     this._PASSInfo = '';
@@ -38,7 +41,7 @@ class Pop3Command extends Pop3Connection {
   /**
    * @returns {Promise<string>}
    */
-  async _connect() {
+  async _connect () {
     if (this._socket) {
       return this._PASSInfo;
     }
@@ -53,7 +56,7 @@ class Pop3Command extends Pop3Connection {
    * @param {Integer|string} msgNumber
    * @returns {Promise<string[][]|string[]>}
    */
-  async UIDL(msgNumber = '') {
+  async UIDL (msgNumber = '') {
     await this._connect();
     const [info, stream] = await super.command('UIDL', msgNumber);
     if (msgNumber) {
@@ -66,7 +69,7 @@ class Pop3Command extends Pop3Connection {
   /**
    * @returns {Promise<void>}
    */
-  async NOOP() {
+  async NOOP () {
     await this._connect();
     await super.command('NOOP');
   }
@@ -75,7 +78,7 @@ class Pop3Command extends Pop3Connection {
    * @param {Integer|string} msgNumber
    * @returns {Promise<string[][]|string[]>}
    */
-  async LIST(msgNumber = '') {
+  async LIST (msgNumber = '') {
     await this._connect();
     const [info, stream] = await super.command('LIST', msgNumber);
     if (msgNumber) {
@@ -88,7 +91,7 @@ class Pop3Command extends Pop3Connection {
   /**
    * @returns {Promise<string>}
    */
-  async RSET() {
+  async RSET () {
     await this._connect();
     const [info] = await super.command('RSET');
     return info;
@@ -98,7 +101,7 @@ class Pop3Command extends Pop3Connection {
    * @param {Integer} msgNumber
    * @returns {Promise<string>}
    */
-  async RETR(msgNumber) {
+  async RETR (msgNumber) {
     await this._connect();
     const [, stream] = await super.command('RETR', msgNumber);
     return stream2String(stream);
@@ -108,7 +111,7 @@ class Pop3Command extends Pop3Connection {
    * @param {Integer} msgNumber
    * @returns {Promise<string>}
    */
-  async DELE(msgNumber) {
+  async DELE (msgNumber) {
     await this._connect();
     const [info] = await super.command('DELE', msgNumber);
     return info;
@@ -117,7 +120,7 @@ class Pop3Command extends Pop3Connection {
   /**
    * @returns {Promise<string>}
    */
-  async STAT() {
+  async STAT () {
     await this._connect();
     const [info] = await super.command('STAT');
     return info;
@@ -126,11 +129,11 @@ class Pop3Command extends Pop3Connection {
   /**
    * @returns {Promise<string>}
    */
-  async LAST() {
+  async LAST () {
     await this._connect();
     const [info] = await super.command('LAST');
+    /* c8 ignore next 2 */
     // May fail depending on test server
-    /* c8 ignore next */
     return info;
   }
 
@@ -139,7 +142,7 @@ class Pop3Command extends Pop3Connection {
    * @param {Integer} numLines
    * @returns {Promise<string>}
    */
-  async TOP(msgNumber, numLines = 0) {
+  async TOP (msgNumber, numLines = 0) {
     await this._connect();
     const [, stream] = await super.command('TOP', msgNumber, numLines);
     return stream2String(stream);
@@ -148,9 +151,9 @@ class Pop3Command extends Pop3Connection {
   /**
    * @returns {Promise<string>}
    */
-  async QUIT() {
+  async QUIT () {
     if (!this._socket) {
-      this._PASSInfo = '' || 'Bye';
+      this._PASSInfo = 'Bye';
       return this._PASSInfo;
     }
     const [info] = await super.command('QUIT');

@@ -1,3 +1,4 @@
+import {expect} from 'chai';
 import spawnAsync from '@expo/spawn-async';
 import {seedMessage, deleteMessage} from './helpers/helper.js';
 

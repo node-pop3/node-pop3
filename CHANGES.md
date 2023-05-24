@@ -1,5 +1,11 @@
 # CHANGES to node-pop3
 
+## 0.9.0 (2023-05-24)
+
+- feat: TypeScript types
+- feat: added LAST command (@metafloor)
+- fix: LIST and UIDL with msg-nbr (@metafloor)
+
 ## 0.8.0 (2022-01-16)
 
 - Enhancement: Add `servername` option

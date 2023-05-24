@@ -1,5 +1,8 @@
-import { CRLF } from './constant.js';
+import {CRLF} from './constant.js';
 
+/**
+ * @param {import('stream').Stream} stream
+ */
 export function stream2String(stream) {
   return new Promise((resolve, reject) => {
     let buffer = Buffer.concat([]);
@@ -13,6 +16,10 @@ export function stream2String(stream) {
   });
 }
 
+/**
+ * @param {string} str
+ * @returns {string[][]}
+ */
 export function listify(str) {
   return str.split(CRLF)
     .filter((line) => line)

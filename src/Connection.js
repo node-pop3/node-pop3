@@ -12,7 +12,21 @@ import {
   MAYBE_MULTI_LINE_COMMAND_NAME
 } from './constant.js';
 
+/**
+ * @typedef {number} Integer
+ */
+
 class Pop3Connection extends EventEmitter {
+  /**
+   * @param {{
+  *   host: string,
+  *   port?: Integer,
+  *   tls?: boolean,
+  *   timeout?: Integer,
+  *   tlsOptions?: import('tls').TlsOptions,
+  *   servername?: string
+  * }} cfg
+  */
   constructor({
     host,
     port,
@@ -33,6 +47,9 @@ class Pop3Connection extends EventEmitter {
     this.servername = servername || host;
   }
 
+  /**
+   * @returns {Readable}
+   */
   _updateStream() {
     this._stream = new Readable({
       read: () => {},
@@ -40,18 +57,26 @@ class Pop3Connection extends EventEmitter {
     return this._stream;
   }
 
+  /**
+   * @param {Buffer} buffer
+   * @returns {void}
+   */
   _pushStream(buffer) {
     if (TERMINATOR_BUFFER_ARRAY.some((_buffer) => _buffer.equals(buffer))) {
       return this._endStream();
     }
     const endBuffer = buffer.slice(-5);
     if (endBuffer.equals(TERMINATOR_BUFFER)) {
-      this._stream.push(buffer.slice(0, -5));
+      /** @type {Readable} */ (this._stream).push(buffer.slice(0, -5));
       return this._endStream();
     }
-    this._stream.push(buffer);
+    /** @type {Readable} */ (this._stream).push(buffer);
   }
 
+  /**
+   * @param {Error} [err]
+   * @returns {void}
+   */
   _endStream(err) {
     if (this._stream) {
       this._stream.push(null);
@@ -64,10 +89,14 @@ class Pop3Connection extends EventEmitter {
     const { host, port, tlsOptions, servername } = this;
     const socket = new Socket();
     socket.setKeepAlive(true);
-    return new Promise((resolve, reject) => {
+    return new Promise((
+      /** @type {(val?: any) => void} */
+      resolve,
+      reject
+    ) => {
       if (typeof this.timeout !== 'undefined') {
         socket.setTimeout(this.timeout, () => {
-          const err = new Error('timeout');
+          const err = /** @type {Error & {eventName: "timeout"}} */ (new Error('timeout'));
           err.eventName = 'timeout';
           reject(err);
           if (this.listeners('end').length) {
@@ -76,12 +105,13 @@ class Pop3Connection extends EventEmitter {
           if (this.listeners('error').length) {
             this.emit('error', err);
           }
-          this._socket.end();
+          /** @type {import('tls').TLSSocket} */ (this._socket).end();
           this._socket = null;
         });
       }
       if (this.tls) {
         const options = Object.assign({ host, port, socket, servername }, tlsOptions);
+        // @ts-expect-error Works
         this._socket = _tls.connect(options);
       } else {
         this._socket = socket;
@@ -92,7 +122,9 @@ class Pop3Connection extends EventEmitter {
           return this._pushStream(buffer);
         }
         if (buffer[0] === 45) { // '-'
-          const err = new Error(buffer.slice(5, -2));
+          const err =  /** @type {Error & {eventName: "error", command: string|undefined}} */ (
+            new Error(buffer.slice(5, -2))
+          );
           err.eventName = 'error';
           err.command = this._command;
           return this.emit('error', err);
@@ -115,7 +147,9 @@ class Pop3Connection extends EventEmitter {
           resolve();
           return;
         }
-        const err = new Error('Unexpected response');
+        const err = /** @type {Error & {eventName: "bad-server-response"}} */ (
+          new Error('Unexpected response')
+        );
         err.eventName = 'bad-server-response';
         reject(err);
       });
@@ -129,13 +163,13 @@ class Pop3Connection extends EventEmitter {
         this._socket = null;
       });
       this._socket.once('close', () => {
-        const err = new Error('close');
+        const err = /** @type {Error & {eventName: "close"}} */ (new Error('close'));
         err.eventName = 'close';
         reject(err);
         this._socket = null;
       });
       this._socket.once('end', () => {
-        const err = new Error('end');
+        const err = /** @type {Error & {eventName: "end"}} */ (new Error('end'));
         err.eventName = 'end';
         reject(err);
         this._socket = null;
@@ -147,12 +181,21 @@ class Pop3Connection extends EventEmitter {
     });
   }
 
+  /**
+   * @param {...(string|Integer)} args
+   * @throws {Error}
+   * @returns {Promise<[string, Readable]>}
+   */
   async command(...args) {
     this._command = args.join(' ');
     if (!this._socket) {
       throw new Error('no-socket');
     }
-    await new Promise((resolve, reject) => {
+    await new Promise((
+      /** @type {(value?: any) => void} */
+      resolve,
+      reject
+    ) => {
       if (!this._stream) {
         return resolve();
       }
@@ -164,6 +207,9 @@ class Pop3Connection extends EventEmitter {
       });
     });
     return new Promise((resolve, reject) => {
+      /**
+       * @param {Error} err
+       */
       const rejectFn = (err) => reject(err);
       this.once('error', rejectFn);
       this.once('response', (info, stream) => {
@@ -173,7 +219,7 @@ class Pop3Connection extends EventEmitter {
       if (!this._socket) {
         reject(new Error('no-socket'));
       }
-      this._socket.write(`${this._command}${CRLF}`, 'utf8');
+      /** @type {Socket} */ (this._socket).write(`${this._command}${CRLF}`, 'utf8');
     });
   }
 }

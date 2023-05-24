@@ -13,6 +13,15 @@ devDependencies:
   '@expo/spawn-async':
     specifier: ^1.7.0
     version: 1.7.0
+  '@types/chai':
+    specifier: ^4.3.5
+    version: 4.3.5
+  '@types/mocha':
+    specifier: ^10.0.1
+    version: 10.0.1
+  '@types/node':
+    specifier: ^20.2.3
+    version: 20.2.3
   babel-plugin-add-module-exports:
     specifier: ^1.0.4
     version: 1.0.4
@@ -1320,8 +1329,20 @@ packages:
       fastq: 1.13.0
     dev: true
 
+  /@types/chai@4.3.5:
+    resolution: {integrity: sha512-mEo1sAde+UCE6b2hxn332f1g1E8WfYRu6p5SvTKr2ZKC1f7gFJXk4h5PyGP9Dt6gCaG8y8XhwnXWC6Iy2cmBng==}
+    dev: true
+
   /@types/istanbul-lib-coverage@2.0.4:
     resolution: {integrity: sha512-z/QT1XN4K4KYuslS23k62yDIDLwLFkzxOuMplDtObz0+y7VqJCaO2o+SPwHCvLFZh7xazvvoor2tA/hPz9ee7g==}
+    dev: true
+
+  /@types/mocha@10.0.1:
+    resolution: {integrity: sha512-/fvYntiO1GeICvqbQ3doGDIP97vWmvFt83GKguJ6prmQM2iXZfFcq6YE8KteFyRtX2/h5Hf91BYvPodJKFYv5Q==}
+    dev: true
+
+  /@types/node@20.2.3:
+    resolution: {integrity: sha512-pg9d0yC4rVNWQzX8U7xb4olIOFuuVL9za3bzMT2pu2SU0SNEi66i2qrvhE2qt0HvkhuCaWJu7pLNOt/Pj8BIrw==}
     dev: true
 
   /acorn-jsx@5.3.2(acorn@8.8.1):

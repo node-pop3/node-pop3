@@ -2,7 +2,12 @@ import {readFileSync} from 'fs';
 import {SMTPClient} from 'emailjs';
 import Pop3Command from '../../src/Command.js';
 
-const config = JSON.parse(readFileSync(new URL('../../pop.config.json', import.meta.url)));
+const config = JSON.parse(
+  // @ts-expect-error It's ok
+  readFileSync(
+    new URL('../../pop.config.json', import.meta.url)
+  )
+);
 
 const smtpClient = new SMTPClient({
   host: config.host,
@@ -14,7 +19,12 @@ const smtpClient = new SMTPClient({
 });
 
 /**
- * @returns {Promise<import('emailjs').Message}
+ * @param {{
+ *   subject: string,
+ *   html: string,
+ *   to?: string
+ * }} cfg
+ * @returns {Promise<import('emailjs').Message>}
  */
 function seedMessage ({subject, html, to = config.user}) {
   const attachment = [{data: html, alternative: true}];
@@ -27,6 +37,9 @@ function seedMessage ({subject, html, to = config.user}) {
   });
 }
 
+/**
+ * @returns {Promise<void>}
+ */
 async function deleteMessage () {
   const pop3Command = new Pop3Command(config);
   await pop3Command.connect();

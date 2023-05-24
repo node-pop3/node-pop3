@@ -6,6 +6,12 @@ import Pop3Command from '../src/Command.js';
 import {stream2String} from '../src/helper.js';
 
 const {argv} = process,
+  /**
+   * @type {{
+   *   help: [boolean],
+   *   [key: string]: any[]
+   * }}
+   */
   options = {},
   alias = {
     c: 'config',
@@ -15,11 +21,27 @@ const {argv} = process,
     m: 'method',
   },
   requiredOptionNames = ['user', 'password', 'host', 'method'],
-  mailStructure = {
-    port: 110,
-    tls: false,
-  },
+  /**
+   * @typedef {number} Integer
+   */
+
+  /**
+   * @type {{
+   *   user: string,
+   *   password: string,
+   *   host: string,
+   *   port?: Integer,
+   *   tls?: boolean,
+   *   timeout?: Integer,
+   *   tlsOptions?: import('tls').TlsOptions,
+   *   servername?: string
+   * }}
+   */
+  mailStructure = {},
   mailStructureOptionNames = ['user', 'password', 'host', 'port', 'tls', 'timeout'];
+
+mailStructure.port = 110;
+mailStructure.tls = false;
 
 function printHelpAndExit() {
   const text = 'Usage: pop [options]\r\n'
@@ -40,16 +62,17 @@ function printHelpAndExit() {
   process.exit(0);
 }
 
+/** @type {string} */
 let optionName;
 if (argv.slice(2).some(function(arg, i, args) {
   if (arg.charAt(0) === '-') {
     optionName = arg.replace(/^-+/g, '');
     if ((optionName || '').length === 1) {
-      if (!{}.hasOwnProperty.call(alias, optionName)) {
+      if (!Object.hasOwn(alias, optionName)) {
         console.error('Invalid alias', optionName);
         return true;
       }
-      optionName = alias[optionName];
+      optionName = alias[/** @type {"c"|"u"|"p"|"h"|"m"} */ (optionName)];
     }
     if (
       optionName &&
@@ -74,9 +97,12 @@ if (options.help) {
 }
 
 if (options.config) {
-  const configOptions = JSON.parse(await readFile(
-    new URL(join('../', options.config[0]), import.meta.url)
-  ));
+  const configOptions = JSON.parse(
+    // @ts-expect-error It's ok
+    await readFile(
+      new URL(join('../', options.config[0]), import.meta.url)
+    )
+  );
 
   ['method', ...mailStructureOptionNames].forEach((optionName) => {
     if (!(optionName in options) && optionName in configOptions) {
@@ -100,26 +126,49 @@ if ('no-tls' in options) {
   options.tls = [false];
 } else if (options.tls && options.tls[0]) {
   // By using `mailStructure`, can still be overridden below
-  mailStructure.port = '995';
+  mailStructure.port = 995;
 }
 for (const _optionName of mailStructureOptionNames) {
-  mailStructure[_optionName] = (
+  // @ts-expect-error Unclear what is wrong here?
+  mailStructure[
+    /** @type {"user"|"password"|"host"|"port"|"tls"|"timeout"} */ (
+      _optionName
+    )
+  ] = (
     options[_optionName] || []
-  )[0] || mailStructure[_optionName];
+  )[0] || mailStructure[
+    /** @type {"user"|"password"|"host"|"port"|"tls"|"timeout"} */
+    (_optionName)
+  ];
 }
 
-const pop3Command = new Pop3Command(mailStructure);
+const pop3Command = new Pop3Command(
+    /**
+   * @type {{
+    *   user: string,
+    *   password: string,
+    *   host: string,
+    *   port?: Integer,
+    *   tls?: boolean,
+    *   timeout?: Integer,
+    *   tlsOptions?: import('tls').TlsOptions,
+    *   servername?: string
+    * }}
+    */
+  (mailStructure)
+);
 const [methodName] = options.method;
-
-// Todo: Might want to report this to Istnabul as nyc doesn't seem to pick
-//   this up, despite it running
-// istanbul ignore next
-(async () => {
 
 let result;
 try {
   if (['UIDL', 'TOP', 'QUIT', 'RETR'].includes(methodName)) {
-    result = await pop3Command[methodName](...options.method.slice(1));
+    result = await pop3Command[
+      /** @type {"UIDL"|"TOP"|"QUIT"|"RETR"} */
+      (methodName)
+    ](
+      // @ts-expect-error It's ok
+      ...options.method.slice(1)
+    );
   } else {
     await pop3Command._connect();
     result = await pop3Command.command(...options.method);
@@ -139,5 +188,3 @@ try {
 
 console.dir(result);
 process.exit(0);
-
-})();

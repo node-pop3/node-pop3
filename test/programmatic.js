@@ -1,11 +1,18 @@
 import {Readable} from 'stream';
 import {readFileSync} from 'fs';
 
+import {expect} from 'chai';
+
 import Pop3Command from '../src/Command.js';
 import {stream2String} from '../src/helper.js';
 import {seedMessage, deleteMessage} from './helpers/helper.js';
 
-const config = JSON.parse(readFileSync(new URL('../pop.config.json', import.meta.url)));
+const config = JSON.parse(
+  // @ts-expect-error It's ok
+  readFileSync(
+    new URL('../pop.config.json', import.meta.url)
+  )
+);
 
 describe('Programmatic', async function () {
   this.timeout(60000);
@@ -144,7 +151,9 @@ describe('Programmatic', async function () {
     });
     const listProm = pop3Command.command('LIST');
     setTimeout(() => {
-      pop3Command._socket.emit('data', Buffer.from('\r\n.\r\n'));
+      /** @type {import('net').Socket} */ (
+        pop3Command._socket
+      ).emit('data', Buffer.from('\r\n.\r\n'));
     }, 3000);
 
     try {
@@ -196,7 +205,9 @@ describe('Programmatic', async function () {
     it('Rejects with bad server response (not `+OK` or `-ERR`)', async function () {
       const pop3Command = new Pop3Command(config);
       const prom = pop3Command._connect();
-      pop3Command._socket.emit('data', [50]);
+      /** @type {import('net').Socket} */ (
+        pop3Command._socket
+      ).emit('data', [50]);
       await prom.then(() => {
         expect(false).to.be.true;
       }, (err) => {
@@ -217,7 +228,7 @@ describe('Programmatic', async function () {
         await prom;
         expect(false).to.be.true;
       } catch (err) {
-        expect(err.message).to.equal('oops');
+        expect(/** @type {Error} */ (err).message).to.equal('oops');
       }
       await pop3Command.QUIT();
       expect(true).to.be.true;
@@ -225,7 +236,9 @@ describe('Programmatic', async function () {
 
     it('Rejects with socket error and existing stream', async function () {
       const pop3Command = new Pop3Command(config);
-      let err, res;
+      let err;
+      /** @type {(value?: any) => void} */
+      let res;
       pop3Command.on('error', (e) => {
         err = e;
         if (err.message === 'oops' || err.message.includes('Unknown command')) {
@@ -237,9 +250,13 @@ describe('Programmatic', async function () {
       const p = new Promise((resolve) => {
         setTimeout(() => {
           res = resolve;
-          pop3Command._socket.emit('error', new Error('oops'));
+          /** @type {import('net').Socket} */ (
+            pop3Command._socket
+          ).emit('error', new Error('oops'));
           // We have to send this ourselves as not getting from server
-          pop3Command._socket.emit('data', Buffer.from('\r\n.\r\n'));
+          /** @type {import('net').Socket} */ (
+            pop3Command._socket
+          ).emit('data', Buffer.from('\r\n.\r\n'));
         }, 3000);
       });
 
@@ -247,7 +264,7 @@ describe('Programmatic', async function () {
         await connectProm;
         expect(false).to.be.true;
       } catch (err) {
-        expect(err.message).to.equal('oops');
+        expect(/** @type {Error} */ (err).message).to.equal('oops');
       }
 
       await listProm;
@@ -263,7 +280,10 @@ describe('Programmatic', async function () {
         ...config,
         timeout: 10
       });
-      let endError, errError;
+      /** @type {undefined|(Error & {eventName: "timeout"})} */
+      let endError;
+      /** @type {undefined|(Error & {eventName: "timeout"})} */
+      let errError;
       pop3Command.on('end', (e) => {
         endError = e;
       });
@@ -274,21 +294,30 @@ describe('Programmatic', async function () {
       try {
         await pop3Command._connect();
         expect(false).to.be.true;
-      } catch (err) {
+      } catch (er) {
+        const err = /** @type {Error & {eventName: "timeout"}} */ (er);
         expect(err.eventName).to.equal('timeout');
         expect(err.message).to.equal('timeout');
 
-        expect(endError.eventName).to.equal('timeout');
-        expect(endError.message).to.equal('timeout');
+        expect(/** @type {Error & {eventName: "timeout"}} */ (
+          endError
+        ).eventName).to.equal('timeout');
+        expect(/** @type {Error & {eventName: "timeout"}} */ (
+          endError
+        ).message).to.equal('timeout');
 
-        expect(errError.eventName).to.equal('timeout');
-        expect(errError.message).to.equal('timeout');
+        expect(/** @type {Error & {eventName: "timeout"}} */ (
+          errError
+        ).eventName).to.equal('timeout');
+        expect(/** @type {Error & {eventName: "timeout"}} */ (
+          errError
+        ).message).to.equal('timeout');
       }
       try {
         await pop3Command.command('QUIT');
         expect(false).to.be.true;
       } catch (err) {
-        expect(err.message).to.equal('no-socket');
+        expect(/** @type {Error} */ (err).message).to.equal('no-socket');
       }
     });
   });

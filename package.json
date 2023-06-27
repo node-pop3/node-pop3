@@ -1,6 +1,6 @@
 {
   "name": "@tyzion/node-pop3",
-  "version": "0.8.4",
+  "version": "0.8.5",
   "description": "fork of node-pop3, POP3 client for node",
   "main": "./lib/Command.js",
   "type": "commonjs",

@@ -12,8 +12,8 @@ export function stream2String(stream, maxBufferSize) {
   }
   return new Promise((resolve, reject) => {
     const streamTimeout = setTimeout(() => {
-      reject(new Error('stream2String timeout'))
-    }, 10*60*1000);
+      reject({ eventName: 'timeout', name: 'stream2String timeout' })
+    }, 5*60*1000);
 
     const finalBufferArr = [];
     let finalBufferLength = 0;

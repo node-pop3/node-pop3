@@ -227,7 +227,7 @@ class Pop3Connection extends EventEmitter {
    * @returns {Promise<[string, Readable]>}
    */
   async command (...args) {
-    this._command = args.join(' ');
+    this._command = args.join(' ').trim();
     if (!this._socket) {
       throw new Error('no-socket');
     }

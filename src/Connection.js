@@ -122,6 +122,10 @@ class Pop3Connection extends EventEmitter {
           }
           /** @type {import('tls').TLSSocket} */ (this._socket).end();
           this._socket = null;
+
+          if (this._stream) {
+            this._stream.destroy();
+          }
         });
       }
       if (this.tls) {

@@ -1,5 +1,10 @@
 # CHANGES to node-pop3
 
+## 0.9.1 (2025-04-15)
+
+- fix: avoid trailing spaces for parameterless commands (#34)
+- fix: destroy stream after timeout
+
 ## 0.9.0 (2023-05-24)
 
 - feat: ESM modules (BREAKING)

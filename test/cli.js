@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-shadow -- Needed
 import {expect} from 'chai';
 import spawnAsync from '@expo/spawn-async';
 import {seedMessage, deleteMessage} from './helpers/helper.js';
@@ -96,8 +95,9 @@ describe('CLI', function () {
           'LIST'
         ]);
         expect(stderr).to.equal('');
-        // eslint-disable-next-line unicorn/no-unsafe-regex -- Testing
-        expect(stdout).to.match(/'\d+ messages:'/u).and.match(/'\d+ \d+(?:\\r\\n\d+ \d+)*'/u);
+        expect(stdout).to.match(/'\d+ messages:'/v).and.match(
+          /'\d+ \d+(?:\\r\\n\d+ \d+)*'/v
+        );
       });
       it('Runs UIDL', async function () {
         const {stdout, stderr} = await spawnAsync('./bin/pop.js', [
@@ -149,7 +149,7 @@ describe('CLI', function () {
         'STAT'
       ]);
       expect(stderr).to.equal('');
-      expect(stdout).to.match(/\[ '\d+ \d+', null \]\n/u);
+      expect(stdout).to.match(/\[ '\d+ \d+', null \]\n/v);
     });
     it('Runs RSET', async function () {
       const {stdout, stderr} = await spawnAsync('./bin/pop.js', [

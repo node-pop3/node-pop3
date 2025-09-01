@@ -1,8 +1,7 @@
-/* eslint-disable no-unused-expressions -- Chai */
+/* eslint-disable chai-expect/no-inner-literal -- Just checking reached code */
 import {Readable} from 'stream';
 import {readFileSync} from 'fs';
 
-// eslint-disable-next-line no-shadow -- Needed
 import {expect} from 'chai';
 
 import Pop3Command from '../src/Command.js';
@@ -11,6 +10,7 @@ import {seedMessage, deleteMessage} from './helpers/helper.js';
 
 const config = JSON.parse(
   // @ts-expect-error It's ok
+  // eslint-disable-next-line n/no-sync -- Testing
   readFileSync(
     new URL('../pop.config.json', import.meta.url)
   )
@@ -205,7 +205,7 @@ describe('Programmatic', function () {
       const prom = stream2String(stream).then(() => {
         expect(false).to.be.true;
         return undefined;
-      // eslint-disable-next-line max-len -- Long
+      // eslint-disable-next-line @stylistic/max-len -- Long
       // eslint-disable-next-line promise/prefer-await-to-callbacks -- Stream emit
       }, (err) => {
         expect(err).to.be.an('error');

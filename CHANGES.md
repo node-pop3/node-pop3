@@ -1,5 +1,12 @@
 # CHANGES to node-pop3
 
+## 0.10.0 (unreleased)
+
+BREAKING CHANGES:
+- Requires Node ^20.11.0 || >= 22.0.0
+
+- chore: update devDeps.
+
 ## 0.9.1 (2025-04-15)
 
 - fix: avoid trailing spaces for parameterless commands (#34)

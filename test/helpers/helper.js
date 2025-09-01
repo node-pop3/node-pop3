@@ -5,6 +5,7 @@ import Pop3Command from '../../src/Command.js';
 
 const config = JSON.parse(
   // @ts-expect-error It's ok
+  // eslint-disable-next-line n/no-sync -- Testing
   readFileSync(
     new URL('../../pop.config.json', import.meta.url)
   )

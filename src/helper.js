@@ -22,7 +22,7 @@ export function stream2String (stream) {
  * @returns {string[][]}
  */
 export function listify (str) {
-  return str.split(CRLF)
-    .filter(Boolean)
-    .map((line) => line.split(' '));
+  return str.split(CRLF).
+    filter(Boolean).
+    map((line) => line.split(' '));
 }

@@ -1,10 +1,11 @@
 # CHANGES to node-pop3
 
-## 0.10.0 (unreleased)
+## 0.10.0
 
 BREAKING CHANGES:
 - Requires Node ^20.11.0 || >= 22.0.0
 
+- fix(security): avoid leaking password in potentially loggable errors (#37)
 - chore: update devDeps.
 
 ## 0.9.1 (2025-04-15)

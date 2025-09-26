@@ -103,6 +103,7 @@ class Pop3Connection extends EventEmitter {
     socket.setKeepAlive(true);
     // eslint-disable-next-line promise/avoid-new -- Our own API
     return new Promise((
+      // eslint-disable-next-line jsdoc/reject-any-type -- Promise API
       /** @type {(val?: any) => void} */
       resolve,
       reject
@@ -156,7 +157,10 @@ class Pop3Connection extends EventEmitter {
                 new Error(buffer.subarray(5, -2))
               );
             err.eventName = 'error';
-            err.command = this._command;
+            // https://github.com/node-pop3/node-pop3/issues/37
+            err.command = this._command.startsWith('PASS ')
+              ? 'PASS ***'
+              : this._command;
             this.emit('error', err);
             return;
           }
@@ -233,6 +237,7 @@ class Pop3Connection extends EventEmitter {
     }
     // eslint-disable-next-line promise/avoid-new -- Our own API
     await new Promise((
+      // eslint-disable-next-line jsdoc/reject-any-type -- Promise API
       /** @type {(value?: any) => void} */
       resolve,
       reject

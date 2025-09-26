@@ -258,6 +258,7 @@ describe('Programmatic', function () {
     it('Rejects with socket error and existing stream', async function () {
       const pop3Command = new Pop3Command(config);
       let err;
+      // eslint-disable-next-line jsdoc/reject-any-type -- Promise API
       /** @type {(value?: any) => void} */
       let res;
       pop3Command.on('error', (e) => {

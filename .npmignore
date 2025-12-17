@@ -5,3 +5,8 @@ coverage
 test
 pnpm-lock.yaml
 eslint.config.js
+.idea
+.ncurc.cjs
+tsconfig.json
+tsconfig-prod.json
+pnpm-workspace.yaml

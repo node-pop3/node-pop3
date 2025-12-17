@@ -108,20 +108,45 @@ class Pop3Connection extends EventEmitter {
       resolve,
       reject
     ) => {
+      let settled = false;
+
+      const safeResolve = () => {
+        if (settled) {
+          return;
+        }
+        settled = true;
+        resolve();
+      };
+
+      /**
+       * @param {Error & {
+       *   eventName: "timeout"|"bad-server-response"|"close"|"end"
+       * }} e
+       */
+      const safeReject = (e) => {
+        if (settled) {
+          return;
+        }
+        settled = true;
+        if (this.listeners('error').length) {
+          this.emit('error', e);
+        }
+        reject(e);
+      };
+
       if (typeof this.timeout !== 'undefined') {
         socket.setTimeout(this.timeout, () => {
           const err = /** @type {Error & {eventName: "timeout"}} */ (
             new Error('timeout')
           );
           err.eventName = 'timeout';
-          reject(err);
+          safeReject(err);
           if (this.listeners('end').length) {
             this.emit('end', err);
           }
-          if (this.listeners('error').length) {
-            this.emit('error', err);
+          if (this._socket && !this._socket.destroyed) {
+            this._socket.end();
           }
-          /** @type {import('tls').TLSSocket} */ (this._socket).end();
           this._socket = null;
 
           if (this._stream) {
@@ -180,7 +205,7 @@ class Pop3Connection extends EventEmitter {
               }
             }
             this.emit('response', infoBuffer.toString(), stream);
-            resolve();
+            safeResolve();
             return;
           }
           const err =
@@ -190,7 +215,7 @@ class Pop3Connection extends EventEmitter {
               new Error('Unexpected response')
             );
           err.eventName = 'bad-server-response';
-          reject(err);
+          safeReject(err);
         }
       );
       this._socket.on('error', (err) => {
@@ -199,7 +224,7 @@ class Pop3Connection extends EventEmitter {
           this.emit('error', err);
           return;
         }
-        reject(err);
+        safeReject(err);
         this._socket = null;
       });
       this._socket.once('close', () => {
@@ -207,7 +232,7 @@ class Pop3Connection extends EventEmitter {
           new Error('close')
         );
         err.eventName = 'close';
-        reject(err);
+        safeReject(err);
         this._socket = null;
       });
       this._socket.once('end', () => {
@@ -215,7 +240,7 @@ class Pop3Connection extends EventEmitter {
           new Error('end')
         );
         err.eventName = 'end';
-        reject(err);
+        safeReject(err);
         this._socket = null;
       });
       socket.connect({

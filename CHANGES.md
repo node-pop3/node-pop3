@@ -2,8 +2,9 @@
 
 ## 0.10.1
 
-- fix: ensure event listeners receive all error events
-- fix: avoid resettling of Promises
+- fix: ensure event listeners receive all error events (@aeza8i, @brettz9)
+- fix: avoid resettling of Promises (@aeza8i)
+- fix: avoid end on null socket (@aeza8i)
 
 ## 0.10.0
 

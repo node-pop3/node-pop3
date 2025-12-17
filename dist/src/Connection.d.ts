@@ -1,11 +1,12 @@
-/// <reference types="node" resolution-mode="require"/>
-/// <reference types="node" resolution-mode="require"/>
 export default Pop3Connection;
 export type Integer = number;
 /**
  * @typedef {number} Integer
  */
-declare class Pop3Connection extends EventEmitter {
+/**
+ *
+ */
+declare class Pop3Connection extends EventEmitter<[never]> {
     /**
      * @param {{
     *   host: string,
@@ -21,7 +22,7 @@ declare class Pop3Connection extends EventEmitter {
         port?: Integer;
         tls?: boolean;
         timeout?: Integer;
-        tlsOptions?: import('tls').TlsOptions;
+        tlsOptions?: import("tls").TlsOptions;
         servername?: string;
     });
     host: string;
@@ -30,6 +31,7 @@ declare class Pop3Connection extends EventEmitter {
     timeout: number | undefined;
     _socket: Socket | _tls.TLSSocket | null;
     _stream: Readable | null;
+    _command: string;
     tlsOptions: _tls.TlsOptions;
     servername: string;
     /**
@@ -45,15 +47,17 @@ declare class Pop3Connection extends EventEmitter {
      * @param {Error} [err]
      * @returns {void}
      */
-    _endStream(err?: Error | undefined): void;
-    connect(): Promise<any>;
+    _endStream(err?: Error): void;
+    /**
+     * @returns {Promise<void>}
+     */
+    connect(): Promise<void>;
     /**
      * @param {...(string|Integer)} args
      * @throws {Error}
      * @returns {Promise<[string, Readable]>}
      */
     command(...args: (string | Integer)[]): Promise<[string, Readable]>;
-    _command: string | undefined;
 }
 import { EventEmitter } from 'events';
 import { Socket } from 'net';

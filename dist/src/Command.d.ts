@@ -3,6 +3,9 @@ export type Integer = number;
 /**
  * @typedef {number} Integer
  */
+/**
+ *
+ */
 declare class Pop3Command extends Pop3Connection {
     /**
      * @param {{
@@ -23,7 +26,7 @@ declare class Pop3Command extends Pop3Connection {
         port?: Integer;
         tls?: boolean;
         timeout?: Integer;
-        tlsOptions?: import('tls').TlsOptions;
+        tlsOptions?: import("tls").TlsOptions;
         servername?: string;
     });
     user: string;

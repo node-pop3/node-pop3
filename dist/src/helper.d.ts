@@ -1,7 +1,7 @@
 /**
  * @param {import('stream').Stream} stream
  */
-export function stream2String(stream: import('stream').Stream): Promise<any>;
+export function stream2String(stream: import("stream").Stream): Promise<any>;
 /**
  * @param {string} str
  * @returns {string[][]}

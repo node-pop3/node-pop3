@@ -1,5 +1,10 @@
 # CHANGES to node-pop3
 
+## 0.10.1
+
+- fix: ensure event listeners receive all error events
+- fix: avoid resettling of Promises
+
 ## 0.10.0
 
 BREAKING CHANGES:

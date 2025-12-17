@@ -124,13 +124,13 @@ class Pop3Connection extends EventEmitter {
        * }} e
        */
       const safeReject = (e) => {
+        if (this.listeners('error').length) {
+          this.emit('error', e);
+        }
         if (settled) {
           return;
         }
         settled = true;
-        if (this.listeners('error').length) {
-          this.emit('error', e);
-        }
         reject(e);
       };
 

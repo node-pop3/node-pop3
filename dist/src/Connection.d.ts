@@ -6,7 +6,7 @@ export type Integer = number;
 /**
  *
  */
-declare class Pop3Connection extends EventEmitter<[never]> {
+declare class Pop3Connection extends EventEmitter<any> {
     /**
      * @param {{
     *   host: string,

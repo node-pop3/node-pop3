@@ -14,6 +14,7 @@
     "pop": "./bin/pop.js"
   },
   "scripts": {
+    "prepublishOnly": "npm run lint && npm run build && npm run tsc",
     "tsc": "tsc",
     "build": "tsc -p tsconfig-prod.json",
     "cli": "node ./bin/pop.js",
@@ -58,7 +59,7 @@
     "@expo/spawn-async": "^1.7.2",
     "@types/chai": "^5.2.3",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^24.10.4",
+    "@types/node": "^25.0.3",
     "babel-plugin-add-module-exports": "^1.0.4",
     "babel-plugin-module-extension": "^0.1.3",
     "c8": "^10.1.3",

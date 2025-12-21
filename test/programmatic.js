@@ -310,7 +310,7 @@ describe('Programmatic', function () {
       pop3Command.on('end', (e) => {
         endError = e;
       });
-      pop3Command.on('error', (e) => {
+      pop3Command.on('warn', (e) => {
         errError = e;
       });
 

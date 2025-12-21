@@ -1,5 +1,10 @@
 # CHANGES to node-pop3
 
+## 0.11.0
+
+BREAKING CHANGES:
+- `error` events are now `warn` events.
+
 ## 0.10.1
 
 - fix: ensure event listeners receive all error events (@aeza8i, @brettz9)

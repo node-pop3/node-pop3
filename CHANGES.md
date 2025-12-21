@@ -3,7 +3,7 @@
 ## 0.11.0
 
 BREAKING CHANGES:
-- `error` events are now `warn` events.
+- `error` events are now `warn` events. (@aeza8i)
 
 ## 0.10.1
 

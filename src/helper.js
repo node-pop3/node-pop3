@@ -13,8 +13,57 @@ export function stream2String (stream) {
       buffer = Buffer.concat([buffer, _buffer], len);
     });
     stream.on('error', (err) => reject(err));
-    stream.on('end', () => resolve(buffer.toString()));
+    stream.on('end', () => {
+      // Reverse POP3 byte-stuffing (RFC 1939 Section 3):
+      // The server prepends a '.' to any line starting with '.' to avoid
+      // confusion with the multi-line terminator. The client must remove it.
+      const result = dotUnstuff(buffer);
+      resolve(result.toString());
+    });
   });
+}
+
+/**
+ * Reverse POP3 dot-stuffing (RFC 1939 Section 3).
+ *
+ * Any line beginning with ".." has the extra leading "." removed.
+ *
+ * @param {Buffer} buffer
+ * @returns {Buffer}
+ */
+function dotUnstuff (buffer) {
+  const dot = 0x2E;
+  const cr = 0x0D;
+  const lf = 0x0A;
+  const chunks = [];
+  let start = 0;
+
+  // Check first line (no preceding CRLF)
+  if (buffer.length >= 2 && buffer[0] === dot && buffer[1] === dot) {
+    start = 1;
+  }
+
+  for (let i = start; i < buffer.length - 3; i++) {
+    if (
+      buffer[i] === cr &&
+      buffer[i + 1] === lf &&
+      buffer[i + 2] === dot &&
+      buffer[i + 3] === dot
+    ) {
+      // Include up to and including \r\n.
+      chunks.push(buffer.subarray(start, i + 3));
+      // Skip the extra dot
+      start = i + 4;
+      i = start - 1;
+    }
+  }
+
+  if (chunks.length === 0 && start === 0) {
+    return buffer;
+  }
+
+  chunks.push(buffer.subarray(start));
+  return Buffer.concat(chunks);
 }
 
 /**

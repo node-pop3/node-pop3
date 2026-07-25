@@ -50,4 +50,13 @@ describe('stream2String / dotUnstuff', function () {
       const result = await stream2String(stream);
       expect(result).to.equal('.first\r\n.second\r\n');
     });
+
+  it('detects dot-stuffing when the pattern ends at the last byte',
+    async function () {
+      // Buffer ends exactly with \r\n.. (no trailing content after)
+      const input = 'line\r\n..';
+      const stream = stringToStream(input);
+      const result = await stream2String(stream);
+      expect(result).to.equal('line\r\n.');
+    });
 });

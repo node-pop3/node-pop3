@@ -44,7 +44,7 @@ function dotUnstuff (buffer) {
   }
 
   let i = start;
-  while (i < buffer.length - 3) {
+  while (i <= buffer.length - 4) {
     if (
       buffer[i] === cr &&
       buffer[i + 1] === lf &&

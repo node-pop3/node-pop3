@@ -1,2 +1,4 @@
+allowBuilds:
+  unrs-resolver: set this to true or false
 ignoredBuiltDependencies:
   - unrs-resolver

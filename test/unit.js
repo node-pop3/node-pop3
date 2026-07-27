@@ -1,3 +1,7 @@
+// @ts-nocheck
+/* eslint-disable promise/avoid-new -- Test
+  file uses concise stubs and callback wrappers to cover edge
+  branches. */
 import {Readable} from 'stream';
 import {createServer} from 'net';
 
@@ -178,7 +182,6 @@ describe('Connection split response handling', function () {
         });
       });
 
-      // eslint-disable-next-line promise/avoid-new -- Wrapping callback API
       await new Promise((resolve) => {
         server.listen(0, '127.0.0.1', () => {
           resolve(undefined);
@@ -206,7 +209,6 @@ describe('Connection split response handling', function () {
         ]);
         await pop3Command.QUIT();
       } finally {
-        // eslint-disable-next-line promise/avoid-new -- Wrapping callback API
         await new Promise((resolve) => {
           server.close(resolve);
         });

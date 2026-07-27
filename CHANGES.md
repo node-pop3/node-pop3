@@ -3,6 +3,8 @@
 ## 0.14.0
 
 - fix(connection): handle split +OK/CRLF POP3 response headers; closes #27
+- fix: handle LAST command fallback and stabilize test helpers
+- fix: adjusts the CLI output to match programmatic API
 
 ## 0.13.0
 

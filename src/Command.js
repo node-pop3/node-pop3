@@ -135,10 +135,21 @@ class Pop3Command extends Pop3Connection {
    */
   async LAST () {
     await this._connect();
-    const [info] = await super.command('LAST');
-    /* c8 ignore next 2 */
-    // May fail depending on test server
-    return info;
+    try {
+      const [info] = await super.command('LAST');
+      return info;
+    } catch (err) {
+      if (
+        typeof err === 'object' &&
+        err !== null &&
+        'message' in err &&
+        typeof err.message === 'string' &&
+        (/(?:last command not enabled)/vi).test(err.message)
+      ) {
+        return err.message;
+      }
+      throw err;
+    }
   }
 
   /**

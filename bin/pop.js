@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import {readFile} from 'fs/promises';
 import {join} from 'path';
+import {inspect} from 'util';
 
 import Pop3Command from '../src/Command.js';
 import {stream2String} from '../src/helper.js';
@@ -186,5 +187,5 @@ try {
   process.exit();
 }
 
-console.dir(result);
+console.log(inspect(result, {compact: true, depth: null, breakLength: Infinity}));
 process.exit(0);

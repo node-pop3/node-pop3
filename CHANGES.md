@@ -2,9 +2,12 @@
 
 ## 0.14.0
 
-- fix(connection): handle split +OK/CRLF POP3 response headers; closes #27
+- feat: add `maxMailSize`, `parseStreamToString`, and `streamReadTimeout` options for `RETR`/`TOP`
+- perf: make `stream2String` linear-time by collecting chunks before concatenation
+- fix: add timeout and max-size guardrails to stream parsing
 - fix: handle LAST command fallback and stabilize test helpers
-- fix: adjusts the CLI output to match programmatic API
+- fix(cli): adjusts the CLI output to match programmatic API
+- fix(connection): handle split +OK/CRLF POP3 response headers; closes #27
 
 ## 0.13.0
 

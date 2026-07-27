@@ -75,6 +75,9 @@ options.port|yes|Number. Defaults to `110`
 options.servername|yes|String. Defaults to `host` value. Same as `servername` for Node TLS option.
 options.tls|yes|Boolean. Defaults to `false`
 options.timeout|yes|Number. Defaults to `undefined`
+options.maxMailSize|yes|Number (bytes). If exceeded while parsing `RETR`/`TOP`, rejects with `mailSizeExceeded`
+options.parseStreamToString|yes|Boolean. Defaults to `true`. When `false`, `RETR`/`TOP` resolve to the raw stream
+options.streamReadTimeout|yes|Number (ms). Timeout used while converting `RETR`/`TOP` stream to string
 options.tlsOptions|yes|Defaults to `{}`
 
 `tlsOptions` takes the options documented for your Node version and
@@ -118,8 +121,8 @@ console.log(
 method|params|return|comment
 ---|---|---|---
 UIDL|`{String\|Number}` msgNum|`{Promise}` resolve to `{Array}` list of responsed|msgNum is optional
-RETR|`{String\|Number}` msgNum|`{Promise}` resolve to `{String}` of mail stream|
-TOP|`{String\|Number}` msgNum, `{Number}` n|`{Promise}` resolve to `{String}` message of responsed|n is default to 0
+RETR|`{String\|Number}` msgNum|`{Promise}` resolve to `{String}` or `{Stream}`|Returns stream when `parseStreamToString: false`
+TOP|`{String\|Number}` msgNum, `{Number}` n|`{Promise}` resolve to `{String}` or `{Stream}`|`n` defaults to 0; returns stream when `parseStreamToString: false`
 QUIT||`{Promise}` resolve to `{String}` message of response message|
 
 ## ERROR

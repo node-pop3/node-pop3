@@ -18,6 +18,9 @@ class Pop3Command extends Pop3Connection {
    *   port?: Integer,
    *   tls?: boolean,
    *   timeout?: Integer,
+   *   maxMailSize?: Integer,
+   *   parseStreamToString?: boolean,
+   *   streamReadTimeout?: Integer,
    *   tlsOptions?: import('tls').TlsOptions,
    *   servername?: string
    * }} cfg
@@ -29,13 +32,33 @@ class Pop3Command extends Pop3Connection {
     port,
     tls,
     timeout,
+    maxMailSize,
+    parseStreamToString = true,
+    streamReadTimeout,
     tlsOptions,
     servername
   }) {
     super({host, port, tls, timeout, tlsOptions, servername});
     this.user = user;
     this.password = password;
+    this.maxMailSize = maxMailSize;
+    this.parseStreamToString = parseStreamToString;
+    this.streamReadTimeout = streamReadTimeout;
     this._PASSInfo = '';
+  }
+
+  /**
+   * @param {import('stream').Stream} stream
+   * @returns {Promise<string>|import('stream').Stream}
+   */
+  _parseMailStream (stream) {
+    if (this.parseStreamToString === false) {
+      return stream;
+    }
+    return stream2String(stream, {
+      maxBytes: this.maxMailSize,
+      timeoutMs: this.streamReadTimeout
+    });
   }
 
   /**
@@ -103,12 +126,14 @@ class Pop3Command extends Pop3Connection {
 
   /**
    * @param {Integer} msgNumber
-   * @returns {Promise<string>}
+   * @returns {Promise<string|import('stream').Stream>}
    */
   async RETR (msgNumber) {
     await this._connect();
     const [, stream] = await super.command('RETR', msgNumber);
-    return stream2String(/** @type {import('stream').Stream} */ (stream));
+    return this._parseMailStream(
+      /** @type {import('stream').Stream} */ (stream)
+    );
   }
 
   /**
@@ -155,12 +180,14 @@ class Pop3Command extends Pop3Connection {
   /**
    * @param {Integer} msgNumber
    * @param {Integer} numLines
-   * @returns {Promise<string>}
+   * @returns {Promise<string|import('stream').Stream>}
    */
   async TOP (msgNumber, numLines = 0) {
     await this._connect();
     const [, stream] = await super.command('TOP', msgNumber, numLines);
-    return stream2String(/** @type {import('stream').Stream} */ (stream));
+    return this._parseMailStream(
+      /** @type {import('stream').Stream} */ (stream)
+    );
   }
 
   /**

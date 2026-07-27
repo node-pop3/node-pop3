@@ -77,6 +77,43 @@ describe('stream2String dot-unstuffing', function () {
     const result = await stream2String(makeStream(''));
     expect(result).to.equal('');
   });
+
+  it('rejects when maxBytes is exceeded', async function () {
+    try {
+      await stream2String(
+        makeStream('123456'),
+        {maxBytes: 5}
+      );
+      expect.fail('Expected stream2String to reject on maxBytes');
+    } catch (err) {
+      expect(err).to.be.an('error');
+      expect(/** @type {Error} */ (err).message).to.equal('mailSizeExceeded');
+      expect(/** @type {{eventName?: string}} */ (err).eventName).to.equal(
+        'mail-size-exceeded'
+      );
+    }
+  });
+
+  it('rejects when timeoutMs is reached', async function () {
+    const stream = new Readable({
+      read () {
+        // Keep stream open so timeout can trigger.
+      }
+    });
+
+    try {
+      await stream2String(stream, {timeoutMs: 15});
+      expect.fail('Expected stream2String to reject on timeout');
+    } catch (err) {
+      expect(err).to.be.an('error');
+      expect(
+        /** @type {Error} */ (err).message
+      ).to.equal('stream2String timeout');
+      expect(/** @type {{eventName?: string}} */ (err).eventName).to.equal(
+        'timeout'
+      );
+    }
+  });
 });
 
 describe('Connection socket lifecycle checks', function () {

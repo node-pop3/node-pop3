@@ -163,6 +163,17 @@ describe('CLI', function () {
       expect(stdout).to.contain("[ '', null ]\n");
     });
 
+    it('Runs LAST', async function () {
+      const {stdout, stderr} = await spawnAsync('./bin/pop.js', [
+        '--config',
+        'pop.config.json',
+        '--method',
+        'LAST'
+      ]);
+      expect(stderr).to.equal('');
+      expect(stdout).to.match(/^'.*'\n$/v);
+    });
+
     it('Runs CAPA', async function () {
       const {stdout, stderr} = await spawnAsync('./bin/pop.js', [
         '--config',

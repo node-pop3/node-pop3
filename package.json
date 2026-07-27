@@ -16,7 +16,7 @@
   "scripts": {
     "prepublishOnly": "npm run lint && npm run build && npm run tsc",
     "tsc": "tsc",
-    "build": "tsc -p tsconfig-prod.json",
+    "build": "tsc -p tsconfig-prod.json && npm run babel",
     "cli": "node ./bin/pop.js",
     "lint": "npm run eslint",
     "eslint": "eslint .",

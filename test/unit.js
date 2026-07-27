@@ -90,6 +90,7 @@ describe('Connection socket lifecycle checks', function () {
         writableEnded: true,
         write () {
           writeCalled = true;
+          return true;
         }
       };
 

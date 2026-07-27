@@ -34,7 +34,9 @@ describe('Programmatic', function () {
       await pop3Command.command('PASS', config.password);
       const [, stream] = await pop3Command.command('TOP', '1', '0');
       await pop3Command.QUIT();
-      const str = await stream2String(stream);
+      const str = await stream2String(
+        /** @type {import('stream').Stream} */ (stream)
+      );
       expect(str).to.contain('Received:');
     });
 

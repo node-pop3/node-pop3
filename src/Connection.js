@@ -267,7 +267,7 @@ class Pop3Connection extends EventEmitter {
   /**
    * @param {...(string|Integer)} args
    * @throws {Error}
-   * @returns {Promise<[string, Readable]>}
+   * @returns {Promise<[string, Readable|null]>}
    */
   async command (...args) {
     this._command = args.join(' ').trim();

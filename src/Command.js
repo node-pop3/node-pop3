@@ -62,7 +62,9 @@ class Pop3Command extends Pop3Connection {
     if (msgNumber) {
       return listify(info)[0];
     }
-    const str = await stream2String(stream);
+    const str = await stream2String(
+      /** @type {import('stream').Stream} */ (stream)
+    );
     return listify(str);
   }
 
@@ -84,7 +86,9 @@ class Pop3Command extends Pop3Connection {
     if (msgNumber) {
       return listify(info)[0];
     }
-    const str = await stream2String(stream);
+    const str = await stream2String(
+      /** @type {import('stream').Stream} */ (stream)
+    );
     return listify(str);
   }
 
@@ -104,7 +108,7 @@ class Pop3Command extends Pop3Connection {
   async RETR (msgNumber) {
     await this._connect();
     const [, stream] = await super.command('RETR', msgNumber);
-    return stream2String(stream);
+    return stream2String(/** @type {import('stream').Stream} */ (stream));
   }
 
   /**
@@ -145,7 +149,7 @@ class Pop3Command extends Pop3Connection {
   async TOP (msgNumber, numLines = 0) {
     await this._connect();
     const [, stream] = await super.command('TOP', msgNumber, numLines);
-    return stream2String(stream);
+    return stream2String(/** @type {import('stream').Stream} */ (stream));
   }
 
   /**

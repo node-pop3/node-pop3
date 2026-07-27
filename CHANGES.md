@@ -3,6 +3,7 @@
 ## 0.15.0
 
 - feat: add `CAPA` and `supports` commands
+- fix: allow for LAST to return "unknown command"
 
 ## 0.14.0
 

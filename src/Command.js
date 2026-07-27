@@ -218,7 +218,7 @@ class Pop3Command extends Pop3Connection {
         err !== null &&
         'message' in err &&
         typeof err.message === 'string' &&
-        (/(?:last command not enabled)/vi).test(err.message)
+        (/(?:last command not enabled|unknown command)/vi).test(err.message)
       ) {
         return err.message;
       }

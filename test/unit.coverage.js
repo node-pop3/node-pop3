@@ -232,6 +232,30 @@ describe('Pop3Command branch coverage', function () {
     expect(info).to.equal('3');
   });
 
+  it('returns LAST server message when LAST is unknown command', async function () {
+    const pop3Command = makeCommand();
+
+    Pop3Connection.prototype.connect = async function () {
+      return undefined;
+    };
+
+    Pop3Connection.prototype.command = async function (commandName) {
+      if (commandName === 'USER') {
+        return ['ok', null];
+      }
+      if (commandName === 'PASS') {
+        return ['auth ok', null];
+      }
+      if (commandName === 'LAST') {
+        throw new Error('Unknown command.');
+      }
+      return ['ok', null];
+    };
+
+    const info = await pop3Command.LAST();
+    expect(info).to.equal('Unknown command.');
+  });
+
   it('rethrows LAST errors that are unrelated to disabled-LAST responses', async function () {
     const pop3Command = makeCommand();
 

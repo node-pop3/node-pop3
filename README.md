@@ -127,7 +127,12 @@ CAPA||`{Promise}` resolve to `{Object<String, String[]>}` capability map|Capabil
 supports|`{String}` capability|`{Promise}` resolve to `{Boolean}`|Trims and uppercases the input name; lazily calls `CAPA` and reuses cached capabilities for subsequent checks
 QUIT||`{Promise}` resolve to `{String}` message of response message|
 
-Note that `SASL`, `RESP-CODES`, `LOGIN-DELAY`, `PIPELINING`, `EXPIRE`, and `IMPLEMENTATION` are capability tokens not commands.
+Note that
+
+- `SASL`, `RESP-CODES`, `LOGIN-DELAY`, `PIPELINING`, `EXPIRE`, and `IMPLEMENTATION`
+- PLAIN, LOGIN, and DIGEST-MD5
+
+...are capability tokens not commands.
 
 ```js
 const capabilities = await pop3.CAPA();

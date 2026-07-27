@@ -35,6 +35,10 @@ declare class Pop3Connection extends EventEmitter<any> {
     tlsOptions: _tls.TlsOptions;
     servername: string;
     /**
+     * @returns {boolean}
+     */
+    _hasActiveSocket(): boolean;
+    /**
      * @returns {Readable}
      */
     _updateStream(): Readable;
@@ -55,9 +59,9 @@ declare class Pop3Connection extends EventEmitter<any> {
     /**
      * @param {...(string|Integer)} args
      * @throws {Error}
-     * @returns {Promise<[string, Readable]>}
+     * @returns {Promise<[string, Readable|null]>}
      */
-    command(...args: (string | Integer)[]): Promise<[string, Readable]>;
+    command(...args: (string | Integer)[]): Promise<[string, Readable | null]>;
 }
 import { EventEmitter } from 'events';
 import { Socket } from 'net';

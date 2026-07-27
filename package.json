@@ -59,14 +59,14 @@
     "@expo/spawn-async": "^1.8.0",
     "@types/chai": "^5.2.3",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^26.1.1",
+    "@types/node": "^26.1.2",
     "babel-plugin-add-module-exports": "^1.0.4",
     "babel-plugin-module-extension": "^0.1.3",
     "c8": "^12.0.0",
     "chai": "^6.2.2",
     "emailjs": "^4.0.3",
     "eslint": "^10.8.0",
-    "eslint-config-ash-nazg": "^40.2.0",
+    "eslint-config-ash-nazg": "^41.0.0",
     "mocha": "^11.7.6"
   }
 }

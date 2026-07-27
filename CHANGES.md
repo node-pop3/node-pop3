@@ -1,5 +1,10 @@
 # CHANGES to node-pop3
 
+## 0.12.0
+
+- fix: add `dotUnstuff()` for POP3 dot-stuffing (@christpet)
+- chore: update devDeps.
+
 ## 0.11.0
 
 BREAKING CHANGES:

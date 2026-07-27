@@ -123,7 +123,19 @@ method|params|return|comment
 UIDL|`{String\|Number}` msgNum|`{Promise}` resolve to `{Array}` list of responsed|msgNum is optional
 RETR|`{String\|Number}` msgNum|`{Promise}` resolve to `{String}` or `{Stream}`|Returns stream when `parseStreamToString: false`
 TOP|`{String\|Number}` msgNum, `{Number}` n|`{Promise}` resolve to `{String}` or `{Stream}`|`n` defaults to 0; returns stream when `parseStreamToString: false`
+CAPA||`{Promise}` resolve to `{Object<String, String[]>}` capability map|Capability names are uppercased keys, values are argument arrays (often empty)
+supports|`{String}` capability|`{Promise}` resolve to `{Boolean}`|Trims and uppercases the input name; lazily calls `CAPA` and reuses cached capabilities for subsequent checks
 QUIT||`{Promise}` resolve to `{String}` message of response message|
+
+Note that `SASL`, `RESP-CODES`, `LOGIN-DELAY`, `PIPELINING`, `EXPIRE`, and `IMPLEMENTATION` are capability tokens not commands.
+
+```js
+const capabilities = await pop3.CAPA();
+console.log(capabilities.CAPA); // []
+
+const hasPipelining = await pop3.supports('pipelining');
+console.log(hasPipelining); // true or false
+```
 
 ## ERROR
 

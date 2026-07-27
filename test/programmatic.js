@@ -1,4 +1,5 @@
 /* eslint-disable chai-expect/no-inner-literal -- Just checking reached code */
+/* eslint-disable sonarjs/no-trivial-assertions -- Used to flag success */
 import {Readable} from 'stream';
 import {readFileSync} from 'fs';
 
@@ -206,8 +207,8 @@ describe('Programmatic', function () {
         expect(false).to.be.true;
         return undefined;
       // eslint-disable-next-line @stylistic/max-len -- Long
-      // eslint-disable-next-line promise/prefer-await-to-callbacks -- Stream emit
-      }, (err) => {
+      // eslint-disable-next-line promise/prefer-await-to-then, promise/prefer-await-to-callbacks -- Stream emit
+      }).catch((err) => {
         expect(err).to.be.an('error');
         expect(err.message).to.equal('oops');
       });

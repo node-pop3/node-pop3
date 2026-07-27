@@ -192,7 +192,9 @@ class Pop3Connection extends EventEmitter {
           if (buffer[0] === 43) { // '+'
             const firstLineEndIndex = buffer.indexOf(CRLF_BUFFER);
             const infoBuffer = buffer.subarray(4, firstLineEndIndex);
-            const [commandName, msgNumber] = (this._command || '').split(' ');
+            const [commandName, msgNumber] = (
+              this._command || ''
+            ).split(' ', 2);
             let stream = null;
             if (MULTI_LINE_COMMAND_NAME.includes(commandName) ||
                 (!msgNumber &&

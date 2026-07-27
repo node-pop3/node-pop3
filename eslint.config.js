@@ -20,6 +20,8 @@ export default [
       ]
     },
     rules: {
+      // Using external to the file
+      'unicorn/prefer-private-class-fields': 'off',
       'new-cap': 0
     }
   },
@@ -34,16 +36,14 @@ export default [
       }
     },
     rules: {
-      'import/unambiguous': 'off',
-      'import/no-unresolved': 'off',
-      'import/no-commonjs': 'off',
+      'import-x/unambiguous': 'off',
+      'import-x/no-unresolved': 'off',
+      'import-x/no-commonjs': 'off',
       'no-console': 'off',
       'no-shadow': ['error', {
         allow: ['Pop3Command']
       }],
-      'no-unused-vars': ['error', {varsIgnorePattern: 'Pop3Command|str'}],
-      // eslint-disable-next-line sonarjs/no-hardcoded-passwords -- Off
-      'sonarjs/no-hardcoded-passwords': 'off'
+      'no-unused-vars': ['error', {varsIgnorePattern: 'Pop3Command|str'}]
     }
   }
 ];

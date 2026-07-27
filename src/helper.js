@@ -36,12 +36,10 @@ function dotUnstuff (buffer) {
   const cr = 0x0D;
   const lf = 0x0A;
   const chunks = [];
-  let start = 0;
-
   // Check first line (no preceding CRLF)
-  if (buffer.length >= 2 && buffer[0] === dot && buffer[1] === dot) {
-    start = 1;
-  }
+  let start = buffer.length >= 2 && buffer[0] === dot && buffer[1] === dot
+    ? 1
+    : 0;
 
   let i = start;
   while (i <= buffer.length - 4) {
@@ -61,7 +59,7 @@ function dotUnstuff (buffer) {
     }
   }
 
-  if (chunks.length === 0 && start === 0) {
+  if (start === 0 && chunks.length === 0) {
     return buffer;
   }
 

@@ -65,8 +65,8 @@
     "c8": "^12.0.0",
     "chai": "^6.2.2",
     "emailjs": "^4.0.3",
-    "eslint": "^9.39.2",
-    "eslint-config-ash-nazg": "^39.11.1",
+    "eslint": "^10.8.0",
+    "eslint-config-ash-nazg": "^40.2.0",
     "mocha": "^11.7.6"
   }
 }

@@ -2,3 +2,8 @@ allowBuilds:
   unrs-resolver: true
 ignoredBuiltDependencies:
   - unrs-resolver
+minimumReleaseAgeExclude:
+  - eslint-config-ash-nazg@40.0.0 || 40.0.1 || 40.1.0 || 40.2.0
+  - eslint-plugin-jsdoc@63.3.1
+  - eslint-plugin-mocha@12.0.0
+  - globals@17.8.0

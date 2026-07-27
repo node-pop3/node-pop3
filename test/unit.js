@@ -1,8 +1,10 @@
 import {Readable} from 'stream';
+import {createServer} from 'net';
 
 import {expect} from 'chai';
 
 import Pop3Connection from '../src/Connection.js';
+import Pop3Command from '../src/Command.js';
 import {stream2String} from '../src/helper.js';
 
 /**
@@ -102,6 +104,76 @@ describe('Connection socket lifecycle checks', function () {
       }
 
       expect(writeCalled).to.equal(false);
+    }
+  );
+});
+
+describe('Connection split response handling', function () {
+  it(
+    'handles +OK and CRLF arriving in separate chunks for UIDL',
+    async function () {
+      this.timeout(5000);
+
+      const server = createServer((socket) => {
+        socket.write('+OK pop3 test server ready\r\n');
+        socket.on('data', (_buffer) => {
+          const command = _buffer.toString('utf8').trim();
+          if (command.startsWith('USER ')) {
+            socket.write('+OK user accepted\r\n');
+            return;
+          }
+          if (command.startsWith('PASS ')) {
+            socket.write('+OK pass accepted\r\n');
+            return;
+          }
+          if (command === 'UIDL') {
+            socket.write('+OK');
+            setTimeout(() => socket.write('\r\n'), 5);
+            setTimeout(() => socket.write('1 first-id\r\n'), 10);
+            setTimeout(() => socket.write('2 second-id\r\n'), 15);
+            setTimeout(() => socket.write('.'), 20);
+            return;
+          }
+          if (command === 'QUIT') {
+            socket.write('+OK bye\r\n');
+            socket.end();
+          }
+        });
+      });
+
+      // eslint-disable-next-line promise/avoid-new -- Wrapping callback API
+      await new Promise((resolve) => {
+        server.listen(0, '127.0.0.1', () => {
+          resolve(undefined);
+        });
+      });
+
+      const address = server.address();
+      if (!address || typeof address === 'string') {
+        server.close();
+        throw new TypeError('Could not get test server address');
+      }
+
+      const pop3Command = new Pop3Command({
+        host: '127.0.0.1',
+        port: address.port,
+        user: 'user',
+        password: 'pass'
+      });
+
+      try {
+        const list = await pop3Command.UIDL();
+        expect(list).to.deep.equal([
+          ['1', 'first-id'],
+          ['2', 'second-id']
+        ]);
+        await pop3Command.QUIT();
+      } finally {
+        // eslint-disable-next-line promise/avoid-new -- Wrapping callback API
+        await new Promise((resolve) => {
+          server.close(resolve);
+        });
+      }
     }
   );
 });

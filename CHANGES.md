@@ -1,5 +1,9 @@
 # CHANGES to node-pop3
 
+## 0.13.0
+
+- fix(connection): avoid write-after-destroy by guarding inactive sockets
+
 ## 0.12.0
 
 - fix: add `dotUnstuff()` for POP3 dot-stuffing (@christpet)

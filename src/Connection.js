@@ -53,6 +53,18 @@ class Pop3Connection extends EventEmitter {
   }
 
   /**
+   * @returns {boolean}
+   */
+  _hasActiveSocket () {
+    return Boolean(
+      this._socket &&
+      !this._socket.destroyed &&
+      this._socket.writable &&
+      !this._socket.writableEnded
+    );
+  }
+
+  /**
    * @returns {Readable}
    */
   _updateStream () {
@@ -259,7 +271,7 @@ class Pop3Connection extends EventEmitter {
    */
   async command (...args) {
     this._command = args.join(' ').trim();
-    if (!this._socket) {
+    if (!this._hasActiveSocket()) {
       throw new Error('no-socket');
     }
     // eslint-disable-next-line promise/avoid-new -- Our own API
@@ -283,21 +295,56 @@ class Pop3Connection extends EventEmitter {
 
     // eslint-disable-next-line promise/avoid-new -- Our own API
     return new Promise((resolve, reject) => {
+      /** @type {boolean} */
+      let settled = false;
+
+      /**
+       * @returns {void}
+       */
+      const clear = () => {
+        this.removeListener('error', rejectFn);
+        this.removeListener('response', responseFn);
+      };
+
       /**
        * @param {Error} err
        */
-      const rejectFn = (err) => reject(err);
-      this.once('error', rejectFn);
-      this.once('response', (info, stream) => {
-        this.removeListener('error', rejectFn);
+      const rejectFn = (err) => {
+        if (settled) {
+          return;
+        }
+        settled = true;
+        clear();
+        reject(err);
+      };
+
+      /**
+       * @param {string} info
+       * @param {Readable|null} stream
+       * @returns {void}
+       */
+      const responseFn = (info, stream) => {
+        if (settled) {
+          return;
+        }
+        settled = true;
+        clear();
         resolve([info, stream]);
-      });
-      if (!this._socket) {
+      };
+
+      this.once('error', rejectFn);
+      this.once('response', responseFn);
+      if (!this._hasActiveSocket()) {
         reject(new Error('no-socket'));
+        return;
       }
-      /** @type {Socket} */ (
-        this._socket
-      ).write(`${this._command}${CRLF}`, 'utf8');
+      try {
+        /** @type {Socket} */ (
+          this._socket
+        ).write(`${this._command}${CRLF}`, 'utf8');
+      } catch (err) {
+        rejectFn(/** @type {Error} */ (err));
+      }
     });
   }
 }

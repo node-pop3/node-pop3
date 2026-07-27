@@ -2,6 +2,7 @@ import {Readable} from 'stream';
 
 import {expect} from 'chai';
 
+import Pop3Connection from '../src/Connection.js';
 import {stream2String} from '../src/helper.js';
 
 /**
@@ -74,4 +75,32 @@ describe('stream2String dot-unstuffing', function () {
     const result = await stream2String(makeStream(''));
     expect(result).to.equal('');
   });
+});
+
+describe('Connection socket lifecycle checks', function () {
+  it(
+    'rejects with no-socket if socket has already been destroyed',
+    async function () {
+      const connection = new Pop3Connection({host: 'example.test'});
+      let writeCalled = false;
+      // @ts-expect-error Testing invalid socket state
+      connection._socket = {
+        destroyed: true,
+        writable: false,
+        writableEnded: true,
+        write () {
+          writeCalled = true;
+        }
+      };
+
+      try {
+        await connection.command('NOOP');
+        expect.fail('Expected command to reject with no-socket');
+      } catch (err) {
+        expect(/** @type {Error} */ (err).message).to.equal('no-socket');
+      }
+
+      expect(writeCalled).to.equal(false);
+    }
+  );
 });

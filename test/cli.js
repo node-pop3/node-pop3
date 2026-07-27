@@ -163,6 +163,29 @@ describe('CLI', function () {
       expect(stdout).to.contain("[ '', null ]\n");
     });
 
+    it('Runs CAPA', async function () {
+      const {stdout, stderr} = await spawnAsync('./bin/pop.js', [
+        '--config',
+        'pop.config.json',
+        '--method',
+        'CAPA'
+      ]);
+      expect(stderr).to.equal('');
+      expect(stdout).to.contain('CAPA');
+    });
+
+    it('Runs supports', async function () {
+      const {stdout, stderr} = await spawnAsync('./bin/pop.js', [
+        '--config',
+        'pop.config.json',
+        '--method',
+        'supports',
+        'PIPELINING'
+      ]);
+      expect(stderr).to.equal('');
+      expect(stdout).to.match(/^(?:true|false)\n$/v);
+    });
+
     // Todo: Test APOP
   });
 

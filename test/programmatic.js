@@ -106,7 +106,6 @@ describe('Programmatic', function () {
     const pop3Command = new Pop3Command(config);
     await pop3Command.connect();
     await pop3Command.command('USER', config.user);
-    await pop3Command.command('PASS', config.password);
     const info = await pop3Command.LAST();
     await pop3Command.QUIT();
     expect(info).to.be.a('string');
@@ -137,6 +136,29 @@ describe('Programmatic', function () {
     const list = await pop3Command.UIDL();
     await pop3Command.QUIT();
     expect(list).to.be.an('array');
+  });
+
+  it('Runs CAPA command', async function () {
+    const pop3Command = new Pop3Command(config);
+    try {
+      const capabilities = await pop3Command.CAPA();
+      expect(capabilities).to.be.an('object');
+      // eslint-disable-next-line no-console -- See server capabilities
+      console.log('capabilities', capabilities);
+      expect(Object.keys(capabilities).length).to.be.greaterThan(0);
+    } finally {
+      await pop3Command.QUIT();
+    }
+  });
+
+  it('Runs supports command helper', async function () {
+    const pop3Command = new Pop3Command(config);
+    try {
+      const supported = await pop3Command.supports('PIPELINING');
+      expect(supported).to.be.a('boolean');
+    } finally {
+      await pop3Command.QUIT();
+    }
   });
 
   it('Defaults programmatically to 110 with no port or tls', async function () {

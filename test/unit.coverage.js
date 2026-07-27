@@ -286,6 +286,91 @@ describe('Pop3Command branch coverage', function () {
     expect(result).to.equal(stream);
   });
 
+  it('parses CAPA stream into a capability map', async function () {
+    const pop3Command = makeCommand();
+
+    Pop3Connection.prototype.connect = async function () {
+      return undefined;
+    };
+
+    Pop3Connection.prototype.command = async function (commandName) {
+      if (commandName === 'USER') {
+        return ['ok', null];
+      }
+      if (commandName === 'PASS') {
+        return ['auth ok', null];
+      }
+      if (commandName === 'CAPA') {
+        return [
+          'ok',
+          Readable.from([
+            Buffer.from(
+              'SASL PLAIN LOGIN\r\n PIPELINING\r\nRESP-CODES\r\n'
+            )
+          ])
+        ];
+      }
+      return ['ok', null];
+    };
+
+    const capabilities = await pop3Command.CAPA();
+    expect(capabilities).to.deep.equal({
+      SASL: ['PLAIN', 'LOGIN'],
+      'RESP-CODES': []
+    });
+  });
+
+  it('supports uses normalized names and cached capabilities', async function () {
+    const pop3Command = makeCommand();
+    let capaCallCount = 0;
+
+    Pop3Connection.prototype.connect = async function () {
+      return undefined;
+    };
+
+    Pop3Connection.prototype.command = async function (commandName) {
+      if (commandName === 'USER') {
+        return ['ok', null];
+      }
+      if (commandName === 'PASS') {
+        return ['auth ok', null];
+      }
+      if (commandName === 'CAPA') {
+        capaCallCount++;
+        return [
+          'ok',
+          Readable.from([
+            Buffer.from('STLS\r\nIMPLEMENTATION node-pop3\r\n')
+          ])
+        ];
+      }
+      return ['ok', null];
+    };
+
+    const hasStls = await pop3Command.supports(' stls ');
+    const hasImplementation = await pop3Command.supports('IMPLEMENTATION');
+    const hasAuth = await pop3Command.supports('AUTH');
+
+    expect(hasStls).to.equal(true);
+    expect(hasImplementation).to.equal(true);
+    expect(hasAuth).to.equal(false);
+    expect(capaCallCount).to.equal(1);
+  });
+
+  it('supports returns false for an empty capability name', async function () {
+    const pop3Command = makeCommand();
+
+    Pop3Connection.prototype.connect = async function () {
+      throw new Error('connect should not be called');
+    };
+    Pop3Connection.prototype.command = async function () {
+      throw new Error('command should not be called');
+    };
+
+    const supported = await pop3Command.supports('  ');
+    expect(supported).to.equal(false);
+  });
+
   it('parses RETR stream to string when parseStreamToString is enabled', async function () {
     const pop3Command = makeCommand({parseStreamToString: true});
 
@@ -312,15 +397,18 @@ describe('Pop3Command branch coverage', function () {
 
   it('returns Bye for QUIT when there is no active socket', async function () {
     const pop3Command = makeCommand();
+    pop3Command._capabilities = {SASL: ['PLAIN']};
 
     const info = await pop3Command.QUIT();
     expect(info).to.equal('Bye');
+    expect(pop3Command._capabilities).to.be.null;
   });
 
   it('stores an empty string if QUIT returns no info text', async function () {
     const pop3Command = makeCommand();
     // @ts-expect-error Test doubles for socket state
     pop3Command._socket = {destroyed: false, writable: true, writableEnded: false};
+    pop3Command._capabilities = {PIPELINING: []};
 
     Pop3Connection.prototype.command = async function (commandName) {
       if (commandName === 'QUIT') {
@@ -332,6 +420,7 @@ describe('Pop3Command branch coverage', function () {
     const info = await pop3Command.QUIT();
     expect(info).to.equal('');
     expect(pop3Command._PASSInfo).to.equal('');
+    expect(pop3Command._capabilities).to.be.null;
   });
 });
 

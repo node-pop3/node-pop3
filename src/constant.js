@@ -9,7 +9,8 @@ export const TERMINATOR_BUFFER_ARRAY = [
 
 export const MULTI_LINE_COMMAND_NAME = [
   'RETR',
-  'TOP'
+  'TOP',
+  'CAPA'
 ];
 export const MAYBE_MULTI_LINE_COMMAND_NAME = [
   'LIST',

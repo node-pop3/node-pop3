@@ -162,9 +162,9 @@ const [methodName] = options.method;
 
 let result;
 try {
-  if (['UIDL', 'TOP', 'QUIT', 'RETR'].includes(methodName)) {
+  if (['UIDL', 'TOP', 'QUIT', 'RETR', 'CAPA', 'supports'].includes(methodName)) {
     result = await pop3Command[
-      /** @type {"UIDL"|"TOP"|"QUIT"|"RETR"} */
+      /** @type {"UIDL"|"TOP"|"QUIT"|"RETR"|"CAPA"|"supports"} */
       (methodName)
     ](
       // @ts-expect-error It's ok

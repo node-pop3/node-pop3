@@ -1,5 +1,9 @@
 # CHANGES to node-pop3
 
+## 0.15.0
+
+- feat: add `CAPA` and `supports` commands
+
 ## 0.14.0
 
 - feat: add `maxMailSize`, `parseStreamToString`, and `streamReadTimeout` options for `RETR`/`TOP`

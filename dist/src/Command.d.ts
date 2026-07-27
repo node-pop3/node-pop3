@@ -41,6 +41,7 @@ declare class Pop3Command extends Pop3Connection {
     parseStreamToString: boolean;
     streamReadTimeout: number | undefined;
     _PASSInfo: string;
+    _capabilities: Record<string, string[]> | null;
     /**
      * @param {import('stream').Stream} stream
      * @returns {Promise<string>|import('stream').Stream}
@@ -50,6 +51,15 @@ declare class Pop3Command extends Pop3Connection {
      * @returns {Promise<string>}
      */
     _connect(): Promise<string>;
+    /**
+     * @returns {Promise<Record<string, string[]>>}
+     */
+    CAPA(): Promise<Record<string, string[]>>;
+    /**
+     * @param {string} capability
+     * @returns {Promise<boolean>}
+     */
+    supports(capability: string): Promise<boolean>;
     /**
      * @param {Integer|string} msgNumber
      * @returns {Promise<string[][]|string[]>}

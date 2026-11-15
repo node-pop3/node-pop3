@@ -1,13 +1,14 @@
 {
   "presets": [
     ["@babel/preset-env", {
+      "modules": "commonjs",
       "targets": {
         "node": "14"
       }
     }]
   ],
   "plugins": [
-    ["add-module-exports"],
+    ["add-module-exports", {}],
     ["module-extension", {
       "js": "cjs"
     }]

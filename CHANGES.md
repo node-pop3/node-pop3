@@ -1,5 +1,9 @@
 # CHANGES to node-pop3
 
+## 0.15.5
+
+- fix: restore CJS exports
+
 ## 0.15.4
 
 - fix: detect the multi-line `\r\n.\r\n` terminator even when it is

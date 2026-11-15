@@ -24,7 +24,9 @@ function createSmtpClient () {
     password: config.password,
     timeout: config.timeout,
     // Todo: Make configurable
-    ssl: true
+    // The server requires an explicit SNI servername; without it the TLS
+    //   handshake fails with "wrong version number"
+    ssl: {servername: config.host}
   });
 }
 
